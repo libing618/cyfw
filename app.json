@@ -1,0 +1,74 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/index/signup/signup",
+    "pages/index/f_Role/f_Role",
+    "pages/index/structure/structure",
+    "pages/index/procedures/procedures",
+    "pages/index/distributor/distributor",
+    "pages/index/distribution/distribution",
+    "pages/index/accounting/accounting",
+    "pages/index/rcustomer/rcustomer",
+    "pages/index/addresslist/addresslist",
+    "pages/index/workconnection/workconnection",
+    "pages/plan/plan",
+    "pages/plan/adjustment/adjustment",
+    "pages/fprocedure/fprocedure",
+    "pages/vprocedure/vprocedure",
+    "pages/lprocedures/lprocedures",
+    "pages/production/production",
+    "pages/production/material/material",
+    "pages/production/process/process",
+    "pages/production/storage/storage",
+    "pages/production/stocks/stocks",
+    "pages/production/live/live",
+    "pages/production/capital/capital",
+    "pages/customer/customer",
+    "pages/order/order",
+    "pages/customer/returns/returns",
+    "pages/customer/logistics/logistics",
+    "pages/customer/evaluate/evaluate",
+    "pages/customer/communication/communication",
+    "pages/customer/statement/statement",
+    "util/wxchat/wxchat",
+    "util/approve/approve",
+    "util/addressedit/addressedit",
+    "util/productsct/productsct",
+    "util/mapsunit/mapsunit",
+    "util/ceimage/ceimage",
+    "util/filesct/filesct"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "创业服务平台",
+    "navigationBarTextStyle":"black",
+    "backgroundColor": "#f8f8f8",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "selectedColor": "#FF0033",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "首页",
+      "iconPath": "images/index.png",
+      "selectedIconPath": "images/index-1.png"
+    },{
+      "pagePath": "pages/plan/plan",
+      "text": "计划",
+      "iconPath": "images/shops.png",
+      "selectedIconPath": "images/shops-1.png"
+    },{
+      "pagePath": "pages/production/production",
+      "text": "生产",
+      "iconPath": "images/marketing.png",
+      "selectedIconPath": "images/marketing-1.png"
+    },{
+      "pagePath": "pages/customer/customer",
+      "text": "销售",
+      "iconPath":"images/customer.png",
+      "selectedIconPath":"images/customer-1.png"
+    }
+    ]
+  }
+}
