@@ -164,57 +164,58 @@ Page({
   makeunit: function(e) {                         //创建单位并申请负责人岗位
     var that = this;
 		var reqUnitData = e.detail.value;
-		var fSeatch = new AV.Query('_Role');
-		fSeatch.equalTo('uName',reqUnitData.uName);
-		fSeatch.find().then((results)=>{
-			if (results.length==0){                      //申请单位名称无重复
-        let crUnit = new AV.ACL();
-        crUnit.setWriteAccess(AV.User.current(), true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
-        crUnit.setPublicReadAccess(true);
-        crUnit.setPublicWriteAccess(false);
-        let unitRole = new AV.Role(app.globalData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
-        unitRole.getUsers().add(AV.User.current());
-        unitRole.set('uName',reqUnitData.uName)
-        unitRole.set('unitUsers',[{"objectId":app.globalData.user.objectId, "userRolName":'admin', 'uName':app.globalData.user.uName, 'avatarUrl':app.globalData.user.avatarUrl,'nickName':app.globalData.user.nickName}] );
-        unitRole.save().then((res)=>{
-          app.uUnit = res.toJSON();
-          let rQuery = AV.Object.createWithoutData('userInit', '598353adfe88c200571b8636')  //设定菜单为applyAdmin
-          AV.User.current()
-            .set({ "unit": res.objectId, "userRolName": 'admin', "userRol": rQuery })  // 设置并保存单位ID
-    				.save()
-    				.then(function(user) {
-              app.getRols(res.objectId);
-              wx.navigateTo({ url: '/pages/index/f_Role/f_Role' })
-            }).catch((error) => { console.log(error)
-            wx.showToast({title: '修改用户单位信息出现问题,请重试。'})	});
-        }).catch((error) => { console.log(error);
-          wx.showToast({ title: '新建单位时出现问题,请重试。', duration: 7500}) })
-			}else{
-				wx.showModal({
-          title: '已存在同名单位',
-          content: '选择取消进行核实修改，选择确定则申请加入该单位！',
-          success: function(res) {
-            if (res.confirm) {              //用户点击确定则申请加入该单位
-              let resUnit = results[0].toJSON();
-              let rQuery = AV.Object.createWithoutData('userInit', '59af7119ac502e006abee06a')  //设定菜单为sessionuser
-              AV.User.current()
-                .set({ "unit": resUnit.objectId, "userRolName": 'sessionuser', "userRol": rQuery } )  // 设置并保存单位ID
-                .save()
-                .then(function(user) {
-                  app.uUnit = resUnit;
-                  app.globalData.user.unit = resUnit.objectId;
-                  that.setData({user : app.globalData.user});
-                  wx.navigateTo({ url: '../structure/structure' });
-                })
-            } else if (res.cancel) {        //用户点击取消
-              that.data.crUnitData.c = '';
-              that.setData({crUnitData: that.data.crUnitData});
+    if (reqUnitData.uName){
+      var fSeatch = new AV.Query('_Role');
+      fSeatch.equalTo('uName',reqUnitData.uName);
+      fSeatch.find().then((results)=>{
+        if (results.length==0){                      //申请单位名称无重复
+          let crUnit = new AV.ACL();
+          crUnit.setWriteAccess(AV.User.current(), true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
+          crUnit.setPublicReadAccess(true);
+          crUnit.setPublicWriteAccess(false);
+          let unitRole = new AV.Role(app.globalData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
+          unitRole.getUsers().add(AV.User.current());
+          unitRole.set('uName',reqUnitData.uName)
+          unitRole.set('unitUsers',[{"objectId":app.globalData.user.objectId, "userRolName":'admin', 'uName':app.globalData.user.uName, 'avatarUrl':app.globalData.user.avatarUrl,'nickName':app.globalData.user.nickName}] );
+          unitRole.save().then((res)=>{
+            app.uUnit = res.toJSON();
+            let rQuery = AV.Object.createWithoutData('userInit', '598353adfe88c200571b8636')  //设定菜单为applyAdmin
+            AV.User.current()
+              .set({ "unit": res.objectId, "userRolName": 'admin', "userRol": rQuery })  // 设置并保存单位ID
+              .save()
+              .then(function(user) {
+                app.getRols(res.objectId);
+                wx.navigateTo({ url: '/pages/index/f_Role/f_Role' })
+              }).catch((error) => { console.log(error)
+              wx.showToast({title: '修改用户单位信息出现问题,请重试。'})	});
+          }).catch((error) => { console.log(error);
+            wx.showToast({ title: '新建单位时出现问题,请重试。', duration: 7500}) })
+        }else{
+          wx.showModal({
+            title: '已存在同名单位',
+            content: '选择取消进行核实修改，选择确定则申请加入该单位！',
+            success: function(res) {
+              if (res.confirm) {              //用户点击确定则申请加入该单位
+                let resUnit = results[0].toJSON();
+                let rQuery = AV.Object.createWithoutData('userInit', '59af7119ac502e006abee06a')  //设定菜单为sessionuser
+                AV.User.current()
+                  .set({ "unit": resUnit.objectId, "userRolName": 'sessionuser', "userRol": rQuery } )  // 设置并保存单位ID
+                  .save()
+                  .then(function(user) {
+                    app.uUnit = resUnit;
+                    app.globalData.user.unit = resUnit.objectId;
+                    that.setData({user : app.globalData.user});
+                    wx.navigateTo({ url: '../structure/structure' });
+                  })
+              } else if (res.cancel) {        //用户点击取消
+                that.data.crUnitData.c = '';
+                that.setData({crUnitData: that.data.crUnitData});
+              }
             }
-          }
-        })
-
-			}
-		}).catch(function(error) { console.log(error) });                                     //打印错误日志
+          })
+        }
+      }).catch(function(error) { console.log(error) });                                     //打印错误日志
+    }
 	}
 
 })
