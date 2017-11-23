@@ -97,10 +97,9 @@
 <template name="i_arrsel">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd" id="ds-{{n}}" bindtap="i_arrsel">{{alist[c]}}</view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
     <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{alist}}" bindchange="i_arrsel">
-      <view class="weui-cell__ft"><icon type="search" size="32"/></view>
+    <view class="weui-cell__bd" id="ds-{{n}}">{{alist[c]}}</view>
     </picker>
   </view>
 </template>
