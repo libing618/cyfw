@@ -90,8 +90,14 @@ module.exports = {
         case 'producttype' :
           that.data.reqData[i].apdclist = app.uUnit.indType;
           break;
+        case 'industrytype':
+          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [] };
+          break;
+        case 'arrsel':
+          if (vifData) { that.data.vData[that.data.reqData[i].gname] = 0 };
+          break;
         case 'sedate' :
-          that.data.vData[that.data.reqData[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)]
+          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)] }
           break;
       }
     };

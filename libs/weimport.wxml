@@ -95,13 +95,13 @@
 </template>
 
 <template name="i_arrsel">
-  <view class="weui-cell">
+  <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{alist}}" bindchange="i_arrsel">
+  <view  class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-    <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{alist}}" bindchange="i_arrsel">
     <view class="weui-cell__bd" id="ds-{{n}}">{{alist[c]}}</view>
-    </picker>
   </view>
+  </picker>
+  <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
 </template>
 
 <template name="s_h1">
