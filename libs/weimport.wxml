@@ -418,18 +418,18 @@
   </view>
 </template>
 
-<template name="s_mapSunit">
+<template name="s_MS">
   <view hidden="true">{{c}}</view>
 </template>
 
-<template name="i_mapSunit">
+<template name="i_MS">
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-  <view class="weui-cell weui-cell_input">
-    <navigator url="/util/mapsunit/mapsunit?reqName={{gname}}">
+  <navigator url="/util/mapsunit/mapsunit?reqNumber={{n}}">
+    <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd">{{p}}:</view>
       <view class="weui-cell__ft">{{e}}</view>
-    </navigator>
-  </view>
+    </view>
+  </navigator>
 </template>
 
 <template name="s_table">

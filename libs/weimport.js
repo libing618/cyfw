@@ -281,7 +281,7 @@ module.exports = {
     wx.chooseLocation({
       success: function (res) {
         that.setData({ 'vData.aGeoPoint':new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude}) });
-        if (that.data.vData[that.data.reqData[n+1].gname]=='') { that.setData(vdSet(that.data.reqData[n+1].gname,res.address)) }
+        if (!that.data.vData[that.data.reqData[n+1].gname]) { that.setData(vdSet(that.data.reqData[n+1].gname,res.address)) }
       }
     })
   },
@@ -416,7 +416,7 @@ module.exports = {
     let approvalID = parseInt(that.data.pNo);        //流程序号
     var approvalClass = require('./procedureclass.js')[approvalID];       //流程定义和数据结构
     var subData = e.detail.value;
-    if (that.data.vData.details.length>0){
+    if ( Array.isArray(that.data.vData.details) ){
       for (let i = 0; i < that.data.vData.details.length; i++) {
         that.data.vData.details[i].e = subData['ade' + i];
         that.data.vData.details[i].c = subData['adc' + i];
