@@ -20,11 +20,11 @@ Page({
     let pages = getCurrentPages();                //获取当前页面路由栈的信息
     that.prevPage = pages[pages.length - 2];        //上个页面
     that.reqField = 'vData.' + options.reqName;
-    if (that.prevPage.data.selectd<0) {
-      var getSrc = that.prevPage.data.vData[options.reqName];
+    if (typeof that.prevPage.data.selectd=='number' && that.prevPage.data.selectd>=0) {
+      that.reqField += '[' + that.prevPage.data.selectd + '].c';              //详情部分的图片编辑
+      var getSrc = that.prevPage.data.vData[options.reqName][that.prevPage.data.selectd].c;
     } else {
-      that.reqField += '['+that.prevPage.data.selectd+'].c';
-      var getSrc = that.prevPage.data.vData[options.reqName][that.prevPage.data.selectd].c
+      var getSrc = that.prevPage.data.vData[options.reqName];
     };
     wx.getImageInfo({
       src: getSrc,
@@ -53,7 +53,7 @@ Page({
     }
     this.setData({ x: xm, y: ym });
     ctx.scale(ds*cScale / iScale, ds*cScale / iScale);
-    ctx.drawImage(this.data.iscr, (0 - xm) / cScale, (0 - ym) / cScale, 320, 272);
+    ctx.drawImage(this.data.iscr, 0 - xm/cScale/ds, 0 - ym/cScale/ds, 320, 272);
     ctx.draw();
   },
 

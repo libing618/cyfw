@@ -123,10 +123,11 @@ Page({
         that.setData({ scale: that.data.scale==5 ? 5 : that.data.scale-1  })
         break;
       case 3:
-        that.prevPage.data.reqData[that.reqNumber].c = that.data.unitArray[that.data.sId].objectId;
-        that.prevPage.data.reqData[that.reqNumber].e = that.data.unitArray[that.data.sId].uName;
+       //that.prevPage.data.vData[that.reqNumber] = that.data.unitArray[that.data.sId].objectId;
+     //   that.prevPage.data.reqData[that.reqNumber].e = that.data.unitArray[that.data.sId].uName;
         let reqset = {};
-        reqset['reqData['+that.reqNumber+']'] = that.prevPage.data.reqData[that.reqNumber];
+        reqset['reqData['+that.reqNumber+'].e'] = that.prevPage.data.reqData[that.reqNumber];
+        reqset['vData.' + that.prevPage.data.reqData[that.reqNumber].gname] = that.data.unitArray[that.data.sId].objectId;
         if (that.reqProIsSuperior) {
           app.uUnit.sUnit = that.data.unitArray[that.data.sId].objectId;
           app.sUnit = that.data.unitArray[that.data.sId];
