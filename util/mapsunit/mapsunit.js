@@ -84,7 +84,7 @@ Page({
               uM.iconPath=resJSON.unitType ? '/images/icon-personal.png' : '/images/icon-company.png';
               uMarkers.push(uM);
               badd = new AV.GeoPoint(resJSON.aGeoPoint);
-              resJSON.distance = badd.kilometersTo(cadd) * 1000;
+              resJSON.distance = parseInt(badd.kilometersTo(cadd) * 1000 +0.5);
               unitArray.push( resJSON );
             }
             that.data.controls[2].clickable = true;
@@ -126,7 +126,7 @@ Page({
        //that.prevPage.data.vData[that.reqNumber] = that.data.unitArray[that.data.sId].objectId;
      //   that.prevPage.data.reqData[that.reqNumber].e = that.data.unitArray[that.data.sId].uName;
         let reqset = {};
-        reqset['reqData['+that.reqNumber+'].e'] = that.prevPage.data.reqData[that.reqNumber];
+        reqset['reqData[' + that.reqNumber + '].e'] = that.data.unitArray[that.data.sId].uName;
         reqset['vData.' + that.prevPage.data.reqData[that.reqNumber].gname] = that.data.unitArray[that.data.sId].objectId;
         if (that.reqProIsSuperior) {
           app.uUnit.sUnit = that.data.unitArray[that.data.sId].objectId;
