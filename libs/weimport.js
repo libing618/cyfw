@@ -491,7 +491,7 @@ module.exports = {
                 (m, p) => m.then(v => AV.Promise.all([...v, p()])),
                 AV.Promise.resolve([])
               ).then(files => { resolve(files) } ).catch(console.error)
-            } else { resole([]) };
+            } else { resole(['no files save']) };
           }).then( (sFiles) => {
             if (that.data.targetId=='0'){
               let nApproval = AV.Object.extend('sengpi');        //创建审批流程
