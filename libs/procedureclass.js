@@ -2,7 +2,7 @@ module.exports = [
 {
   "pNo": 0,
   "pName": "单位名称和负责人",
-  "afamily": ['合作户','产品经理','生产厂家','运营商'],
+  "afamily": ['合作户','产品经理','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdclist:require('./apd1.js'), apdvalue:[0, 0, 0] },
     {gname:"nick", p:'单位简称',t:"h3" },

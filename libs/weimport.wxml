@@ -97,7 +97,7 @@
 <template name="i_arrsel">
   <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{alist}}" bindchange="i_arrsel">
   <view  class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__hd">{{p}}:{{c}}</view>
     <view class="weui-cell__bd" id="ds-{{n}}">{{alist[c]}}</view>
   </view>
   </picker>
@@ -137,7 +137,7 @@
         <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
-      <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入标题" />
+      <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入{{p}}" />
     </view>
   </view>
 </template>
@@ -155,7 +155,7 @@
         <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
-      <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入标题" />
+      <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入{{p}}" />
     </view>
   </view>
 </template>
@@ -294,8 +294,8 @@
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">
-      <view class="weui-cell_input" wx:for="{{c}}" wx:key="{{index}}">
-        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
+      <view wx:for="{{c}}" wx:key="{{index}}">
+        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{item}}----{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
       </view>
     </view>
     <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="i_industrytype" type="search" size="32"/></view>

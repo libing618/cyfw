@@ -51,8 +51,8 @@ function sFilePath(reqData,vData){
 }
 module.exports = {
   initData: function(that,aaData){
-    let vifData = typeof aaData == 'undefined';
-    if (!vifData) { that.data.vData = aaData };
+    let vifData = false//typeof aaData == 'undefined';
+  //  if (!vifData) { that.data.vData = aaData };
     var lName='0';
     for (let i=0;i<that.data.reqData.length;i++){
       switch (that.data.reqData[i].t){
@@ -488,10 +488,10 @@ module.exports = {
                 } else { that.data.vData[sFileStr.na[0]][sFileStr.na[1]].c= sfile.url(); }
               })
               ).reduce(
-                (m, p) => m.then(v => AV.Promise.all([...v, p()])),
-                AV.Promise.resolve([])
+                (m, p) => m.then(v => Promise.all([...v, p()])),
+                Promise.resolve([])
               ).then(files => { resolve(files) } ).catch(console.error)
-            } else { resole(['no files save']) };
+            } else { resolve(['no files save']) };
           }).then( (sFiles) => {
             if (that.data.targetId=='0'){
               let nApproval = AV.Object.extend('sengpi');        //创建审批流程

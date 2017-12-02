@@ -15,7 +15,8 @@ page{
   text-align: center;
 }
 .page__bd {
-    padding-bottom: 10rpx;
+  padding-top: 30rpx;
+  padding-bottom: 10rpx;
 }
 .page__bd_spacing {
     padding-left: 16rpx;
