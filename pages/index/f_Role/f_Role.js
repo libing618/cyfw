@@ -13,7 +13,7 @@ var uniteditPage = {
       "nick":'山西乐农汇',
       "title": '山西乐农汇',
       "desc":'山西乐农汇',
-	    aGeoPoint:{__type	: 'GeoPoint',latitude	: 37.79517436379926,ongitude	: 112.56480059271237},
+	    aGeoPoint:{__type	: 'GeoPoint',latitude	: 37.79517436379926,longitude	: 112.56480059271237},
 		  thumbnail	: 'http://store/wxfbbbc7b7f73ae7fb.o6zAJs6LaWhNUWov3f7onphfKFNI.e7a6715a5378b8351d8dc711b1bc071b.png',
       address: '山西省太原市小店区创意街N、P、Q座',
       sUnit	:	'599a5811a22b9df82fa82272',
@@ -43,7 +43,7 @@ var uniteditPage = {
           resPageData.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
           that.setData(resPageData) ;
         } else {
-          weImp.initData(that,app.aData[0][app.uUnit.objectId]);
+          weImp.initData(that,that.data.vData)//app.aData[0][app.uUnit.objectId]);
         };
       }).catch( console.error )
       that.data.reqData.forEach(upSuccess => {

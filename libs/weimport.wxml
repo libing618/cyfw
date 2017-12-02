@@ -1,5 +1,6 @@
 <import src="wedetail.wxml" />
 <wxs src="apdv.wxs" module="apdv" />
+<wxs src="apdc.wxs" module="apdclist" />
 <wxs src="assv.wxs" module="assv" />
 <wxs src="weimport.wxs" module="wewxs" />
 
@@ -97,7 +98,7 @@
 <template name="i_arrsel">
   <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{alist}}" bindchange="i_arrsel">
   <view  class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:{{c}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd" id="ds-{{n}}">{{alist[c]}}</view>
   </view>
   </picker>
@@ -295,14 +296,16 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">
       <view wx:for="{{c}}" wx:key="{{index}}">
-        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{item}}----{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
+        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
       </view>
     </view>
-    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="i_industrytype" type="search" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="i_industrytype" type="download" size="32"/></view>
   </view>
   <view hidden="{{inclose}}">
+  <view class="weui-cell">
     <view class="weui-cell__bd">{{apdv['s'+ apdclist[apdvalue[0]].st[apdvalue[1]].ct[apdvalue[2]]] }}</view>
-    <view class="weui-cell__ft"><icon id="su-{{n}}" bindtap="i_industrytype" type="success" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="su-{{n}}" data-sapdv="{{apdclist[apdvalue[0]].st[apdvalue[1]].ct[apdvalue[2]]}}" bindtap="i_industrytype" type="success" size="32"/></view>
+  </view>
     <picker-view  id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{apdvalue}}" bindchange="i_industrytype">
         <picker-view-column>
             <view wx:for="{{apdclist}}" wx:key="{{index}}" style="line-height: 36rpx">{{item.n}}</view>

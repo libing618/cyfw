@@ -51,8 +51,8 @@ function sFilePath(reqData,vData){
 }
 module.exports = {
   initData: function(that,aaData){
-    let vifData = false//typeof aaData == 'undefined';
-  //  if (!vifData) { that.data.vData = aaData };
+    let vifData = typeof aaData == 'undefined';
+    if (!vifData) { that.data.vData = aaData };
     var lName='0';
     for (let i=0;i<that.data.reqData.length;i++){
       switch (that.data.reqData[i].t){
@@ -149,12 +149,12 @@ module.exports = {
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     var id = e.currentTarget.id.substring(0,2);
     switch (id) {
-      case 'se' :                                   //按放大镜ICON打开选择框
+      case 'se' :                                   //按下载ICON打开选择框
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
         break;
       case 'su' :                                   //按确定ICON确认选择
         let apdv = that.data.reqData[n].apdvalue;
-        that.data.vData[that.data.reqData[n].gname].push(that.data.reqData[n].apdclist[apdv[0]].st[apdv[1]].ct[apdv[2]]);
+        that.data.vData[that.data.reqData[n].gname].push(Number(e.currentTarget.dataset.sapdv));
         that.setData( vdSet(that.data.reqData[n].gname,that.data.vData[that.data.reqData[n].gname]) )
         break;
       case 'pa' :
@@ -507,7 +507,7 @@ module.exports = {
               cUserName[app.globalData.user.objectId] = app.globalData.user.uName;
               let puRoles = approvalClass.puRoles;
               let suRoles = approvalClass.suRoles;
-              if (!app.uUnit.unitType && puRoles) {          //单位类型为企业且有本单位审批设置
+              if (app.uUnit.unitType>1 && puRoles) {          //单位类型为企业且有本单位审批设置
                 let pRolesNum = 0, pRoleUser;
                 for (let i=0;i<puRoles.length;i++){
                   pRoleUser = [];
@@ -557,7 +557,8 @@ module.exports = {
                   })
                 }
               }
-              let managers = cManagers.map((manger) => { return manger.map((mUser) => { return mUser } ) });
+              let managers = [];
+              cManagers.forEach((manger) => { manger.forEach((mUser) => { managers.push(mUser) } ) });
               fcApproval.set('cManagers', cManagers);             //处理人数组
               fcApproval.set('cUserId', managers);             //处理人数组
               fcApproval.set('cUserName', cUserName);             //处理人姓名JSON

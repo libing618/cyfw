@@ -4,7 +4,7 @@ module.exports = [
   "pName": "单位名称和负责人",
   "afamily": ['合作户','产品经理','生产厂家','电子商务企业'],
   "pSuccess": [
-    {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdclist:require('./apd1.js'), apdvalue:[0, 0, 0] },
+    {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdvalue:[0, 0, 0] },
     {gname:"nick", p:'单位简称',t:"h3" },
     {gname: "title", p: '单位简介', t: "p"},
     {gname: "desc", p: '单位描述', t: "p"},
