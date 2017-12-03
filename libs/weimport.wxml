@@ -503,7 +503,8 @@
 
 <template name="i_products">
   <view class="weui-cell">规格：{{p.shelves.uName}} 订单:{{p.orders.uName}}</view>
-  <switch class="weui-cell__hd"/>订{{p.quantity}}份
+  <switch class="weui-cell__hd"/>
+  <view class="weui-cell__bd">订{{p.quantity}}份</view>
   <view class="weui-cell__ft">出品包装号</view>
   <input name="{{c}}" value="{{p.quantity}}" />
 </template>
