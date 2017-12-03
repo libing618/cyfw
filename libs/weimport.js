@@ -414,7 +414,7 @@ module.exports = {
   fSubmit: function (e) {
     var that = this;
     let approvalID = parseInt(that.data.pNo);        //流程序号
-    var approvalClass = require('./procedureclass.js')[approvalID];       //流程定义和数据结构
+    var approvalClass = require('../model/procedureclass.js')[approvalID];       //流程定义和数据结构
     var subData = e.detail.value;
     if ( Array.isArray(that.data.vData.details) ){
       for (let i = 0; i < that.data.vData.details.length; i++) {

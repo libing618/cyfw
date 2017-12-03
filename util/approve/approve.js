@@ -64,7 +64,7 @@ Page({
           let sData = that.data.aValue.dObject;
           if (that.data.aValue.dProcedure == 0) {                    //是否单位审批流程
             sData.uState = rResultId;
-            AV.Cloud.run('setRole', { id: that.data.aValue.dObjectId, dObject: sData }).then(() => {
+            AV.Cloud.run('setRole', { id: that.data.aValue.unitId, dObject: sData }).then(() => {
               wx.showToast({ title: '设置单位信息', duration: 2000 });
               resolve(0);
             })

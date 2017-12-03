@@ -19,17 +19,17 @@ var uniteditPage = {
       let aList = require('../../../model/procedureclass.js')[0].afamily;
       that.data.reqData.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist:aList })
       wx.setNavigationBarTitle({  title: app.uUnit.nick+'的信息',  })
-      new AV.Query.doCloudQuery('select dObject,cInstance from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0').then((datas) => {
+      new AV.Query.doCloudQuery('select dObject,cInstance,dObjectId,cManagers from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0').then((datas) => {
         if (datas.results.length > 0) {
           var spdata = datas.results[0].toJSON();
-          var resPageData = {};
-          resPageData.targetId = spdata.objectId;
-          resPageData.dObjectId = spdata.dObjectId
-          resPageData.vData = spdata.dObject;
-          resPageData.reqData[8].e = app.sUnit.uName;
-          resPageData.unEdit = spdata.cInstance==0 ? false : true;        //页面在流程起点能提交和保存
-          resPageData.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
-          that.setData(resPageData) ;
+          that.data.targetId = spdata.objectId;
+          that.data.dObjectId = spdata.dObjectId
+          that.data.vData = spdata.dObject;
+          that.data.reqData[8].e = app.sUnit.uName;
+          that.data.unEdit = spdata.cInstance>0 && spdata.cInstance<spdata.cManagers.length;        //流程起点或已结束才能提交
+          that.data.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
+          app.aData[spdata.objectId] = spdata;
+          that.setData(that.data) ;
         } else {
           weImp.initData(that,that.data.vData)//app.aData[0][app.uUnit.objectId]);
         };

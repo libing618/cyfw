@@ -1,4 +1,5 @@
 //图片选取及简单编辑模块 util/ceimage/ceimage.js
+const { File } = require('../../libs/leancloud-storage.js');
 var iScale=1 , cScale ,ds;
 var ctx = wx.createCanvasContext('cei');
 var app = getApp();
@@ -84,15 +85,13 @@ Page({
       destWidth: 640,
       destHeight: 544,
       success: function(resTem){
-        wx.saveFile({
-          tempFilePath: resTem.tempFilePath,
-          success: function (res) {
-            let reqset = {};
-            reqset[that.reqField] = res.savedFilePath;
-            that.prevPage.setData(reqset);
-            wx.navigateBack({ delta: 1 });
-          }
-        })
+        new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
+        }).save().then(	resfile => {
+          let reqset = {};
+          reqset[that.reqField] = resfile.url();
+          that.prevPage.setData(reqset);
+          wx.navigateBack({ delta: 1 });
+        }).catch(console.error);
       }
     })
   }
