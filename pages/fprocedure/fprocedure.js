@@ -34,7 +34,7 @@ var sPage = {
         };
       }
     }).then(ops=>{
-      var pClass = require('../../libs/procedureclass.js')[ops.pNo];
+      var pClass = require('../../model/procedureclass.js')[ops.pNo];
       that.data.reqData = pClass.pSuccess;
       that.data.reqData.forEach(upSuccess => {
         let functionName = 'i_' + upSuccess.t;             //每个输入类型定义的字段长度大于2则存在对应处理过程
@@ -67,7 +67,7 @@ var sPage = {
     }).catch((error)=>{
       console.log(error)
       wx.showToast({ title: '数据传输有误，请联系客服！', duration: 2500 });
-   //   setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     });
   },
 

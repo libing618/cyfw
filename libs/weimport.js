@@ -568,7 +568,10 @@ module.exports = {
               var acl = new AV.ACL();      // 新建一个 ACL 实例
               acl.setRoleReadAccess(app.uUnit.objectId,true);
               acl.setRoleReadAccess(app.sUnit.objectId, true);
-              managers.forEach((mUser) => {acl.setWriteAccess(mUser, true); })
+              managers.forEach((mUser) => {
+                acl.setWriteAccess(mUser, true);
+                acl.setReadAccess(mUser, true);
+              })
               fcApproval.setACL(acl);         // 将 ACL 实例赋予fcApproval对象
               fcApproval.save().then((resTarget) => {
                 app.aData[resTarget.objectId] = fcApproval.toJSON();

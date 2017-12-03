@@ -2,6 +2,7 @@
 <wxs src="apdv.wxs" module="apdv" />
 <wxs src="apdc.wxs" module="apdclist" />
 <wxs src="assv.wxs" module="assv" />
+<wxs src="assc.wxs" module="assclist" />
 <wxs src="weimport.wxs" module="wewxs" />
 
 <template name="s_p">
@@ -296,7 +297,7 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">
       <view wx:for="{{c}}" wx:key="{{index}}">
-        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
+        <view class="weui-cell_link" style='display: inline-block;' id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
       </view>
     </view>
     <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="i_industrytype" type="download" size="32"/></view>
@@ -332,7 +333,7 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{ apdv['s'+ c ? c : wewxs.glist(apdclist,pdva,2)] }}</view>
     <view hidden="true"><input name="{{gname}}" value="{{c ? c : wewxs.glist(apdclist,pdva,2)}}"/></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_producttype" type="search" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_producttype" type="download" size="32"/>
   </view>
   <view hidden="{{inclose}}">
     <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{pdva}}" bindchange="i_producttype">
@@ -361,7 +362,7 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{assv['a'+ c ? c : assclist[ascvalue[0]].st[ascvalue[1]].ct[ascvalue[2]] ]}} </view>
     <view hidden="true"><input name="{{gname}}" value="{{c ? c : assclist[ascvalue[0]].st[ascvalue[1]].ct[ascvalue[2]]}}" /></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_assettype" type="search" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_assettype" type="download" size="32"/>
   </view>
   <view hidden="{{inclose}}">
     <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{ascvalue}}" bindchange="i_assettype">

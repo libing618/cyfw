@@ -15,10 +15,10 @@ Page({
   },
 
   onLoad:function(options){
-    let pClass = require('../../../libs/procedureclass.js');
+    let pClass = require('../../../model/procedureclass.js');
     pClass.forEach( procedure=> { this.data.pClassName.push(procedure.pName)} )
     var pLength = pClass.length;
-    var ats = [new Array(pLength), new Array(pLength), new Array(pLength)];    
+    var ats = [new Array(pLength), new Array(pLength), new Array(pLength)];
     for (let j=0;j<pLength;j++){
       if (app.mData.procedures[j]) {
         app.mData.procedures[j].forEach( mpoId=>{

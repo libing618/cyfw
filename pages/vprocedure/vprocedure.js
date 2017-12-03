@@ -14,7 +14,7 @@ Page({
     let artid = Number(options.artId);
     if (!isNaN(pno) && isNaN(artid)) {             //检查参数
       let apNo = 'prdct'+options.pNo;
-      let pClass = require('../../libs/procedureclass.js')[pno];
+      let pClass = require('../../model/procedureclass.js')[pno];
       that.data.reqData=pClass.pSuccess.map( rField=>{
         switch (rField.t){
           case 'sproduct' :
@@ -47,7 +47,7 @@ Page({
         break;
       case 'fTemplate' :
         if (typeof that.data.viewData.afamily=='number') {url += '&artId='+that.data.viewData.afamily};
-        let proName=require('../libs/procedureclass.js')[that.data.pNo].pModle;
+        let proName=require('../model/procedureclass.js')[that.data.pNo].pModle;
         app.aData[that.data.pNo][proName] = that.data.viewData;
         break;
     };

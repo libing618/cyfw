@@ -39,7 +39,7 @@ Page ({
 
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
-    let oClass = require('../../libs/operationclass.js')[1];
+    let oClass = require('../../model/operationclass.js')[1];
     if (weutil.checkRols(app.globalData.user.userRolName,oClass.ouRoles[ops.oState])){  //检查用户操作权限
       that.setData({
         oState: ops.oState,
