@@ -88,7 +88,8 @@ module.exports = {
           that.data.reqData[i].ad = app.aData[3];
           break;
         case 'producttype' :
-          that.data.reqData[i].apdclist = app.uUnit.indType;
+          that.data.reqData[i].indlist = app.uUnit.indType;
+          if (vifData) { that.data.vData[that.data.reqData[i].gname] = app.uUnit.indType[0] };
           break;
         case 'industrytype':
           if (vifData) {that.data.vData[that.data.reqData[i].gname] = [] };
@@ -179,7 +180,6 @@ module.exports = {
     switch (id) {
       case 'ac' :
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
-        that.setData( vdSet(that.data.reqData[n].gname,'') );
         break;
       case 'pa' :
         let aval = e.detail.value;
@@ -187,6 +187,7 @@ module.exports = {
           if (that.data.reqData[n].ascvalue[1] != aval[1]){ aval[2] = 0 ; }
         } else { aval[1] = 0 ; aval[2] = 0 ; }
         that.setData(rdSet(n, 'ascvalue',aval));
+        that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.sassv)));
         break;
     }
   },
@@ -198,14 +199,14 @@ module.exports = {
     switch (id) {
       case 'ac' :
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
-        that.setData( vdSet(that.data.reqData[n].gname,'') )
         break;
       case 'pa' :
         let aval = e.detail.value;
         if (that.data.reqData[n].pdva[0] == aval[0]) {
           if (that.data.reqData[n].pdva[1] != aval[1]){ aval[2] = 0 ; }
-        } else { aval[1] = 0 ; aval[2] = 0 ; }
+        } else { aval[1] = 0; aval[2] = 0; }
         that.setData(rdSet(n, 'pdva',aval));
+        that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.spdva) ) );
         break;
     }
   },
