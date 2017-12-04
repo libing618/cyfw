@@ -22,7 +22,6 @@ var uniteditPage = {
       new AV.Query.doCloudQuery('select dObject,cInstance,dObjectId,cManagers from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0').then((datas) => {
         if (datas.results.length > 0) {
           var spdata = datas.results[0].toJSON();
-          that.data.targetId = spdata.objectId;
           that.data.dObjectId = spdata.dObjectId
           that.data.vData = spdata.dObject;
           that.data.reqData[8].e = app.sUnit.uName;
