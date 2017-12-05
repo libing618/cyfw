@@ -22,13 +22,16 @@ module.exports={
       [{"tourl": "./signup/signup",
       "mIcon": "../../images/index.png",
       "mName": "我的信息"}],
-      [{"tourl": "./product/product",
+      [{
+      "tourl": "/pages/fprocedure/fprocedure?pNo=3&artId=0",
       "mIcon": "../../images/iconfont-produce.png",
       "mName": "新增产品"}],
-      [{"tourl": "../artedit/artedit?artId=3",
+      [{
+      "tourl": "/pages/fprocedure/fprocedure?pNo=3&artId=3",
       "mIcon": "../../images/iconfont-edit.png",
       "mName": "宣传文章"}],
-      [{"tourl": "/util/artlist/artlist?artId=4",
+      [{
+      "tourl": "pages/lprocedures/lprocedures?pNo=1&artId=7",
       "mIcon": "../../images/iconfont-abook.png",
       "mName": "常见问题"}]
       ],

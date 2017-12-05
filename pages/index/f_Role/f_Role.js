@@ -19,20 +19,26 @@ var uniteditPage = {
       let aList = require('../../../model/procedureclass.js')[0].afamily;
       that.data.reqData.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist:aList })
       wx.setNavigationBarTitle({  title: app.uUnit.nick+'的信息',  })
-      new AV.Query.doCloudQuery('select dObject,cInstance,dObjectId,cManagers from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0').then((datas) => {
-        if (datas.results.length > 0) {
-          var spdata = datas.results[0].toJSON();
-          that.data.dObjectId = spdata.dObjectId
-          that.data.vData = spdata.dObject;
-          that.data.reqData[8].e = app.sUnit.uName;
-          that.data.unEdit = spdata.cInstance>0 && spdata.cInstance<spdata.cManagers.length;        //流程起点或已结束才能提交
-          that.data.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
-          app.aData[spdata.objectId] = spdata;
-          that.setData(that.data) ;
-        } else {
-          weImp.initData(that,that.data.vData)//app.aData[0][app.uUnit.objectId]);
-        };
-      }).catch( console.error )
+  //    new AV.Query.doCloudQuery('select dObject,cInstance,dObjectId,cManagers from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0')
+      new AV.Query('sengpi')
+        .equalTo('unitId', app.uUnit.objectId)
+        .equalTo('dProcedure',0)
+        .select(['dObject','cInstance', 'dObjectId', 'cManagers'])
+        .descending('createdAt')
+        .first().then((rdata) => {
+          if (rdata) {
+            var spdata = rdata.toJSON();
+            that.data.dObjectId = spdata.dObjectId
+            that.data.vData = spdata.dObject;
+            that.data.reqData[8].e = app.sUnit.uName;
+            that.data.unEdit = spdata.cInstance>0 && spdata.cInstance<spdata.cManagers.length;        //流程起点或已结束才能提交
+            that.data.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
+            app.aData[spdata.objectId] = spdata;
+            that.setData(that.data) ;
+          } else {
+            weImp.initData(that,that.data.vData)//app.aData[0][app.uUnit.objectId]);
+          };
+        }).catch( console.error )
       that.data.reqData.forEach(upSuccess => {
         let functionName = 'i_' + upSuccess.t;             //每个输入类型定义的字段长度大于2则存在对应处理过程
         if (functionName.length > 4) { that[functionName] = weImp[functionName] };
