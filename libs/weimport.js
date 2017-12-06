@@ -577,11 +577,12 @@ module.exports = {
               fcApproval.save().then((resTarget) => {
                 app.aData[resTarget.objectId] = fcApproval.toJSON();
                 wx.showToast({title: '流程已提交,请查询审批结果。',duration:2000}) // 保存成功
-              })
+                setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+              }).catch(wx.showToast({ title: '提交保存失败,请重试。', duration: 2000 })) // 保存失败
             } else {
               app.aData[that.data.targetId].dObject = that.data.vData;
+              wx.navigateBack({ delta: 1 });
             }
-            wx.navigateBack({delta:1});
           }).catch( console.error );
         }
       break;

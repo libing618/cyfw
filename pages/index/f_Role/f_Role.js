@@ -7,7 +7,7 @@ var uniteditPage = {
     pNo: 0,                       //流程的序号
     targetId: '0',              //流程申请表的ID
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
-    vData: require('../../../test/irole.js'),                 //编辑值的对象
+    vData: {},                 //编辑值的对象
     unEdit: false,           //新建信息页面,可以提交和保存
     reqData: []
   },
@@ -19,7 +19,6 @@ var uniteditPage = {
       let aList = require('../../../model/procedureclass.js')[0].afamily;
       that.data.reqData.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist:aList })
       wx.setNavigationBarTitle({  title: app.uUnit.nick+'的信息',  })
-  //    new AV.Query.doCloudQuery('select dObject,cInstance,dObjectId,cManagers from sengpi where unitId="' + app.uUnit.objectId + '" and dProcedure=0')
       new AV.Query('sengpi')
         .equalTo('unitId', app.uUnit.objectId)
         .equalTo('dProcedure',0)
