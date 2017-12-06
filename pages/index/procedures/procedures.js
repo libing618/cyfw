@@ -22,7 +22,7 @@ Page({
     for (let j=0;j<pLength;j++){
       if (app.mData.procedures[j]) {
         app.mData.procedures[j].forEach( mpoId=>{
-          if (!ats[app.procedures[mpoId].apState][j]) { ats[app.procedures[mpoId].apState][j] = [] };
+          if (typeof ats[app.procedures[mpoId].apState][j] == 'undefined') { ats[app.procedures[mpoId].apState][j] = [] };
           ats[app.procdures[mpoId].apState][j].push(mpoId);
         })
       }

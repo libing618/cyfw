@@ -45,6 +45,9 @@ page{
     text-align: left;
     font-size: 28rpx;
 }
+.kind-list{
+  background-color: #F0F0F0;
+}
 .kind-list__item {
   margin: 10px 0;
   background-color: #FFFFFF;

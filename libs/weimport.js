@@ -142,7 +142,7 @@ module.exports = {
 
   i_arrsel: function (e) {                         //选择类型
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
-    this.setData( vdSet(this.data.reqData[n].gname,e.detail.value) )
+    this.setData( vdSet(this.data.reqData[n].gname,Number(e.detail.value)) )
   },
 
   i_industrytype: function (e) {                         //选择行业类型
