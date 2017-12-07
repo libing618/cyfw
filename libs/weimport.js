@@ -186,8 +186,9 @@ module.exports = {
         if (that.data.reqData[n].ascvalue[0] == aval[0]) {
           if (that.data.reqData[n].ascvalue[1] != aval[1]){ aval[2] = 0 ; }
         } else { aval[1] = 0 ; aval[2] = 0 ; }
-        that.setData(rdSet(n, 'ascvalue',aval));
-        that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.sassv)));
+        that.setData(rdSet(n, 'ascvalue',aval),()=>
+          {that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.sassv)));}
+        );
         break;
     }
   },
@@ -199,6 +200,7 @@ module.exports = {
     switch (id) {
       case 'ac' :
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
+        if (!that.data.reqData[n].inclose) {that.setData(vdSet(that.data.reqData[n].gname,0 ))};
         break;
       case 'pa' :
         let aval = e.detail.value;
@@ -206,7 +208,6 @@ module.exports = {
           if (that.data.reqData[n].pdva[1] != aval[1]){ aval[2] = 0 ; }
         } else { aval[1] = 0; aval[2] = 0; }
         that.setData(rdSet(n, 'pdva',aval));
-        that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.spdva) ) );
         break;
     }
   },

@@ -103,7 +103,6 @@
     <view class="weui-cell__bd" id="ds-{{n}}">{{alist[c]}}</view>
   </view>
   </picker>
-  <!-- <view hidden="true"><input name="{{gname}}" type="number" value="{{c}}"/></view> -->
 </template>
 
 <template name="s_h1">
@@ -331,12 +330,12 @@
 <template name="i_producttype">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd">{{ apdv['s'+ c] }}</view>
-    <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
+    <view class="weui-cell__bd">{{ apdv['s'+ (c ? c : wewxs.glist(indlist,pdva,2))] }}</view>
+    <view hidden="true"><input name="{{gname}}" value="{{c ? c : wewxs.glist(indlist,pdva,2)}}"/></view>
     <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_producttype" type="download" size="32"/>
   </view>
   <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" data-spdva="{{wewxs.glist(indlist,pdva,2)}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{pdva}}" bindchange="i_producttype">
+    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{pdva}}" bindchange="i_producttype">
         <picker-view-column>
             <view wx:for="{{indlist}}" wx:key="{{index}}" style="line-height: 36rpx">{{apdv['s'+item]}}</view>
         </picker-view-column>
