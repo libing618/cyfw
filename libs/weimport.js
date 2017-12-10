@@ -253,9 +253,8 @@ module.exports = {
       count: 9,                                     // 最多可以选择的图片张数，默认9
       sizeType: ['compressed'],         // original 原图，compressed 压缩图，默认二者都有
       sourceType: ['album', 'camera'],             // album 从相册选图，camera 使用相机，默认二者都有
-      success: function (restem) {                     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-        let tfPaths = restem.tempFilePaths.map( tfPath=>{ return {c:tfPath}})
-        that.setData( vdSet(that.data.reqData[n].gname,tfPaths) );
+      success: function (restem) {                     // 返回选定照片的本地文件路径列表
+        that.setData(vdSet(that.data.reqData[n].gname, restem.tempFilePaths) );
       },
       fail: function () { wx.showToast({ title: '选取照片失败！' }) }
     })
