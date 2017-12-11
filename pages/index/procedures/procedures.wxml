@@ -1,10 +1,9 @@
 <import src="../../../libs/weimport.wxml"/>
 <import src="../../../libs/wedetail.wxml"/>
 <view class="page">
-
-    <view class="weui-tab">
-      <template is="tabsCk" data="{{ fLength , pageCk , tabs ,wWidth }}"/>
-    </view>
+  <view class="weui-tab">
+    <template is="tabsCk" data="{{ fLength , pageCk , tabs ,wWidth }}"/>
+  </view>
 
   <view class="page__bd weui-tab__panel">
     <block wx:for="{{atotal[pageCk]}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="i">

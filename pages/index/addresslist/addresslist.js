@@ -1,10 +1,12 @@
 // pages/customer/addresslist/addresslist.js
+const app=getApp();
 Page({
   data:{
-    reqData:{}
+    vData:[]
   },
   onLoad:function(options){
-    // 页面初始化 options为页面跳转所带来的参数
+    this.setData({vData:[app.uUnit,app.sUnit]});
+    this.accheck = require('../../../util/util.js').accheck;
   },
   onReady:function(){
     // 页面渲染完成
