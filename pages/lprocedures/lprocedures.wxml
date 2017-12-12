@@ -6,4 +6,9 @@
   <view class="page__bd">
     <template is="tabPanel" data="{{ tPage: fLength ? mPage[pageCk] : mPage , pageData , pNo }}"/>
   </view>
+  <view class="page__ft">
+    <navigator url="/pages/fprocedure/fprocedure?pNo={{pNo}}&artId={{objectId}}">
+      <button class="weui-btn" type="primary" size="default">新建</button>
+    </navigator>
+  </view>
 </view>
