@@ -295,7 +295,7 @@ module.exports = {
       maxDuration: 60,
       camera: ['front', 'back'],
       success: function (res) {
-        that.setData(vdSet(that.data.reqData[n].gname, res.tempFilePaths[0]));
+        that.setData(vdSet(that.data.reqData[n].gname, res.tempFilePath));
       },
       fail: function () { wx.showToast({ title: '选取视频失败！' }) }
     })
