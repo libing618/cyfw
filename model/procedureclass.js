@@ -80,7 +80,7 @@ module.exports = [
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
     {gname: "aGeoPoint", p: '地理位置', t: "chooseAd" },
-    {gname: "address", p: '详细地址', t: "ed" },
+    {gname: "address", p: '地址', t: "ed" },
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
     {gname: "PARM_attention", p:'注意事项', t:"h4" },

@@ -62,18 +62,22 @@
 
 <template name="s_pics">
   <view class="swiper_box">
-    <block wx:for="{{c}}" wx:key="{{index}}">
-      <image src="{{item.c}}" class="swimage"></image>
-    </block>
+    <swiper class="swiper_box" indicator-dots="{{false}}" autoplay="{{true}}">
+      <block wx:for="{{c}}" wx:key="{{index}}">
+        <image src="{{item}}" class="swimage"></image>
+      </block>
+    </swiper>
   </view>
 </template>
 
 <template name="i_pics">
   <view class="swiper_box" id="ac-{{n}}" bindtap="i_pics">
     <view class="swtext">{{p}}:</view>
-    <block wx:for="{{c}}" wx:key="{{index}}">
-      <image src="{{item.c}}" class="swimage"></image>
-    </block>
+    <swiper class="swiper_box" indicator-dots="{{false}}" autoplay="{{true}}">
+      <block wx:for="{{c}}" wx:key="{{index}}">
+        <image src="{{item}}" class="swimage"></image>
+      </block>
+    </swiper>
   </view>
 </template>
 
