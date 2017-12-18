@@ -4,32 +4,24 @@ Page ({
   data: {
     pNo: 2,                       //流程的序号
     mPage: [],                 //页面管理数组
-    dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
+    dObjectId: 0,             //已建数据的ID作为修改标志，0则为新建
     pageData: []
   },
 
   onLoad: function (ops) {        //传入参数为pNo,不得为空
     var that = this;
     let pno = Number(ops.pNo);
+    let artid = Number(ops.artId);
     if (! isNaN(pno)) {
-      weutil.pName(pno);
       that.data.pNo = pno;
-      if (app.aData[pno].length>0) {
-        that.data.mPage = app.mData[prdct+pno];
-        that.data.pageData = app.aData[pno];
-      }
+      if(!isNaN(artid)) {that.data.dObjectId = artid};
+      that.data.pageData = app.aData[pno];
+      that.data.mPage = isNaN(artid) ? app.mData['prdct'+pno] : app.mData['prdct'+pno][artid];
       that.setData( that.data )
     } else {
       wx.showToast({ title: '数据传输有误，请联系客服！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
-  },
-
-  tabClick: function (e) {                                //点击tab
-    app.mData[pCk+this.data.pNo] = Number(e.currentTarget.id)
-    this.setData({
-      pageCk: app.mData[pCk+this.data.pNo]                //点击序号切换
-    });
   },
 
   onReady: function(){
