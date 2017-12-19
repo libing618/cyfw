@@ -27,7 +27,7 @@ module.exports = [
 {
   "pNo": 1,
   "pName": "文章",
-  "afamily": ['信息共享','品牌建设','政策扶持','单位宣传','帮助问答'],
+  "afamily": ['商圈人脉','品牌建设','政策扶持','产品宣传','帮助问答','我的推介'],
   "pSuccess": [
     {gname:"uName", t:"h1", p:"名称" },
     {gname:"title",t:"h2", p:"标题" },
