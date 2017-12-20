@@ -14,7 +14,7 @@ Page({
   },
   onLoad:function(options){
     var that = this;
-    if (app.globalData.user.userRolName=='admin' && app.uUnit.seriaNumber>=0) {
+    if (app.globalData.user.userRolName=='admin' && app.uUnit.afamily>0) {
       new AV.Query('manufactor').equalTo('unitId',app.uUnit.objectId).find(manufactors=>{
         if (manufactors){
           let mfData = [];
@@ -49,9 +49,10 @@ Page({
         newmf.set('unitId',app.uUnit.objectId);
         newmf.set('bState',true);
         newmf.set('uName',app.uUnit.uName);
+        newmf.set('adminPhone', app.globalData.user.mobilePhoneNumber);
         newmf.set('nick', app.uUnit.nick);
         newmf.set('title', app.uUnit.title);
-        newmf.set('seriaNumber', app.uUnit.seriaNumber);
+        newmf.set('afamily', app.uUnit.afamily);
         newmf.set('desc', app.uUnit.desc);
         newmf.set('thumbnail', app.uUnit.thumbnail);
         newmf.set('aGeoPoint', app.uUnit.aGeoPoint);

@@ -2,7 +2,8 @@
 const app=getApp();
 Page({
   data:{
-    vData:[]
+    vData:[],
+    achecked: -1
   },
   onLoad:function(options){
     this.setData({vData:[app.uUnit,app.sUnit]});
