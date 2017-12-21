@@ -38,6 +38,6 @@
         </view>
       </view>
     </view>
-    <button class="weui-btn" formType="submit" size="mini">确定</button>
+    <button class="weui-btn" formType="submit" type='default' size="default">确定</button>
   </form>
 </view>

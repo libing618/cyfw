@@ -255,7 +255,7 @@
 <template name="i_eDetail">
   <view class="weui-article">
     <block wx:for="{{c}}" wx:key="{{index}}">
-      <view style="background-color:{{selectd==index ? '#999999' : '#F8F8F8'}};" class="weui-article__{{item.t}}" id="ad-{{index}}" catchlongtap="i_eDetail">
+      <view style="background-color:{{selectd==index ? '#999999' : '#F8F8F8'}};" class="weui-article__{{item.t}}" id="ad-{{index}}" catchlongpress="i_eDetail">
         <view wx:if="{{item.t<0}}">
           <template is="{{item.t}}" data="{{...item}}"></template>
           <input hidden="true" name="adc{{index}}" value="{{item.c}}"/>

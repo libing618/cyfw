@@ -58,8 +58,9 @@ Page({
 
   i_address: function (e) {
     var that = this;
-    let reqField = that.reqField;
-    that.prevPage.setData({ reqField: e.detail.value.address1 + e.detail.value.address2 });
+    let reqField = {};
+    reqField[that.reqField] = e.detail.value.address1 + e.detail.value.address2;
+    that.prevPage.setData( reqField );
     wx.navigateBack({ delta: 1 })                // 回退前 delta(默认为1) 页面
   }
 })
