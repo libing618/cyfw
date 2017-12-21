@@ -1,6 +1,6 @@
 const AV = require('./leancloud-storage.js');
 var app = getApp();
-const nt = ['-1','-2','-6'];
+const nt = ['-1','-6'];
 const mdt = ['-2', '-3', '-4', '-6']
 const mdtn = ['pic','thumb','vidio','file']
 const vdSet=function(sname,sVal){
@@ -398,9 +398,6 @@ module.exports = {
         switch (sIndex){
           case '-1':
             nts = '/util/productsct/productsct';
-            break;
-          case '-2':
-            nts = '/util/ceimage/ceimage';
             break;
           case '-6':
             nts = '/util/filesct/filesct';
