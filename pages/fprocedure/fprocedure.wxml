@@ -1,6 +1,5 @@
 <import src="../../libs/weimport.wxml"/>
 <view class="page" id="approval-{{pNo}}">
-
   <form bindsubmit="fSubmit">
     <view class="page__bd_spacing" id="{{targetId}}">
       <block wx:for="{{reqData}}" wx:key="index">

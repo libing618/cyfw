@@ -63,7 +63,7 @@ var sPage = {
           break;
       }
       aaData = typeof aaData == 'undefined' ? app.aData[ops.pNo][that.data.dObjectId] : aaData;
-      weImp.initData(that,aaData);
+      weImp.initData(that,require('../../test/cp.js'));
     }).catch((error)=>{
       console.log(error)
       wx.showToast({ title: '数据传输有误，请联系客服！', duration: 2500 });
