@@ -293,7 +293,7 @@ module.exports = {
     wx.chooseVideo({
       sourceType: ['album', 'camera'],
       maxDuration: 60,
-      camera: ['front', 'back'],
+      camera: 'back',
       success: function (res) {
         that.setData(vdSet(that.data.reqData[n].gname, res.tempFilePath));
       },
