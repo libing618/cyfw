@@ -28,21 +28,21 @@ function sFilePath(reqData,vData){
     switch (nField.t) {
       case 'eDetail' :
         for (let a = 0; a < vData[nField.gname].length; a++) {
-          if (mdt.indexOf(vData[nField.gname][a].t) >= 0 && vData[nField.gname][a].c.substring(0, 4) != 'http') {     //该字段为媒体且不是网络文件
-            sFileArr.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c });
+          if (mdt.indexOf(vData[nField.gname][a].t) >= 0 && vData[nField.gname][a].c.substring(7, 3) != 'tmp') {     //该字段为媒体且不是网络文件
+            filePaths.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c });
           }
         }
         break;
       case 'pics' :
-        for (let b = 0; b < vData[nField.gname].c.length; b++) {
-          if (vData[nField.gname][b].c.substring(0, 4) != 'http') {
-            sFileArr.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c });
+        for (let b = 0; b < vData[nField.gname].length; b++) {
+          if (vData[nField.gname][b].substring(7,3) != 'tmp') {
+            filePaths.push({ na: [nField.gname, b], fPath: vData[nField.gname][b] });
           }
         }
         break;
       default :
-        if (mdtn.indexOf(nField.t) >= 0 && vData[nField.gname].substring(0, 4) != 'http') {     //该字段为媒体且不是网络文件
-          sFileArr.push({ na: [nField.gname, -1], fPath: vData[nField.gname] });
+        if (mdtn.indexOf(nField.t) >= 0 && vData[nField.gname].substring(7,3) != 'tmp') {     //该字段为媒体且不是网络文件
+          filePaths.push({ na: [nField.gname, -1], fPath: vData[nField.gname] });
         }
         break;
     }
