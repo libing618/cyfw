@@ -1,8 +1,6 @@
 const AV = require('./leancloud-storage.js');
 var app = getApp();
 const nt = ['-1','-6'];
-const mdt = ['-2', '-3', '-4', '-6']
-const mdtn = ['pic','thumb','vidio','file']
 const vdSet=function(sname,sVal){
   let reqset = {};
   reqset['vData.'+sname] = sVal;
@@ -22,32 +20,53 @@ function getdate(idate){
   var day = rdate.getDate();
   return year+'-'+( month<10 ? '0'+month : month)+'-'+( day<10 ? '0'+day : day)
 }
-function sFilePath(reqData,vData){
+function sFilePath(reqData,vData){         //本地媒体文件归类
   let filePaths = [];
+  const mdtn = ['pic','thumb','vidio','file'];
+  const mdt = ['-2', '-3', '-4', '-6'];
   reqData.forEach(nField => {
     switch (nField.t) {
       case 'eDetail' :
         for (let a = 0; a < vData[nField.gname].length; a++) {
-          if (mdt.indexOf(vData[nField.gname][a].t) >= 0 && vData[nField.gname][a].c.substring(7, 3) != 'tmp') {     //该字段为媒体且不是网络文件
-            filePaths.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c });
+          if (mdt.indexOf(vData[nField.gname][a].t) >= 0) {     //该字段正文的内容为媒体
+            filePaths.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c, fType:2, fn:2 });
           }
         }
         break;
       case 'pics' :
-        for (let b = 0; b < vData[nField.gname].length; b++) {
-          if (vData[nField.gname][b].substring(7,3) != 'tmp') {
-            filePaths.push({ na: [nField.gname, b], fPath: vData[nField.gname][b] });
-          }
+        for (let b = 0; b < vData[nField.gname].length; b++) {     //该字段为图片组
+            filePaths.push({ na: [nField.gname, b], fPath: vData[nField.gname][b], fType:2, fn:1 });
         }
         break;
       default :
-        if (mdtn.indexOf(nField.t) >= 0 && vData[nField.gname].substring(7,3) != 'tmp') {     //该字段为媒体且不是网络文件
-          filePaths.push({ na: [nField.gname, -1], fPath: vData[nField.gname] });
+        if (mdtn.indexOf(nField.t) >= 0) {            //该字段为媒体
+          filePaths.push({ na: [nField.gname, -1], fPath: vData[nField.gname], fType:2, fn:0 });
         }
         break;
     }
+    wx.getSaveFileList({
+      success: function(res){
+        let saveFileList = res.fileList.map( fList=>{ return fList.filePath });
+        let saveFiles=filePaths.map( sfPath=>{
+          return new Promise((resolve, reject) => {
+            if (saveFileList.indexof(fPath)>=0){
+              sfPath.fType = 1;
+              resolve(sfPath);
+            } else {
+              wx.getFileInfo({
+                filePath: sfPath.fPath,
+                success: function(){
+                  sfPath.fType = 0;
+                  resolve(sfPath);
+                }
+              })
+            }
+          }
+        });
+        Promise.all(saveFiles).then(sFileList=>{ return sFileList })
+      },
+    fail: function() { return [] }
   })
-  return filePaths;
 }
 module.exports = {
   initData: function(that,aaData){
@@ -446,51 +465,55 @@ module.exports = {
         break;
       case 'fStorage':
         if (that.data.targetId=='0') {           //编辑内容不提交流程审批,在本机保存
-          let tFileArr = sFilePath(that.data.reqData,that.data.vData);
-          if (tFileArr.length > 0) {
-            let sFileArr = tFileArr.map( tFileStr => {
-              return new Promise((resolve, reject) => {
-                wx.getFileInfo({
-                  filePath: tFileStr.fPath,
-                  success:function(res1) {
-                    if (res1.size==0) {
-                      wx.saveFile({
-                        tempFilePath: tFileStr.fPath,
-                        success: function(res2) {
-                          if (tFileStr.na[1] == -1) {
-                            that.data.vData[tFileStr.na[0]] = res2.savedFilePath;
-                          } else { that.data.vData[tFileStr.na[0]][tFileStr.na[1]].c = res2.savedFilePath; }
-                          resolve(res2.savedFilePath)
-                        }
-                      })
-                    } else { resolve(res1.filePath)}
-                  }
+          sFilePath(that.data.reqData,that.data.vData).then(fileArr=>{
+            let tFileArr = fileArr.map(tFile=>{ if (tFile.fType==0){return fFile} });
+            if (tFileArr.length > 0) {
+              let sFileArr = tFileArr.map( tFileStr => {
+                return new Promise((resolve, reject) => {
+                  wx.saveFile({
+                    tempFilePath: tFileStr.fPath,
+                    success: function(res2) {
+                      if (tFileStr.na[1] == -1) {
+                        that.data.vData[tFileStr.na[0]] = res2.savedFilePath;
+                      } else { that.data.vData[tFileStr.na[0]][tFileStr.na[1]].c = res2.savedFilePath; }
+                      resolve(res2.savedFilePath)
+                    }
+                  })
                 })
-              })
-            });
-            Promise.all(sFileArr).then( ()=>{
-              app.aData[that.data.pNo][that.data.dObjectId] = that.data.vData;
-            }).catch(console.error);
-          } else { app.aData[that.data.pNo][that.data.dObjectId] = that.data.vData;}
+              });
+              Promise.all(sFileArr).then( ()=>{
+                app.aData[that.data.pNo][that.data.dObjectId] = that.data.vData;
+              }).catch(console.error);
+            } else { app.aData[that.data.pNo][that.data.dObjectId] = that.data.vData;}
+          });
         }
         break;
       case 'fSave' :
         if (emptyField) {
           wx.showToast({ title: emptyField+'等项目未输入，请检查。',duration: 7000 })
         } else {
-          let sFileArr = sFilePath(that.data.reqData, that.data.vData);
-          return new Promise((resolve, reject) => {
+          sFilePath(that.data.reqData, that.data.vData).then(sFileArr=>{
             if (sFileArr.length>0){
               sFileArr.map(sFileStr => () => new AV.File('filename', {blob: {uri: sFileStr.fPath,},}).save().then(sfile =>{
-                wx.removeSavedFile({ filePath: sFileStr.fPath })      //删除本机保存的文件
-                if (sFileStr.na[1]==-1) { that.data.vData[sFileStr.na[0]]= sfile.url();
-                } else { that.data.vData[sFileStr.na[0]][sFileStr.na[1]].c= sfile.url(); }
+                if (sFileStr.fType==1){wx.removeSavedFile({ filePath: sFileStr.fPath })};      //删除本机保存的文件
+                switch (sFileStr.fn) {
+                  case 0:
+                    that.data.vData[sFileStr.na[0]]= sfile.url();
+                    break;
+                  case 1:
+                    that.data.vData[sFileStr.na[0]][sFileStr.na[1]] = sfile.url();
+                    break;
+                  case 2:
+                    that.data.vData[sFileStr.na[0]][sFileStr.na[1]].c = sfile.url();
+                    break;
+                  default:
+                    break;
+                }
               })
               ).reduce(
-                (m, p) => m.then(v => Promise.all([...v, p()])),
-                Promise.resolve([])
+                (m, p) => m.then(v => Promise.all([...v, p()]))
               ).then(files => { resolve(files) } ).catch(console.error)
-            } else { resolve(['no files save']) };
+            } else { return ['no files save'] };
           }).then( (sFiles) => {
             if (that.data.targetId=='0'){
               let nApproval = AV.Object.extend('sengpi');        //创建审批流程
