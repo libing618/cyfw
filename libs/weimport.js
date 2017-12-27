@@ -19,55 +19,8 @@ function getdate(idate){
   var month = rdate.getMonth() + 1;
   var day = rdate.getDate();
   return year+'-'+( month<10 ? '0'+month : month)+'-'+( day<10 ? '0'+day : day)
-}
-function sFilePath(reqData,vData){         //本地媒体文件归类
-  let filePaths = [];
-  const mdtn = ['pic','thumb','vidio','file'];
-  const mdt = ['-2', '-3', '-4', '-6'];
-  reqData.forEach(nField => {
-    switch (nField.t) {
-      case 'eDetail' :
-        for (let a = 0; a < vData[nField.gname].length; a++) {
-          if (mdt.indexOf(vData[nField.gname][a].t) >= 0) {     //该字段正文的内容为媒体
-            filePaths.push({ na: [nField.gname, a], fPath: vData[nField.gname][a].c, fType:2, fn:2 });
-          }
-        }
-        break;
-      case 'pics' :
-        for (let b = 0; b < vData[nField.gname].length; b++) {     //该字段为图片组
-            filePaths.push({ na: [nField.gname, b], fPath: vData[nField.gname][b], fType:2, fn:1 });
-        }
-        break;
-      default :
-        if (mdtn.indexOf(nField.t) >= 0) {            //该字段为媒体
-          filePaths.push({ na: [nField.gname, -1], fPath: vData[nField.gname], fType:2, fn:0 });
-        }
-        break;
-    }
-    wx.getSaveFileList({
-      success: function(res){
-        let saveFileList = res.fileList.map( fList=>{ return fList.filePath });
-        let saveFiles=filePaths.map( sfPath=>{
-          return new Promise((resolve, reject) => {
-            if (saveFileList.indexof(fPath)>=0){
-              sfPath.fType = 1;
-              resolve(sfPath);
-            } else {
-              wx.getFileInfo({
-                filePath: sfPath.fPath,
-                success: function(){
-                  sfPath.fType = 0;
-                  resolve(sfPath);
-                }
-              })
-            }
-          }
-        });
-        Promise.all(saveFiles).then(sFileList=>{ return sFileList })
-      },
-    fail: function() { return [] }
-  })
-}
+};
+
 module.exports = {
   initData: function(that,aaData){
     let vifData = typeof aaData == 'undefined';
@@ -449,6 +402,55 @@ module.exports = {
         } else { emptyField += '《'+approvalClass.pSuccess[i].p+'》'; }
       }
     };
+    var sFilePath = new Promise(function (resolve, reject) {         //本地媒体文件归类
+      let filePaths = [];
+      const mdtn = ['pic', 'thumb', 'vidio', 'file'];
+      const mdt = ['-2', '-3', '-4', '-6'];
+      that.data.reqData.forEach(nField => {
+        switch (nField.t) {
+          case 'eDetail':
+            for (let a = 0; a < that.data.vData[nField.gname].length; a++) {
+              if (mdt.indexOf(that.data.vData[nField.gname][a].t) >= 0) {     //该字段正文的内容为媒体
+                filePaths.push({ na: [nField.gname, a], fPath: that.data.vData[nField.gname][a].c, fType: 2, fn: 2 });
+              }
+            }
+            break;
+          case 'pics':
+            for (let b = 0; b < that.data.vData[nField.gname].length; b++) {     //该字段为图片组
+              filePaths.push({ na: [nField.gname, b], fPath: that.data.vData[nField.gname][b], fType: 2, fn: 1 });
+            }
+            break;
+          default:
+            if (mdtn.indexOf(nField.t) >= 0) {            //该字段为媒体
+              filePaths.push({ na: [nField.gname, -1], fPath: that.data.vData[nField.gname], fType: 2, fn: 0 });
+            }
+            break;
+        }
+      });
+      wx.getSavedFileList({
+        success: function (res) {
+          let saveFileList = res.fileList.map(fList => { return fList.filePath });
+          let saveFiles = filePaths.map(sfPath => {
+            return new Promise((resolve, reject) => {
+              if (saveFileList.indexOf(sfPath.fPath) >= 0) {
+                sfPath.fType = 1;
+                resolve(sfPath);
+              } else {
+                wx.getFileInfo({
+                  filePath: sfPath.fPath,
+                  success: function () {
+                    sfPath.fType = 0;
+                    resolve(sfPath);
+                  }
+                })
+              }
+            });
+          });
+          Promise.all(saveFiles).then((sFileList) => { console.log(sFileList); resolve(sFileList) });
+        },
+        fail: function () { resolve([]) }
+      });
+    });
     switch (e.detail.target.id) {
       case 'fdeldata':                                 //删除内容部分选中的字段
         if (that.data.selectd >= 0) {                         //内容部分容许删除
@@ -465,7 +467,9 @@ module.exports = {
         break;
       case 'fStorage':
         if (that.data.targetId=='0') {           //编辑内容不提交流程审批,在本机保存
-          sFilePath(that.data.reqData,that.data.vData).then(fileArr=>{
+          console.log('save to storage')
+          sFilePath.then(fileArr=>{
+            console.log(fileArr)
             let tFileArr = fileArr.map(tFile=>{ if (tFile.fType==0){return fFile} });
             if (tFileArr.length > 0) {
               let sFileArr = tFileArr.map( tFileStr => {
@@ -492,7 +496,7 @@ module.exports = {
         if (emptyField) {
           wx.showToast({ title: emptyField+'等项目未输入，请检查。',duration: 7000 })
         } else {
-          sFilePath(that.data.reqData, that.data.vData).then(sFileArr=>{
+          sFilePath.then(sFileArr=>{
             if (sFileArr.length>0){
               sFileArr.map(sFileStr => () => new AV.File('filename', {blob: {uri: sFileStr.fPath,},}).save().then(sfile =>{
                 if (sFileStr.fType==1){wx.removeSavedFile({ filePath: sFileStr.fPath })};      //删除本机保存的文件
