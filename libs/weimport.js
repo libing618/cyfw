@@ -40,15 +40,15 @@ module.exports = {
               { t: "p", e: "正文" },
               { t: "h4", e: "1、小标题" },
               { t: "p", e: "图片文章混排说明" },
-              { t: "-2", c: '/images/2.png', e: "图片内容说明" },
+              { t: "-2", c: 'http://ac-trce3aqb.clouddn.com/eb90b6ebd3ef72609afc.png', e: "图片内容说明" },
               { t: "p", e: "正文" },
               { t: "h4", e: "2、小标题" },
               { t: "p", e: "音频文章混排" },
-              { t: "-3", c: "http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E06DCBDC9AB7C49FD713D632D313AC4858BACB8DDD29067D3C601481D36E62053BF8DFEAF74C0A5CCFADD6471160CAF3E6A&fromtag=46", e: "录音内容说明" },
+              { t: "-3", c: "https://i.y.qq.com/v8/playsong.html?songid=108407446&source=yqq", e: "录音内容说明" },
               { t: "p", e: "正文" },
               { t: "h4", p: "3、小标题" },
               { t: "p", p: "视频文章混排" },
-              { t: "-4", c: "http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400", e: "视频内容说明" },
+              { t: "-4", c: "https://v.qq.com/x/page/f05269wf11h.html?ptag=2_5.9.0.13560_copy", e: "视频内容说明" },
               { t: "p", e: "正文" },
               { t: "p", e: "章节结尾" },
               { t: "p", e: "文章结尾" }
@@ -441,12 +441,13 @@ module.exports = {
                   success: function () {
                     sfPath.fType = 0;
                     resolve(sfPath);
-                  }
+                  },
+                  fail: () =>{ resolve(sfPath) }
                 })
               }
             });
           });
-          Promise.all(saveFiles).then((sFileList) => { console.log(sFileList); resolve(sFileList) });
+          Promise.all(saveFiles).then((sFileList) => { resolve(sFileList) });
         },
         fail: function () { resolve([]) }
       });
@@ -467,19 +468,25 @@ module.exports = {
         break;
       case 'fStorage':
         if (that.data.targetId=='0') {           //编辑内容不提交流程审批,在本机保存
-          console.log('save to storage')
           sFilePath.then(fileArr=>{
-            console.log(fileArr)
-            let tFileArr = fileArr.map(tFile=>{ if (tFile.fType==0){return fFile} });
+            let tFileArr = fileArr.filter(function(tFile){ return tFile.fType == 0 });
             if (tFileArr.length > 0) {
-              let sFileArr = tFileArr.map( tFileStr => {
+              let sFileArr = tFileArr.map( (tFileStr) => {
                 return new Promise((resolve, reject) => {
                   wx.saveFile({
                     tempFilePath: tFileStr.fPath,
                     success: function(res2) {
-                      if (tFileStr.na[1] == -1) {
-                        that.data.vData[tFileStr.na[0]] = res2.savedFilePath;
-                      } else { that.data.vData[tFileStr.na[0]][tFileStr.na[1]].c = res2.savedFilePath; }
+                      switch (tFileStr.fn) {
+                        case 0 :
+                          that.data.vData[tFileStr.na[0]] = res2.savedFilePath;
+                          break;
+                        case 1 :
+                          that.data.vData[tFileStr.na[0]][tFileStr.na[1]] = res2.savedFilePath;
+                          break;
+                        case 2 :
+                          that.data.vData[tFileStr.na[0]][tFileStr.na[1]].c = res2.savedFilePath;
+                          break;
+                      }
                       resolve(res2.savedFilePath)
                     }
                   })
@@ -496,8 +503,10 @@ module.exports = {
         if (emptyField) {
           wx.showToast({ title: emptyField+'等项目未输入，请检查。',duration: 7000 })
         } else {
-          sFilePath.then(sFileArr=>{
+          sFilePath.then(sFileLists=>{
+            let sFileArr = sFileLists.filter(sFile => { return sFile.fType < 2 });
             if (sFileArr.length>0){
+              console.log(sFileArr)
               sFileArr.map(sFileStr => () => new AV.File('filename', {blob: {uri: sFileStr.fPath,},}).save().then(sfile =>{
                 if (sFileStr.fType==1){wx.removeSavedFile({ filePath: sFileStr.fPath })};      //删除本机保存的文件
                 switch (sFileStr.fn) {
@@ -515,8 +524,9 @@ module.exports = {
                 }
               })
               ).reduce(
-                (m, p) => m.then(v => Promise.all([...v, p()]))
-              ).then(files => { resolve(files) } ).catch(console.error)
+                (m, p) => m.then(v => Promise.all([...v, p()])),
+                Promise.resolve([])
+              ).then(files => { return files } ).catch(console.error)
             } else { return ['no files save'] };
           }).then( (sFiles) => {
             if (that.data.targetId=='0'){
