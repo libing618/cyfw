@@ -16,7 +16,7 @@ PARM_additive: '无',
 'http://tmp/wxfbbbc7b7f73ae7fb.o6zAJs6LaWhNUWov3f7onphfKFNI.1531661f12bde4c4e539ec778d8c2dfe.JPG'
 ],
 PARM_attention: '阴凉处',
-  tvidio:'http://tmp/wxfbbbc7b7f73ae7fb.o6zAJs6LaWhNUWov3f7onphfKFNI.b30c2685bb6105ee6dd9fe1a689ca28d.mp4',
+tvidio:'http://ac-Trce3aqb.clouddn.com/d3a3bfb513239d50f6da.mp4',
 PARM_period: 300,
 
 standard_code: 'GB111222',

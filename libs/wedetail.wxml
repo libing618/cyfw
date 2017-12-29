@@ -21,7 +21,7 @@
   <image src="{{c}}" mode="aspectFit"></image>
 </template>
 <template name="-3">
-  <audio src="{{c}}"></audio>
+  <audio src="{{c}}" controls></audio>
 </template>
 <template name="-4">
   <video src="{{c}}"></video>

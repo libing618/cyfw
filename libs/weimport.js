@@ -505,29 +505,31 @@ module.exports = {
         } else {
           sFilePath.then(sFileLists=>{
             let sFileArr = sFileLists.filter(sFile => { return sFile.fType < 2 });
-            if (sFileArr.length>0){
-              console.log(sFileArr)
-              sFileArr.map(sFileStr => () => new AV.File('filename', {blob: {uri: sFileStr.fPath,},}).save().then(sfile =>{
-                if (sFileStr.fType==1){wx.removeSavedFile({ filePath: sFileStr.fPath })};      //删除本机保存的文件
-                switch (sFileStr.fn) {
-                  case 0:
-                    that.data.vData[sFileStr.na[0]]= sfile.url();
-                    break;
-                  case 1:
-                    that.data.vData[sFileStr.na[0]][sFileStr.na[1]] = sfile.url();
-                    break;
-                  case 2:
-                    that.data.vData[sFileStr.na[0]][sFileStr.na[1]].c = sfile.url();
-                    break;
-                  default:
-                    break;
-                }
-              })
-              ).reduce(
-                (m, p) => m.then(v => Promise.all([...v, p()])),
-                Promise.resolve([])
-              ).then(files => { return files } ).catch(console.error)
-            } else { return ['no files save'] };
+            wx.showLoading({ title: '文件提交中' });
+            return new Promise((resolve,reject)=>{
+              if (sFileArr.length>0){
+                sFileArr.map(sFileStr => () => new AV.File('filename', {blob: {uri: sFileStr.fPath,},}).save().then(sfile =>{
+                  if (sFileStr.fType==1){wx.removeSavedFile({ filePath: sFileStr.fPath })};      //删除本机保存的文件
+                  switch (sFileStr.fn) {
+                    case 0:
+                      that.data.vData[sFileStr.na[0]]= sfile.url();
+                      break;
+                    case 1:
+                      that.data.vData[sFileStr.na[0]][sFileStr.na[1]] = sfile.url();
+                      break;
+                    case 2:
+                      that.data.vData[sFileStr.na[0]][sFileStr.na[1]].c = sfile.url();
+                      break;
+                    default:
+                      break;
+                  }
+                })
+                ).reduce(
+                  (m, p) => m.then(v => Promise.all([...v, p()])),
+                  Promise.resolve([])
+                ).then(files => { resolve(files) } ).catch(console.error)
+              } else { resolve('no files save') };
+            })
           }).then( (sFiles) => {
             if (that.data.targetId=='0'){
               let nApproval = AV.Object.extend('sengpi');        //创建审批流程
@@ -618,6 +620,7 @@ module.exports = {
               app.aData[that.data.targetId].dObject = that.data.vData;
               wx.navigateBack({ delta: 1 });
             }
+            wx.hideLoading();
           }).catch( console.error );
         }
       break;
