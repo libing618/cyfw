@@ -18,56 +18,57 @@ module.exports = {
   },
 
   updateData: function(isDown,pNo) {    //更新页面显示数据,isDown下拉刷新
-    var that = this;
-    var pClass = procedureclass[pNo];
-    var readProcedure = new AV.Query(pClass.pModle);                                      //进行数据库初始化操作
-    var upName = 'pAt'+pNo;
-    if (isDown) {
-      readProcedure.greaterThan('updatedAt', app.mData[upName][1]);          //查询本地最新时间后修改的记录
-      readProcedure.ascending('updatedAt');           //按更新时间升序排列
-      readProcedure.limit(1000);                      //取最大数量新闻
-    } else {
-      readProcedure.lessThan('updatedAt', app.mData[upName][0]);          //查询最后更新时间前修改的记录
-      readProcedure.descending('updatedAt');           //按更新时间降序排列
-    };
-    let inFamily = typeof pClass.afamily == 'Array';
-    let aaName = 'prdct'+pNo
-    readProcedure.find().then((arp) => {
-      var lena = arp.length;
-      if (lena > 0) {
-        let aProcedure = {}, aPlace = -1, uSetData = {};
-        if (isDown) {
-          app.mData[upName][1] = arp[lena-1].updatedAt;                          //更新本地最新时间
-          app.mData[upName][0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
-        }else{
-          app.mData[upName][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
-        };
-        for (var j = 0; j < lena; j++) {                   //文章分类ID数组增加对应文章ID
-          aProcedure = arp[j].toJSON();                         //afamily文章类别0新闻1品牌2扶持政策3宣传4帮助
-          if (isDown){
-            if (inFamily) {
-              aPlace = app.mData[aaName][aProcedure.afamily].indexOf(aProcedure.objectId);
-              if (aPlace>=0) {app.mData[aaName][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
-              app.mData[aaName][aProcedure.afamily].unshift(aProcedure.objectId);
-            } else {
-              aPlace = app.mData[aaName].indexOf(aProcedure.objectId);
-              if (aPlace>=0) {app.mData[aaName].splice(aPlace,1)}           //删除本地的重复记录列表
-              app.mData[aaName].unshift(aProcedure.objectId);
-            }
+    return new Promise((resolve, reject) => {
+      var pClass = procedureclass[pNo];
+      var readProcedure = new AV.Query(pClass.pModle);                                      //进行数据库初始化操作
+      var upName = 'pAt'+pNo;
+      if (isDown) {
+        readProcedure.greaterThan('updatedAt', app.mData[upName][1]);          //查询本地最新时间后修改的记录
+        readProcedure.ascending('updatedAt');           //按更新时间升序排列
+        readProcedure.limit(1000);                      //取最大数量新闻
+      } else {
+        readProcedure.lessThan('updatedAt', app.mData[upName][0]);          //查询最后更新时间前修改的记录
+        readProcedure.descending('updatedAt');           //按更新时间降序排列
+      };
+      let inFamily = typeof pClass.afamily == 'Array';
+      let aaName = 'prdct'+pNo
+      readProcedure.find().then((arp) => {
+        var lena = arp.length;
+        if (lena > 0) {
+          let aProcedure = {}, aPlace = -1, uSetData = {};
+          if (isDown) {
+            app.mData[upName][1] = arp[lena-1].updatedAt;                          //更新本地最新时间
+            app.mData[upName][0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
           }else{
-            if (inFamily) {
-              app.mData[aaName][aProcedure.afamily].push(aProcedure.objectId);
-            } else {
-              app.mData[aaName].push(aProcedure.objectId);
-            }
+            app.mData[upName][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
           };
-          app.aData[pNo][aProcedure.objectId] = aProcedure;                        //将数据记录到本机
-          uSetData['pageData.'+aProcedure.objectId] = aProcedure;                  //增加页面中的新收到数据
-        };
-        uSetData.mPage = app.mData[aaName];
-        that.setData( uSetData );
-      }
-    }).catch( console.error );
+          for (var j = 0; j < lena; j++) {                   //文章分类ID数组增加对应文章ID
+            aProcedure = arp[j].toJSON();                         //afamily文章类别0新闻1品牌2扶持政策3宣传4帮助
+            if (isDown){
+              if (inFamily) {
+                aPlace = app.mData[aaName][aProcedure.afamily].indexOf(aProcedure.objectId);
+                if (aPlace>=0) {app.mData[aaName][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
+                app.mData[aaName][aProcedure.afamily].unshift(aProcedure.objectId);
+              } else {
+                aPlace = app.mData[aaName].indexOf(aProcedure.objectId);
+                if (aPlace>=0) {app.mData[aaName].splice(aPlace,1)}           //删除本地的重复记录列表
+                app.mData[aaName].unshift(aProcedure.objectId);
+              }
+            }else{
+              if (inFamily) {
+                app.mData[aaName][aProcedure.afamily].push(aProcedure.objectId);
+              } else {
+                app.mData[aaName].push(aProcedure.objectId);
+              }
+            };
+            app.aData[pNo][aProcedure.objectId] = aProcedure;                        //将数据记录到本机
+            uSetData['pageData.'+aProcedure.objectId] = aProcedure;                  //增加页面中的新收到数据
+          };
+          uSetData.mPage = app.mData[aaName];
+          resolve(uSetData) ;
+        }
+      }).catch( error=> {reject(error)} );
+    })
   },
 
   pName: function(pNo){

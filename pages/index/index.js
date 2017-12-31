@@ -51,7 +51,7 @@ Page({
   },
 
   onReady: function(){
-    weutil.updateData(true,1);                       //更新缓存以后有变化的数据
+    weutil.updateData(true,1).then(pData=>{this.setData(pData)});                       //更新缓存以后有变化的数据
   },
   userInfoHandler: function (e) {
     var that = this;
@@ -70,10 +70,10 @@ Page({
   },
 
   onPullDownRefresh:function(){
-    weutil.updateData(true,1);
+    weutil.updateData(true,1).then(pData=>{this.setData(pData)});
   },
   onReachBottom:function(){
-    weutil.updateData(false,1);
+    weutil.updateData(false,1).then(pData=>{this.setData(pData)});
   },
   onShareAppMessage: function() {    // 用户点击右上角分享
     return {

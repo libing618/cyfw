@@ -17,7 +17,9 @@ Page({
     if (app.globalData.user.userRolName=='admin' && app.uUnit.afamily>0) {
       new AV.Query('manufactor').equalTo('unitId',app.uUnit.objectId).first(manufactor=>{
         if (manufactor) { that.setData({ vData: manufactor.toJSON() }) }
-      }).catch(console.error);
+      }).catch(err=>{
+        that.setData({ vData: app.uUnit })
+      });
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -33,10 +35,10 @@ Page({
     newmf.set('nick', app.uUnit.nick);
     newmf.set('title', app.uUnit.title);
     newmf.set('afamily', app.uUnit.afamily);
-    newmf.set('desc', app.uUnit.desc);
-    newmf.set('thumbnail', app.uUnit.thumbnail);
-    newmf.set('aGeoPoint', app.uUnit.aGeoPoint);
-    newmf.set('address', app.uUnit.address);
+    newmf.set('desc', e.detail.value.desc);
+    newmf.set('thumbnail', e.detail.value.thumbnail);
+    newmf.set('aGeoPoint', e.detail.value.aGeoPoint);
+    newmf.set('address', e.detail.value.address);
     newmf.set('agreement',e.detail.value.agreement);
     newmf.save().then(()=>{
       wx.showToast({ title: '分销信息已发布！', duration: 2500 });
