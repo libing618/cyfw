@@ -4,13 +4,12 @@ const weutil = require('../../../util/util.js');
 var app = getApp()
 Page({
   data:{
-    sPrObjectId:{gname: "prObjectId", p:'产品', inclose: true,t:"sproduct" },
     reqData:[
       { gname: "channel", p:'渠道分成比例%',t: "dg",f:"mCost"},
       { gname: "extension", p:'推广分成比例%',t: "dg",f:"mCost"},
       {gname: "mCost", p: '销售管理总占比', t: "ed"}
     ],
-    vData: {}
+    sProObjectId: ""
   },
   onLoad:function(options){
     var that = this;
@@ -39,23 +38,19 @@ Page({
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },
+
   f_sProObjectId:function(options){
-    var that = this;
-    if (app.globalData.user.userRolName=='admin' && app.uUnit.afamily>0) {
-      new AV.Query('manufactor').equalTo('unitId',app.uUnit.objectId).first(manufactor=>{
-        if (manufactor) { that.setData({ vData: manufactor.toJSON() }) }
-      }).catch(console.error);
-    } else {
-      wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
-      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-    };
+    this.setData({sProObjectId:e.target.id});
   },
+
   fSave:function(e){
     var that = this;
     let newmf=new AV.Object.extend('proportions');
     newmf.set('unitId',app.uUnit.objectId);
-
-    newmf.set('agreement',e.detail.value.agreement);
+    newmf.set('prObjectId',that.data.sProObjectId);
+    newmf.set('channel',e.detail.value.channel);
+    newmf.set('extension',e.detail.value.extension);
+    newmf.set('mCost',e.detail.value.mCost);
     newmf.save().then(()=>{
       wx.showToast({ title: '分销信息已发布！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
