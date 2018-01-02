@@ -204,8 +204,27 @@
         <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
-      <input name="{{gname}}" value="{{c}}" class="weui-input" type="digit" />
+      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="digit" bindinput="f_{{f}}"/>
     </view>
+  </view>
+</template>
+
+<template name="i_fg">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+        <view class="weui-label">{{p}}:</view>
+    </view>
+    <view class="weui-cell__bd">
+      <view>{{c}}</view>
+      <input hidden="{{true}}" name="{{gname}}" value="{{c}}"/>
+    </view>
+  </view>
+</template>
+
+<template name="s_fg">
+  <view class="weui-cell">
+    <view class="weui-cell__bd">{{p}}:</view>
+    <view class="weui-cell__ft">{{c}}</view>
   </view>
 </template>
 

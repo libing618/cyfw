@@ -1,25 +1,28 @@
 // pages/marketing/distribution/distribution.js分销策略
 const AV = require('../../../libs/leancloud-storage.js');
-const weutil = require('../../../util/util.js');
-var app = getApp()
+const proportions = require('../../../model/proportions');
+const { updateData } = require('../../../util/util.js');
+var app = getApp();
+
 Page({
   data:{
     reqData:[
       { gname: "channel", p:'渠道分成比例%',t: "dg",f:"mCost"},
       { gname: "extension", p:'推广分成比例%',t: "dg",f:"mCost"},
-      {gname: "mCost", p: '销售管理总占比', t: "ed"}
+      {gname: "mCost", p: '销售管理总占比', t: "fg"}
     ],
+    vData:{"channel":7, "extension":10,"mCost":70},
     sProObjectId: ""
   },
   onLoad:function(options){
     var that = this;
-    if (app.globalData.user.userRolName=='admin' && app.uUnit.afamily>0) {
-      wetuil.updateData(true,3).then(pData=>{
+    if ( app.globalData.user.userRolName == 'admin' && app.uUnit.afamily>0) {
+      updateData(true,3).then(pData=>{
         let sproportions=[],mproportions=[];
-        new AV.Query('proportions').equalTo('unitId',app.uUnit.objectId).find(manufactor=>{
+        new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find(manufactor=>{
           if (manufactor) {
-            manufactor.forEach(proportion=>{
-              prodata = proportion.toJSON();
+            manufactor.forEach(prodata=>{
+        //      prodata = proportion.toJSON();
               pData.sData[prodata.objectId] = prodata;
               pData.mPage[0].forEach(mData=>{
                 if (prodata.objectId==mData.objectId){
@@ -43,17 +46,33 @@ Page({
     this.setData({sProObjectId:e.target.id});
   },
 
+  f_mCost:function(e){
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    inmcost = Number(e.detail.value);
+    let vdSet = {};
+    if (isNaN(inmcost)){
+      vdSet['vData.'+this.data.reqData[n].gname] = 0;
+    } else {
+      if (inmcost>30){vdSet['vData.'+this.data.reqData[n].gname] = 30}
+    }
+    let mcost = 85;
+    
+    this.setData( vdSet );
+  },
   fSave:function(e){
     var that = this;
-    let newmf=new AV.Object.extend('proportions');
-    newmf.set('unitId',app.uUnit.objectId);
-    newmf.set('prObjectId',that.data.sProObjectId);
-    newmf.set('channel',e.detail.value.channel);
-    newmf.set('extension',e.detail.value.extension);
-    newmf.set('mCost',e.detail.value.mCost);
-    newmf.save().then(()=>{
-      wx.showToast({ title: '分销信息已发布！', duration: 2500 });
-      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+    new proportions({unitId:'0',
+      prObjectId:that.data.sProObjectId,
+      channel:e.detail.value.channel,
+      extension:e.detail.value.extension,
+      mCost:e.detail.value.mCost
+    }).save().then((prodata)=>{
+      that.data.sData[prodata.objectId] = prodata;
+      that.data.sPage.unshift(prodata.objectId);
+      let mwz = that.data.mPage[0].indexOf(prodata.objectId);
+      if (mwz>=0){that.data.mPage[0].splice(mwz,1)};
+      that.data.sProObjectId = '';
+      that.setData(that.data);
     }).catch( console.error );
   }
 })
