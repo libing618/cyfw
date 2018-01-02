@@ -1,4 +1,4 @@
-// pages/customer/addresslist/addresslist.js
+//通讯录
 const app=getApp();
 Page({
   data:{

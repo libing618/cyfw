@@ -2,7 +2,7 @@ module.exports = [
 {
   "pNo": 0,
   "pName": "单位名称和负责人",
-  "afamily": ['合作户','产品经理','生产厂家','电子商务企业'],
+  "afamily": ['产品经理','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdvalue:[0, 0, 0] },
     {gname:"nick", p:'单位简称',t:"h3" },
@@ -102,17 +102,16 @@ module.exports = [
   "pName": "团购众筹",
   "afamily":['众筹产品','团购产品'],
   "pSuccess": [
-    {gname: "prObjectId", p:'产品服务', inclose: true,t:"sproduct", provalue:[0,0] },
-    {gname: "uName", p:'名称', t:"h3" },
+    {gname:"prObjectId", p:'产品服务', inclose: true,t:"sproduct", provalue:[0,0] },
+    {gname:"uName", p:'名称', t:"h3" },
     {gname:"title", p:'简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"retail_price", p:'零售价', t:"dg" },
-    { gname: "base_price", p:'基础共享优惠价', t:"dg" },
+    {gname:"base_price", p:'基础共享优惠价', t:"dg" },
     {gname:"base_amount", p:'基础目标数量',t:"dg" },
-    { gname: "big_price", p:'大额共享优惠价', t:"dg" },
+    {gname:"big_price", p:'大额共享优惠价', t:"dg" },
     {gname:"big_amount", p:'大额目标数量',t:"dg" },
-    {gname:"start_end", p:'预订起止日期', t:"sedate",endif:false},
-    {gname:"proportion", p:'占产品总量的比例', t:"dg" }
+    {gname:"start_end", p:'预订起止日期', t:"sedate",endif:false}
   ],
   "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -126,7 +125,7 @@ module.exports = [
   "pNo": 5,
   "pName": "产品上架",
   "pSuccess": [
-    {gname: "prObjectId", p:'产品服务', inclose: true,t:"sproduct" },
+    {gname:"prObjectId", p:'产品服务', inclose: true,t:"sproduct" },
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简述',t:"p" },
     {gname:"thumbnail", p:'图片',t: "thumb" },
@@ -135,8 +134,7 @@ module.exports = [
     {gname:"base_price", p:'小优惠价格', t:"dg" },
     {gname:"big_amount", p:'大优惠起点', t:"dg" },
     {gname:"big_price", p:'大优惠价格', t:"dg" },
-    {gname:"start_end", p:'供应', t:"sedate",endif:false },
-    {gname:"proportion", p:'占产品总量的比例', t:"dg" }
+    {gname:"start_end", p:'供应', t:"sedate",endif:false }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
   "puRoles": [

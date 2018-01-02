@@ -1,4 +1,4 @@
-// pages/marketing/distribution/distribution.js分销策略
+//分销策略
 const AV = require('../../../libs/leancloud-storage.js');
 const proportions = require('../../../model/proportions');
 const { updateData } = require('../../../util/util.js');
@@ -16,7 +16,7 @@ Page({
   },
   onLoad:function(options){
     var that = this;
-    if ( app.globalData.user.userRolName == 'admin' && app.uUnit.afamily>0) {
+    if ( app.globalData.user.userRolName == 'admin' && app.globalData.user.emailVerified ) {
       updateData(true,3).then(pData=>{
         let sproportions=[],mproportions=[];
         new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find(manufactor=>{
@@ -53,10 +53,9 @@ Page({
     if (isNaN(inmcost)){
       vdSet['vData.'+this.data.reqData[n].gname] = 0;
     } else {
-      if (inmcost>30){vdSet['vData.'+this.data.reqData[n].gname] = 30}
+      vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;
     }
-    let mcost = 85;
-    
+    vdSet.vData.mCost = 85-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
     this.setData( vdSet );
   },
   fSave:function(e){

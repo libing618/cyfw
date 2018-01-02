@@ -14,7 +14,7 @@ Page({
   },
   onLoad:function(options){
     var that = this;
-    if (app.globalData.user.userRolName=='admin' && app.uUnit.afamily>0) {
+    if (app.globalData.user.userRolName=='admin' && app.globalData.user.emailVerified) {
       new AV.Query('manufactor').equalTo('unitId',app.uUnit.objectId).first(manufactor=>{
         if (manufactor) { that.setData({ vData: manufactor.toJSON() }) }
       }).catch(err=>{
