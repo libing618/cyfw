@@ -19,7 +19,7 @@ Page({
     if ( app.globalData.user.userRolName == 'admin' && app.globalData.user.emailVerified ) {
       updateData(true,3).then(pData=>{
         let sproportions=[],mproportions=[];
-        new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find(manufactor=>{
+        new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find().then(manufactor=>{
           if (manufactor) {
             manufactor.forEach(prodata=>{
         //      prodata = proportion.toJSON();

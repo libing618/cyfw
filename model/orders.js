@@ -28,6 +28,9 @@ class Orders extends AV.Object {
   get serObjectId() { return this.get('serObjectId'); }
   set serObjectId(value) { this.set('serObjectId', value); }
 
+  get specObjectId() { return this.get('specObjectId'); }
+  set specObjectId(value) { this.set('specObjectId', value); }
+
   get addressObjectId() { return this.get('addressObjectId'); }
   set addressObjectId(value) { this.set('addressObjectId', value); }
 
