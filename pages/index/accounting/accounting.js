@@ -6,28 +6,27 @@ var app = getApp();
 
 Page({
   data:{
-    seDateReq:{ gname:"start_end", p:'预订起止日期', t:"sedate",endif:false},
+    seDateReq:{ gname:"start_end", p:'起止日期', t:"sedate",endif:false},
     seDate: []
   },
   onLoad:function(options){
     var that = this;
     if ( app.globalData.user.userRolName == 'admin' && app.globalData.user.emailVerified) {
-      updateData(true,3).then(pData=>{
-        let sproportions=[],mproportions=[];
-        new AV.Query(orders).equalTo('unitId', app.uUnit.objectId).find(manufactor=>{
-          if (manufactor) {
-            pData.mPage[0].forEach(mData=>{
-
-                if (prodata.objectId==mData.objectId){
-                  sproportions.push(prodata.objectId);
-                } else {mproportions.push(mData.objectId)}
+      updateData(true,3).then(proData=>{
+        if (proData){
+          that.data.mPage = proData.mPage[0];
+          that.data.pageData = proData.pageData;
+          updateData(true,4).then(specData=>{
+            if(specData){
+              that.data.specData = specData.pageData;
+              let shelves={};
+              that.data.mPage.forEach(proObjectId=>{
+                shelves[proObjectId] = specData.mPage.filter(spec => {spec==proObjectId})
               })
-            })
-            pData.sPage = sproportions;
-            pData.mPage[0] = mproportions;
-          }
-          that.setData(pData);
-        }).catch(console.error);
+              that.data.specPage = shelves;
+            }
+          }).catch(console.error);
+        }
       }).catch(console.error);
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
@@ -35,8 +34,21 @@ Page({
     };
   },
 
-  f_sProObjectId:function(options){
-    this.setData({sProObjectId:e.target.id});
+  sumOrders:function(options){
+    var that = this;
+    new AV.Query(orders).equalTo('unitId', app.uUnit.objectId).find(manufactor=>{
+      if (manufactor) {
+        pData.mPage[0].forEach(mData=>{
+
+            if (prodata.objectId==mData.objectId){
+              sproportions.push(prodata.objectId);
+            } else {mproportions.push(mData.objectId)}
+          })
+        })
+        pData.sPage = sproportions;
+        pData.mPage[0] = mproportions;
+      }
+      that.setData(pData);
   }
 
 })

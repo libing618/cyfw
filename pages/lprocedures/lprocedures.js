@@ -1,4 +1,4 @@
-const weutil = require('../../util/util.js');
+const { updateData } = require('../../util/util.js');
 var app = getApp()
 Page ({
   data: {
@@ -25,13 +25,13 @@ Page ({
   },
 
   onReady: function(){
-    weutil.updateData(true, this.data.pNo);                       //更新缓存以后有变化的数据
+    updateData(true,this.data.pNo).then(pData=>{this.setData(pData)});                       //更新缓存以后有变化的数据
   },
   onPullDownRefresh: function () {
-    weutil.updateData(true,this.data.pNo);
+    updateData(true,this.data.pNo).then(pData=>{this.setData(pData)});
   },
   onReachBottom: function () {
-    weutil.updateData(false, this.data.pNo);
+    updateData(false,this.data.pNo).then(pData=>{this.setData(pData)});
   },
   onShareAppMessage: function () {    // 用户点击右上角分享
     return {

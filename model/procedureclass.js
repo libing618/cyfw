@@ -99,19 +99,15 @@ module.exports = [
 },
 {
   "pNo": 4,
-  "pName": "团购众筹",
-  "afamily":['众筹产品','团购产品'],
+  "pName": "产品规格",
   "pSuccess": [
-    {gname:"prObjectId", p:'产品服务', inclose: true,t:"sproduct", provalue:[0,0] },
-    {gname:"uName", p:'名称', t:"h3" },
-    {gname:"title", p:'简介',t:"p" },
+    {gname:"proObjectId", p:'产品', inclose: true,t:"sproduct", provalue:[0,0] },
+    {gname:"serObjectId", p:'服务', inclose: true,t:"sproduct", provalue:[0,0] },
+    {gname:"uName", p:'规格名称', t:"h3" },
+    {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"retail_price", p:'零售价', t:"dg" },
-    {gname:"base_price", p:'基础共享优惠价', t:"dg" },
-    {gname:"base_amount", p:'基础目标数量',t:"dg" },
-    {gname:"big_price", p:'大额共享优惠价', t:"dg" },
-    {gname:"big_amount", p:'大额目标数量',t:"dg" },
-    {gname:"start_end", p:'预订起止日期', t:"sedate",endif:false}
+    {gname:"stock", p:'库存', t:"dg" }
   ],
   "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -123,18 +119,15 @@ module.exports = [
 },
 {
   "pNo": 5,
-  "pName": "产品上架",
+  "pName": "众筹团购及促销",
+  "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"prObjectId", p:'产品服务', inclose: true,t:"sproduct" },
-    {gname:"uName", p:'规格名称', t:"h3" },
-    {gname:"title", p:'规格简述',t:"p" },
-    {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"retail_price", p:'零售价', t:"dg" },
-    {gname:"base_amount", p:'小优惠起点', t:"dg" },
-    {gname:"base_price", p:'小优惠价格', t:"dg" },
-    {gname:"big_amount", p:'大优惠起点', t:"dg" },
-    {gname:"big_price", p:'大优惠价格', t:"dg" },
-    {gname:"start_end", p:'供应', t:"sedate",endif:false }
+    {gname:"specObjectId", p:'产品规格', inclose: true,t:"sproduct" },
+    {gname:"base_price", p:'基础优惠价', t:"dg" },
+    {gname:"base_amount", p:'基础目标数量',t:"dg" },
+    {gname:"big_price", p:'大额优惠价', t:"dg" },
+    {gname:"big_amount", p:'大额目标数量',t:"dg" },
+    {gname:"start_end", p:'活动起止日期', t:"sedate",endif:false}
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
   "puRoles": [
@@ -142,14 +135,14 @@ module.exports = [
     "31"
   ],
   "sFinallyRole": "32",
-  "pModle": "shelves"
+  "pModle": "promotion"
 },
 {
   "pNo": 6,
   "pName": "生产计划",
   "afamily":['3年','每年','半年','每季','每月','每日'],
   "pSuccess": [
-    {gname: "prObjectId", p:'产品服务', inclose: true,t:"sproduct" },
+    {gname: "specObjectId", p:'产品规格', inclose: true,t:"sproduct" },
     {gname:"uName", p:'计划名称', t:"h3" },
     {gname:"title", p:'计划简述',t:"p" },
     {gname:"thumbnail", p:'图片',t: "thumb" },

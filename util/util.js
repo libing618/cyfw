@@ -25,7 +25,7 @@ module.exports = {
       if (isDown) {
         readProcedure.greaterThan('updatedAt', app.mData[upName][1]);          //查询本地最新时间后修改的记录
         readProcedure.ascending('updatedAt');           //按更新时间升序排列
-        readProcedure.limit(1000);                      //取最大数量新闻
+        readProcedure.limit(1000);                      //取最大数量
       } else {
         readProcedure.lessThan('updatedAt', app.mData[upName][0]);          //查询最后更新时间前修改的记录
         readProcedure.descending('updatedAt');           //按更新时间降序排列
@@ -42,10 +42,10 @@ module.exports = {
           }else{
             app.mData[upName][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
           };
-          for (var j = 0; j < lena; j++) {                   //文章分类ID数组增加对应文章ID
-            aProcedure = arp[j].toJSON();                         //afamily文章类别0新闻1品牌2扶持政策3宣传4帮助
+          for (var j = 0; j < lena; j++) {                   //分类ID数组增加对应ID
+            aProcedure = arp[j].toJSON();
             if (isDown){
-              if (inFamily) {
+              if (inFamily) {                         //存在afamily类别
                 aPlace = app.mData[aaName][aProcedure.afamily].indexOf(aProcedure.objectId);
                 if (aPlace>=0) {app.mData[aaName][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
                 app.mData[aaName][aProcedure.afamily].unshift(aProcedure.objectId);
