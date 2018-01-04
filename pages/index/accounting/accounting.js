@@ -6,8 +6,8 @@ var app = getApp();
 
 Page({
   data:{
-    reqData:[{ gname:"start_end", p:'起止日期', t:"sedate",endif:false}],
-    vData: {start_end:[formatTime(Date.now()-864000000,true),formatTime(Date.now(),true)]};
+    reqData: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
+    vData: {},
     achecked: ''
   },
   onLoad:function(options){
@@ -34,15 +34,19 @@ Page({
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },
-
-  i_sedate = require('../../../libs/weimport.js').i_sedate;
-  idcheck = require('../../../util/util.js').idcheck;
+  onReady:function(){
+    var that = this;
+    that.data.vData.start_end = [formatTime(Date.now() - 864000000, true), formatTime(Date.now(), true)];
+    that.sumOrders();
+  },
+  i_sedate: require('../../../libs/weimport.js').i_sedate,
+  idcheck: require('../../../util/util.js').idcheck,
   sumOrders:function(){
     var that = this;
     new AV.Query(orders)
     .equalTo('unitId', app.uUnit.objectId)
-    .greaterThan('updatedAt', new Date(that.data.seDate[0]))
-    .lessThan('updatedAt', new Date(that.data.seDate[1])+86400000)
+    .greaterThan('updatedAt', new Date(that.data.vData.seDate[0]))
+    .lessThan('updatedAt', new Date(that.data.vData.seDate[1])+86400000)
     .limit(1000)
     .find().then(orderlist=>{
       if (orderlist) {
@@ -64,6 +68,9 @@ Page({
         that.setData(that.data);
       }
     }).catch(console.error);
+  },
+  orderquery:function(e){
+    this.sumOrders;
   }
 
 })
