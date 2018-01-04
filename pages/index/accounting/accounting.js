@@ -16,10 +16,10 @@ Page({
       updateData(true,3).then(proData=>{
         if (proData){
           that.data.mPage = proData.mPage[0];
-          that.data.pageData = proData.pageData;
+          that.data.pageData = app.aData[3];
           updateData(true,4).then(specData=>{
             if(specData){
-              that.data.specData = specData.pageData;
+              that.data.specData = app.aData[4];
               let shelves={};
               that.data.mPage.forEach(pObjectId=>{
                 shelves[pObjectId] = specData.mPage.filter(spec => {that.data.specPage[spec].proObjectId==pObjectId})

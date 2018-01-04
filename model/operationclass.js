@@ -21,7 +21,7 @@ module.exports = [
       { gname: "prepayId", t: "ords", p: "付款订单号" },
       { gname: "proObjectId", t: "products", p: "产品" },
       { gname: "serObjectId", t: "sivers", p: "服务" },
-      { gname: "specObjectId", t: "sivers", p: "规格" },
+      { gname: "specObjectId", t: "specs", p: "规格" },
       { gname: "addressObjectId", t: "adds", p: "地点" }
     ],
     "ouRoles": [0,1,1,3],
