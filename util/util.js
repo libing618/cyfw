@@ -82,8 +82,8 @@ module.exports = {
     return psData;
   },
 
-  accheck: function(e){                           //选择类型的数组下标
-    this.setData({ achecked: parseInt(e.currentTarget.id.substring(3)) });
+  idcheck: function(e){                           //选择打开的数组本身id
+    this.setData({ achecked: e.currentTarget.id });
   },
   tabClick: function (e) {                                //点击tab
     app.mData['pCk'+that.data.pNo] = Number(e.currentTarget.id)

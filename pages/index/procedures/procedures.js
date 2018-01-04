@@ -52,10 +52,6 @@ Page({
     this.setData({ achecked: app.mData.proceduresCk });
   },
 
-  tabClick: function (e) {                                //点击tab
-    this.setData({ pageCk: Number(e.currentTarget.id) });               //点击序号切换
-  },
-
   updatepending: function(isDown){                          //更新数据 ，0上拉刷新，1下拉刷新
     var that=this;
     var pLength = that.data.pClassName.length;

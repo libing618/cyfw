@@ -6,8 +6,9 @@ var app = getApp();
 
 Page({
   data:{
-    seDateReq:{ gname:"start_end", p:'起止日期', t:"sedate",endif:false},
-    seDate: [formatTime(Date.now()-864000000,true),formatTime(Date.now(),true)]
+    reqData:[{ gname:"start_end", p:'起止日期', t:"sedate",endif:false}],
+    vData: {start_end:[formatTime(Date.now()-864000000,true),formatTime(Date.now(),true)]};
+    achecked: ''
   },
   onLoad:function(options){
     var that = this;
@@ -34,21 +35,27 @@ Page({
     };
   },
 
-  sumOrders:function(options){
+  i_sedate = require('../../../libs/weimport.js').i_sedate;
+  idcheck = require('../../../util/util.js').idcheck;
+  sumOrders:function(){
     var that = this;
     new AV.Query(orders)
     .equalTo('unitId', app.uUnit.objectId)
     .greaterThan('updatedAt', new Date(that.data.seDate[0]))
     .lessThan('updatedAt', new Date(that.data.seDate[1])+86400000)
+    .limit(1000)
     .find().then(orderlist=>{
       if (orderlist) {
         that.data.mPage.forEach(proObjectId=>{
           let sumPro = 0;
           that.data.specPage[proObjectId].forEach(specObjectId=>{
-            let sumOrder = 0;
+            let sumOrder = 0, specOrder = [];
             orderlist.forEach(order=>{
-              if (order.specObjectId==specObjectId) {sumOrder += order.amount};
+              if (order.specObjectId==specObjectId) {
+                specOrder.push(order);
+                sumOrder += order.amount};
             })
+            that.data.specOrder = specOrder;
             that.data.sumspec[specObjectId] = sumOrder;
             sumPro += sumOrder;
           })

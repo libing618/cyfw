@@ -7,7 +7,7 @@ Page({
   },
   onLoad:function(options){
     this.setData({vData:[app.uUnit,app.sUnit]});
-    this.accheck = require('../../../util/util.js').accheck;
+    this.idcheck = require('../../../util/util.js').idcheck;
   },
   onReady:function(){
     // 页面渲染完成

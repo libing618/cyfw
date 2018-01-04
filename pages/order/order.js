@@ -74,7 +74,7 @@ Page ({
     this.subscription.off('delete', remove)
   },
 
-  accheck: require('../../util/util.js').accheck,
+  idcheck: require('../../util/util.js').idcheck,
 
   fOrder: function(e){
     var that = this;
