@@ -27,8 +27,8 @@
         <view wx:if="{{achecked==spec}}">
           <view class="weui-cell" wx:for="{{specOrder}}" wx:key="{{index}}">
             <view class="weui-cell__hd">{{item.user}}:</view>
-            <view class="weui-cell__bd">于{{item.paidAt}}</view>
-            <view class="weui-cell__ft">{{item.amount}}</view>
+            <view class="weui-cell__bd">于{{item.paidAt}}购{{item.quantity}}件</view>
+            <view class="weui-cell__ft">付{{item.amount}}</view>
           </view>
         </view>
       </block>

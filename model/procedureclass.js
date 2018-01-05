@@ -74,7 +74,7 @@ module.exports = [
   "pSuccess": [
     {gname: "uName", p:'名称', t:"h3" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype", pdva:[0, 0, 0] },
-    {gname:"title", p:'简介',t:"p" },
+    {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"pics", p:'图片集',t:"pics"},

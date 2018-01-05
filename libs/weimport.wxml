@@ -267,7 +267,7 @@
         <view wx:if="{{item.t<0}}">
           <template is="{{item.t}}" data="{{...item}}"></template>
         </view>
-        <text>"{{item.e}}"</text>
+        <view wx:if="{{item.e}}">{{item.e}}</view>
       </view>
     </block>
   </view>
