@@ -1,0 +1,48 @@
+<import src="../../../libs/weimport.wxml"/>
+<import src="../../../libs/wedetail.wxml"/>
+<view class="page">
+  <view class="page__bd">
+    <block wx:for="{{oArray}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="i">
+      <view class="weui-cells">
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
+          <template is="{{ achecked==i ? 'selecticon1' : 'selecticon2'}}" />
+          <view class="weui-cell__bd">{{req.p}}</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access">{{ac}}</view>
+        </view>
+        <view hidden="{{achecked!=i}}">
+          <block class="weui-cell" wx:for="{{mPage}}" wx:key="{{index}}" wx:for-item="id">
+            <view wx:if="{{pageData[id][req.gname]==ac}}">
+              <template is="i_{{req.t}}" data="{{p:pageData[id],e:pros[pageData[id].proObjectId],c:id,n:index}}"/>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+
+<template name="i_products">
+  <view class="weui-cell">规格：{{p.shelves.uName}} 订单:{{p.orders.uName}}</view>
+  <switch class="weui-cell__hd"/>
+  <view class="weui-cell__bd">订{{p.quantity}}份</view>
+  <view class="weui-cell__ft">出品包装号</view>
+  <input name="{{c}}" value="{{p.quantity}}" />
+</template>
+
+<template name="i_sivers">
+  <view class="weui-cell">订单:{{p.orders.uName}}
+  未出品规格：{{p.shelves.uName}}</view>
+  <switch class="weui-cell__hd"/>规格：{{p.shelves.uName}} 出品包装号
+  <view class="weui-cell__ft">运送单号：</view>
+  <input name="{{c}}" value="{{p.quantity}}" />
+</template>
+
+<template name="i_adds">
+  <view class="weui-cell">位置：
+  订单:{{p.orders.uName}}
+  运送单号：{{p.shelves.uName}}</view>
+  <switch class="weui-cell__hd"/>规格：{{p.shelves.uName}} 出品包装号
+  <view class="weui-cell__ft">扫码确认：</view>
+  <input name="{{c}}" value="{{p.quantity}}" />
+</template>

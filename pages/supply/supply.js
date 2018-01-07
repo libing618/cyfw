@@ -1,17 +1,8 @@
-// 订单操作
+// 供货操作
 const AV = require('../../libs/leancloud-storage.js');
 const prosPlan = require('../../model/prosplan.js');
-const Orders = require('../../model/orders.js');
-const remove = value => {
-  stats = this.data.pageData.filter(target => target.id !== value.id)
-  return setOrderData(stats)
-};
-const upsert = value => {
-  let existed = false;
-  stats = this.data.pageData.map(target => (target.id === value.id ? ((existed = true), value) : target))
-  if (!existed) stats = [value, ...stats]
-  return setOrderData(stats)
-};
+const Orders = require('../../model/supplies.js');
+
 const setOrderData = untreatedOrders =>{
   let inArr = [];
   let mpage = untreatedOrders.map(uOrder=>{
@@ -37,6 +28,16 @@ Page ({
     pageData: []
   },
 
+  remove: function(value) {
+    stats = this.data.pageData.filter(target => target.id !== value.id)
+    return setOrderData(stats)
+  },
+  upsert: function(value) {
+    let existed = false;
+    stats = this.data.pageData.map(target => (target.id === value.id ? ((existed = true), value) : target))
+    if (!existed) {stats = [value, ...stats]}
+    return setOrderData(stats)
+  },
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
     let oClass = require('../../model/operationclass.js')[1];
@@ -49,16 +50,16 @@ Page ({
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
-      let orderQuery = new AV.Query('orders')
-                        .equalTo('oState', ops.oState)      //查询订单表里没确认的记录
+      let orderQuery = new AV.Query(Orders)
+                        .equalTo('oState', ops.oState)      //查询供货单表里没确认的记录
                         .ascending('createdAt');
       return Promise.all([orderQuery.find().then(setOrderData),orderQuery.subscribe()]).then((untreatedOrders,subscription) => {
         that.subscription = subscription;
-        that.subscription.on('create', upsert)
-        that.subscription.on('update', upsert)
-        that.subscription.on('enter', upsert)
-        that.subscription.on('leave', remove)
-        that.subscription.on('delete', remove)
+        that.subscription.on('create', that.upsert)
+        that.subscription.on('update', that.upsert)
+        that.subscription.on('enter', that.upsert)
+        that.subscription.on('leave', that.remove)
+        that.subscription.on('delete', that.remove)
       }).catch(console.error);
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
@@ -67,11 +68,11 @@ Page ({
   },
   onUnload: function(){
     this.subscription.unsubscribe();
-    this.subscription.off('create', upsert)
-    this.subscription.off('update', upsert)
-    this.subscription.off('enter', upsert)
-    this.subscription.off('leave', remove)
-    this.subscription.off('delete', remove)
+    this.subscription.off('create', this.upsert)
+    this.subscription.off('update', this.upsert)
+    this.subscription.off('enter', this.upsert)
+    this.subscription.off('leave', this.remove)
+    this.subscription.off('delete', this.remove)
   },
 
   idcheck: require('../../util/util.js').idcheck,
