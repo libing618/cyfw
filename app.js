@@ -8,8 +8,7 @@ const VideoMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js
 const LocationMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').LocationMessage;
 const FileMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').FileMessage;
 const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
-const sProcedure = 7;     //本小程序中审批流程的类型数
-const sOperation = 2;     //本小程序中操作流程的类型数
+const sProcedure = 8;     //本小程序中审批流程的类型数
 AV.init({
     appId: "Trce3aqbc6spacl6TjA1pndr-gzGzoHsz",                    // 初始化存储 SDK
     appKey: "CBbIFAhL4zOyCT9PQM5273bP"
@@ -27,7 +26,6 @@ App({
   wmenu: require('globaldata.js').wmenu,
   mData: require('globaldata.js').mData,
   aData: new Array(sProcedure),                           //以objectId为key的数据记录
-  oData: new Array(sOperation),                           //以objectId为key的数据记录
   procedures: {},
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例

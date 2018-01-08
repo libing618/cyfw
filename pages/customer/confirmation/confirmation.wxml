@@ -10,14 +10,14 @@
           <view class="weui-cell__bd">{{pageData[mPage[ac][0]].specName}}</view>
         </view>
         <form bindsubmit="fOrder">
-          <view class="weui-cell__bd">可供{{e.cant}}份</view>
+          <view class="weui-cell__bd">可供{{specStock[ac]}}份</view>
           <view class="weui-cell__ft weui-cell__ft_in-access">
             <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{quantity[ac]}}份</button>
           </view>
           <view hidden="{{achecked!=ac}}">
             <checkbox-group name="chSpec-{{ac}}" bindchange="checkboxChange">
               <block class="weui-agree" wx:for="{{mPage[ac]}}">
-                <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{item.checked}}">{{pageData[item].address}}
+                <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mCheck[item]}}">{{pageData[item].address}}
                 <view clase="weui-agree__text">于pageData[id].paidAt,订pageData[id].quantity</view>
                 </checkbox>
               </block>

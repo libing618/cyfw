@@ -5,7 +5,7 @@ var productPage = {                       //选择产品类型后列出该类产
     reqData:[
       { n: 0, inclose: false, gname: "proType", p: '产品类型', t: "producttype", apdclist: app.uUnit.indType, apdvalue:[0, 0, 0] },
     ],
-    products: app.mData.products,
+    products: app.mData.prdct3,
     proShow: '',
     pNo: 3,
     pageData: app.aData[3]

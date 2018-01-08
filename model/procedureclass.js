@@ -69,8 +69,7 @@ module.exports = [
 },
 {
   "pNo": 3,
-  "pName": "产品服务",
-  "afamily":['产品管理','服务管理'],
+  "pName": "产品",
   "pSuccess": [
     {gname: "uName", p:'名称', t:"h3" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype", pdva:[0, 0, 0] },
@@ -79,11 +78,11 @@ module.exports = [
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
-    {gname: "aGeoPoint", p: '地理位置', t: "chooseAd" },
-    {gname: "address", p: '地址', t: "ed" },
+    {gname:"aGeoPoint", p: '地理位置', t: "chooseAd" },
+    {gname:"address", p: '地址', t: "ed" },
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
-    {gname: "PARM_attention", p:'注意事项', t:"h4" },
+    {gname:"PARM_attention", p:'注意事项', t:"h4" },
     {gname:"PARM_period", p:'期限(天)', t:"dg" },
     {gname:"standard_code", p:'执行标准', t:"h4" },
     {gname:"license_no", p:'许可证号', t:"h4" },
@@ -99,6 +98,26 @@ module.exports = [
 },
 {
   "pNo": 4,
+  "pName": "服务",
+  "afamily":['快递','物流','柜台提货','店铺消费'],
+  "pSuccess": [
+    {gname:"uName", p:'名称', t:"h3" },
+    {gname:"title", p:'简介',t:"h4" },
+    {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
+    {gname:"address", p: '服务地址', t: "ed" },
+    {gname:"price", p:'价格', t:"dg" },
+    {gname:"serlist", p:['服务方','联系人','电话'], t:"table" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
+  "puRoles": [
+    "12",
+    "11"
+  ],
+  "sFinallyRole": "12",
+  "pModle": "service"
+},
+{
+  "pNo": 5,
   "pName": "产品规格",
   "pSuccess": [
     {gname:"proObjectId", p:'产品', inclose: true,t:"sproduct", provalue:[0,0] },
@@ -118,7 +137,7 @@ module.exports = [
   "pModle": "shelves"
 },
 {
-  "pNo": 5,
+  "pNo": 6,
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
@@ -138,7 +157,7 @@ module.exports = [
   "pModle": "promotion"
 },
 {
-  "pNo": 6,
+  "pNo": 7,
   "pName": "生产计划",
   "afamily":['3年','每年','半年','每季','每月','每日'],
   "pSuccess": [

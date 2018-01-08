@@ -45,6 +45,24 @@ class supplies extends AV.Object {
 
   get confirmer() { return this.get('confirmer'); }
   set confirmer(value) { this.set('confirmer', value); }
+
+  get confirmAt() { return this.get('confirmAt'); }
+  set confirmAt(value) { this.set('confirmAt', value); }
+
+  get deliver() { return this.get('deliver'); }
+  set deliver(value) { this.set('deliver', value); }
+
+  get deliverAt() { return this.get('deliverAt'); }
+  set deliverAt(value) { this.set('deliverAt', value); }
+
+  get deliverNo() { return this.get('deliverNo'); }
+  set deliverNo(value) { this.set('deliverNo', value); }
+
+  get receipt() { return this.get('receipt'); }
+  set receipt(value) { this.set('receipt', value); }
+
+  get receiptAt() { return this.get('receiptAt'); }
+  set receiptAt(value) { this.set('receiptAt', value); }
 }
 AV.Object.register(supplies);
 

@@ -15,7 +15,7 @@ Page({
     if ( app.globalData.user.userRolName == 'admin' && app.globalData.user.emailVerified) {
       updateData(true,3).then(proData=>{
         if (proData){
-          that.data.mPage = proData.mPage[0];
+          that.data.mPage = proData.mPage;
           that.data.pageData = app.aData[3];
           updateData(true,4).then(specData=>{
             if(specData){

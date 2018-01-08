@@ -285,8 +285,7 @@ module.exports = {
         break;
       case 'pa':
         let aval = e.detail.value;
-        if (that.data.reqData[n].provalue[0] != aval[0]) {
-          aval[1] = 0; }
+        if (that.data.reqData[n].provalue[0] != aval[0]) { aval[1] = 0; }
         that.setData(rdSet(n, 'provalue', aval));
         break;
     }

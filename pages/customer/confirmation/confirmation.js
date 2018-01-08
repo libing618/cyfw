@@ -24,8 +24,11 @@ Page ({
   data: {
     mPage: [],                 //页面管理数组
     achecked: '0',
-    pageData: []
+    pageData: [],
+    specCount: {}
   },
+  specPlans: {},
+  supplies: {},
 
   remove: function(value) {
     stats = this.data.pageData.filter(target => target.id !== value.id)
@@ -34,43 +37,56 @@ Page ({
   upDateConfim: function() {
     var that = this;
     new AV.Query(supplies)
-      .edoesNotExist('confirmer')      //查询确认人为空的记录
-      .select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
-      .ascending('paidAt');
-      .find().then(confirmOrder => {
-        if (confirmOrder){
-          let cSpec = [],cantSpec = {},pData = {},mData = {},mChecked = {};
-          confirmOrder.forEach(cOrder=>{
-            pData[cOrder.objectId] = cOrder;
-            if ( cSpec.indexOf(cOrder.specObjectId)<0 ) {
-              cSpec.push(cOrder.specObjectId);
-              cantSpec[cOrder.specObjectId)] = cOrder.quantity;
-              mData[cOrder.specObjectId] = [cOrder.objectId]
-            } else {
-              cantSpec[cOrder.specObjectId)] += cOrder.quantity;
-              mData[cOrder.specObjectId].push([cOrder.objectId])
-            };
-            pData[cOrder.objectId].checked = true;
-          })
-          that.setData({
-            pageData: pData,
-            oArray: cSpec,
-            quantity: cantSpec,
-            mPage: mData,
-            mCheck: mChecked
-          })
-        } else {
-          wx.showToast({ title: '没有新订单！', duration: 2500 });
-        }
+    .equalTo('unitId',app.uUnit.objectId)
+    .edoesNotExist('confirmer')      //查询确认人为空的记录
+    .select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
+    .ascending('paidAt');
+    .find().then(confirmOrder => {
+      if (confirmOrder){
+        let cSpec = [],cantSpec = {},mData = {},mChecked = {};
+        confirmOrder.forEach(cOrder=>{
+          that.supplies[cOrder.objectId] = cOrder;
+          if ( cSpec.indexOf(cOrder.specObjectId)<0 ) {
+            cSpec.push(cOrder.specObjectId);
+            cantSpec[cOrder.specObjectId)] = cOrder.quantity;
+            mData[cOrder.specObjectId] = [cOrder.objectId]
+          } else {
+            cantSpec[cOrder.specObjectId)] += cOrder.quantity;
+            mData[cOrder.specObjectId].push([cOrder.objectId])
+          };
+          mChecked[cOrder.objectId] = true;
+        })
+        that.setData({
+          pageData: that.supplies,
+          oArray: cSpec,
+          quantity: cantSpec,
+          mPage: mData,
+          mCheck: mChecked
+        })
+      } else {
+        wx.showToast({ title: '没有新订单！', duration: 2500 });
+      }
     }).catch(console.error);
   },
-  onLoad: function (ops) {        //传入参数为pNo,不得为空06
+  onLoad: function (ops) {
     var that = this;
     if (weutil.checkRols(app.globalData.user.userRolName,0)){  //检查用户为综合条线或创始人
+      new AV.Query(prosPlan)
+      .equalTo('unitId',app.uUnit.objectId)
+      .select(['unitId','specObjectId','specStock','payment','delivering'])
+      .find().then(specPlans=>{
+        if (specPlans){
+          that.specPlans = specPlans;
+          specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.specObjectId] = specPlan.specStock });
+          that.setData({specCount:that.data.specCount});
+        } else {
+          wx.showToast({ title: '无库存数据！', duration: 2500 });
+          setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+        }
+      }).catch(console.error);
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的订单确认'
       });
-
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -81,10 +97,18 @@ Page ({
 
   fOrder: function(e){
     var that = this;
-    wx.scanCode({
-      success: function(resCode){
-        that.setData({c:resCode.result});
-      }
+    let specId = e.currentTarget.id;
+    let confimate = that.data.quantity[specId];
+    let setSingle = [];
+    that.specPlans[specId].set('specStock':that.specPlans[specId].specStock-confimate);
+    that.specPlans[specId].set('payment':that.specPlans[specId].payment-confimate);
+    that.specPlans[specId].set('delivering':that.specPlans[specId].delivering+confimate);
+    that.specPlans[specId].save().then(()=>{
+      that.data.mPage[specId].forEach(cId=>{
+        that.supplies[cId].set();
+
+      })
+      e.detail.value['chSpec-'+specId].forEach(chSpec=>{})
     })
   },
 
