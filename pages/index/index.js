@@ -7,7 +7,7 @@ Page({
     scrollHeight: app.globalData.sysinfo.windowHeight-80,
     mPage: app.mData.prdct1,
     pNo: 1,                       //流程的序号1为文章类信息
-    pageData: {},
+    pageData: app.aData[1],
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
     userAuthorize: -2,              //中间部分-2显示欢迎词，-1为授权按钮
     pageCk: app.mData.pCk1,
@@ -45,13 +45,10 @@ Page({
         }
       }
     });
-    if (app.aData[1].length>0) {
-      that.setData({ mPage: app.mData.prdct1, pageData: app.aData[1]});
-    }
   },
 
   onReady: function(){
-    updateData(true,1).then(pData=>{this.setData(pData)});                       //更新缓存以后有变化的数据
+    updateData(true,1).then(()=>{ this.setData({mPage:app.mData.prdct1, pageData:app.aData[1]}) });                       //更新缓存以后有变化的数据
   },
   userInfoHandler: function (e) {
     var that = this;
@@ -70,10 +67,10 @@ Page({
   },
 
   onPullDownRefresh:function(){
-    updateData(true,1).then(pData=>{this.setData(pData)});
+    updateData(true,1).then(()=>{ this.setData({mPage: app.mData.prdct1, pageData: app.aData[1]}) });
   },
   onReachBottom:function(){
-    updateData(false,1).then(pData=>{this.setData(pData)});
+    updateData(false,1).then(()=>{ this.setData({mPage: app.mData.prdct1, pageData: app.aData[1]}) });
   },
   onShareAppMessage: function() {    // 用户点击右上角分享
     return {

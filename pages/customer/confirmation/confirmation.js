@@ -2,7 +2,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const prosPlan = require('../../model/prosplan.js');
 const supplies = require('../../model/supplies.js');
-
+const { fetchData } = require('../../util/util.js');
 const setOrderData = untreatedsupplies =>{
   let inArr = [];
   let mpage = untreatedsupplies.map(uOrder=>{
@@ -36,11 +36,11 @@ Page ({
   },
   upDateConfim: function() {
     var that = this;
-    new AV.Query(supplies)
-    .equalTo('unitId',app.uUnit.objectId)
-    .edoesNotExist('confirmer')      //查询确认人为空的记录
-    .select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
-    .ascending('paidAt');
+    supplieQuery = new AV.Query(supplies)
+    supplieQuery.equalTo('unitId',app.uUnit.objectId)
+    supplieQuery.edoesNotExist('confirmer')      //查询确认人为空的记录
+    supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
+    supplieQuery.ascending('paidAt');           //按付款时间升序排列
     .find().then(confirmOrder => {
       if (confirmOrder){
         let cSpec = [],cantSpec = {},mData = {},mChecked = {};

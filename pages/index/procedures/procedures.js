@@ -23,7 +23,7 @@ Page({
       if (app.mData.procedures[j]) {
         app.mData.procedures[j].forEach( mpoId=>{
           if (typeof ats[app.procedures[mpoId].apState][j] == 'undefined') { ats[app.procedures[mpoId].apState][j] = [] };
-          ats[app.procdures[mpoId].apState][j].push(mpoId);
+          ats[app.procedures[mpoId].apState][j].push(mpoId);
         })
       }
     };
@@ -37,7 +37,7 @@ Page({
       atotal: this.data.atotal,
       ats: ats,
       achecked: app.mData.proceduresCk,
-      pageData: app.procdures
+      pageData: app.procedures
     });
   },
 

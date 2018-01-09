@@ -255,13 +255,11 @@ App({
       }
     });
     for (let i=0;i<sProcedure;i++){
-      that.mData.procedures[i] = [];
       that.aData[i] = {};
+      that.mData.procedures[i] = [];
     }
-    for (let j=0;j<sOperation;j++){ that.oData[j]={} }
     that.aData = wx.getStorageSync('aData') || that.aData;              //读数据记录的缓存
     that.mData = wx.getStorageSync('mData') || that.mData;              //读数据管理的缓存
-    that.oData = wx.getStorageSync('oData') || that.oData;              //读数据记录的缓存
     that.procedures = wx.getStorageSync('procedures') || that.procedures;              //读流程的缓存
   },
 
