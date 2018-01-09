@@ -69,24 +69,28 @@ module.exports = {
     })
   },
 
-  fetchData: function(requery,indexField) {                     //同步云端数据到本机
+  fetchData: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
       requery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
       requery.limit(1000);                      //取最大数量
       requery.find().then((readData) => {
         var lena = arp.length;
         if (readData) {
-          let aData = {}, mData = [], aPlace = -1;
+          let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
           arp.forEach(onedata => {
-            aData[onedata.id] = arp;
-            iField
-              if (inFamily) {
-                mData[aProcedure.afamily].push(onedata.id);
-              } else {
-                mData.push(aProcedure.id);                   //分类ID数组增加对应ID
-              }
+            aData[onedata.id] = onedata;
+            iField = onedata.get(indexField);                  //索引字段读数据数
+            if (indexList.indexOf(iField<0)) {
+              indexList.push(iField);
+              mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
+              iSum[iField] = onedata.get(sumField);
+            } else {
+              iSum[iField] += onedata.get(sumField);
+              mData[iField].push(onedata.id);
+            };
+            mChecked[onedata.id] = true;
           });
-          resolve() ;
+          resolve({indexList:indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
         }
       }).catch( error=> {reject(error)} );
     })
