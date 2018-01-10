@@ -9,13 +9,13 @@ Page({
     tabs: ['我的产品','我的服务'],
     pageCk: app.mData.pCk3,
     wWidth: app.globalData.sysinfo.windowWidth,
-    grids: app.wmenu[1]
+    grids: app.wmenu.initValue[1]
   },
   onLoad:function(options){    // 生命周期函数--监听页面加载
     var that = this;
     let pageSetData = weutil.pName(3);
     pageSetData.pandect = '产品' + app.mData.prdct3[0].length + '种  服务' + app.mData.prdct3[1].length + '类';//'  众筹'XX只 上架商品XX 团购XX  成品库存XX 订单未发货XX单 运输过程商品XX单 已结款XXX元
-    pageSetData.grids = app.wmenu[1]          //更新数据
+    pageSetData.grids = app.wmenu.initValue[1]          //更新数据
     that.setData( pageSetData )
   },
   onReady: function(){

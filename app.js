@@ -204,4 +204,11 @@ App({
     }
   },
 
+  onError: function(msg) {
+    this.logData.push([Date.now(), '系统错误:'+msg]);
+    wx.onNetworkStatusChange(res=>{
+      if (!res.isConnected) { wx.showToast({title:'请检查网络！'}) }
+    });
+  }
+
 })

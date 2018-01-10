@@ -8,7 +8,7 @@ Page({
   onLoad:function(options){
     // 生命周期函数--监听页面加载
     var that=this ;
-    that.setData({grids: app.wmenu[2]}) 
+    that.setData({grids: app.wmenu.initValue[2]})
   },
   onReady:function(){
     // 生命周期函数--监听页面初次渲染完成

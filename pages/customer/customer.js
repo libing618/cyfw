@@ -8,7 +8,7 @@ Page({
   },
 
   onLoad:function(options){    // 生命周期函数--监听页面加载
-    this.setData({ grids: app.wmenu[3] })          //更新菜单
+    this.setData({ grids: app.wmenu.initValue[3] })          //更新菜单
   },
 
   onReady:function(){    // 生命周期函数--监听页面初次渲染完成
