@@ -24,11 +24,11 @@ Page({
       that.data.userAuthorize = app.globalData.user.userAuthorize
     };
     return Promise.resolve( AV.User.current()).then(lcuser => {           //读缓存登录信息
-      app.globalData.user = lcuser ? Object.agree(lcuser.toJSON(),userAuthorize: 0) : app.globalData.user;
+      app.globalData.user = lcuser ? Object.assign(lcuser.toJSON(),userAuthorize: 0) : app.globalData.user;
     };
     );
 
-      
+
     wx.getNetworkType({
       success: function(res) {
         if (res.networkType!='none') {                     //如果有网络
