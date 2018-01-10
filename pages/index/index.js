@@ -1,4 +1,4 @@
-const { updateData } = require('../../util/util.js');
+const { updateData,openWxLogin } = require('../../util/util.js');
 var app = getApp()
 Page({
   data: {
@@ -18,22 +18,25 @@ Page({
   onLoad: function () {
     var that = this;
     let mData = wx.getStorageSync('menudata');
-    var mUpdateTime = '0';
     if (mData) {            //有菜单缓存则本手机正常使用中必有登录信息
-      app.wmenu = mData.initVale;
-      mUpdateTime = mData.updatedAt;
       that.data.userAuthorize = 1;
     } else {
       that.data.userAuthorize = app.globalData.user.userAuthorize
     };
+    return Promise.resolve( AV.User.current()).then(lcuser => {           //读缓存登录信息
+      app.globalData.user = lcuser ? Object.agree(lcuser.toJSON(),userAuthorize: 0) : app.globalData.user;
+    };
+    );
+
+      
     wx.getNetworkType({
       success: function(res) {
         if (res.networkType!='none') {                     //如果有网络
           wx.getSetting({
             success(res) {
               if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
-                app.openWxLogin(that.data.userAuthorize, mUpdateTime).then( (mstate)=> {
-                  app.wmenu[0][0].mIcon = app.globalData.user.avatarUrl;
+                openWxLogin(that.data.userAuthorize, mUpdateTime).then( (mstate)=> {
+                  app.wmenu.initVale[0][0].mIcon = app.globalData.user.avatarUrl;
                   that.setData({ userAuthorize: mstate, grids: app.wmenu[0] })
                   app.logData.push([Date.now(), '系统初始化设备' + app.globalData.sysinfo]);                      //本机初始化时间记入日志
                 }).catch((loginErr) => {
@@ -52,7 +55,7 @@ Page({
   },
   userInfoHandler: function (e) {
     var that = this;
-    app.openWxLogin(that.data.userAuthorize,0).then( (mstate)=> {
+    openWxLogin(that.data.userAuthorize,0).then( (mstate)=> {
       app.logData.push([Date.now(), '用户授权' + app.globalData.sysinfo]);                      //用户授权时间记入日志
       app.wmenu[0][0].mIcon = e.detail.userInfo.avatarUrl;      //把微信头像地址存入第一个菜单icon
       that.setData({ userAuthorize: mstate, grids: app.wmenu[0] })

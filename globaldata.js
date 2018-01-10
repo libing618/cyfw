@@ -18,7 +18,8 @@ module.exports={
       "objectId": "0"},
     sysinfo: null
   },
-  wmenu: [                         //用户未注册时的基础菜单
+  wmenu: {
+    initVale:[                         //用户未注册时的基础菜单
       [{"tourl": "./signup/signup",
       "mIcon": "../../images/index.png",
       "mName": "我的信息"}],
@@ -35,6 +36,8 @@ module.exports={
       "mIcon": "../../images/iconfont-abook.png",
       "mName": "常见问题"}]
       ],
+    updatedAt: '0'
+    }
   mData: {
     pAt1 :[                                //缓存中已发布文章更新时间
       new Date(0),                          //最早更新时间
