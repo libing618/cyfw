@@ -36,8 +36,7 @@ Page ({
   },
   upDateConfim: function() {
     var that = this;
-    supplieQuery = new AV.Query(supplies)
-    supplieQuery.equalTo('unitId',app.uUnit.objectId)
+    let supplieQuery = new AV.Query(supplies)
     supplieQuery.edoesNotExist('confirmer')      //查询确认人为空的记录
     supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
@@ -49,10 +48,10 @@ Page ({
           if ( cSpec.indexOf(cOrder.specObjectId)<0 ) {
             cSpec.push(cOrder.specObjectId);
             cantSpec[cOrder.specObjectId)] = cOrder.quantity;
-            mData[cOrder.specObjectId] = [cOrder.objectId]
+mData[cOrder.specObjectId].push([cOrder.objectId])
           } else {
             cantSpec[cOrder.specObjectId)] += cOrder.quantity;
-            mData[cOrder.specObjectId].push([cOrder.objectId])
+
           };
           mChecked[cOrder.objectId] = true;
         })
