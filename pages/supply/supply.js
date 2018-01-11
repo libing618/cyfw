@@ -2,7 +2,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const prosPlan = require('../../model/prosplan.js');
 const supplies = require('../../model/supplies.js');
-const { fetchData,checkRols } = require('../../util/util.js');
+const { fetchData,checkRols,idcheck } = require('../../util/util.js');
 
 var app = getApp();
 Page ({
@@ -17,6 +17,7 @@ Page ({
 
   fetchData: function(oState) {
     var that = this;
+    let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
     let supplieQuery = new AV.Query(supplies);
     supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
@@ -34,7 +35,6 @@ Page ({
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
     supplieQuery.find().then(arp => {
-      let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
       if (readData) {
         arp.forEach(onedata => {
           aData[onedata.id] = onedata;
@@ -55,9 +55,11 @@ Page ({
     }).then(subscription=>{
       this.subscription = subscription;
       if (this.unbind) this.unbind();
-      this.unbind = bind(subscription, todos, setTodos);
+      this.unbind = bind(subscription, aData, setRecord);
     }).catch(console.error)
   },
+
+  setRecord
 
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
@@ -71,6 +73,7 @@ Page ({
           that.specPlans = specPlans;
           specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.specObjectId] = specPlan.specStock });
           that.setData({specCount:that.data.specCount,oState:ops.oState});
+          that.idcheck = idcheck;
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
           setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -79,19 +82,6 @@ Page ({
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
-
-
-
-
-
-      return Promise.all([orderQuery.find().then(setOrderData),orderQuery.subscribe()]).then((untreatedsupplies,subscription) => {
-        that.subscription = subscription;
-        that.subscription.on('create', that.upsert)
-        that.subscription.on('update', that.upsert)
-        that.subscription.on('enter', that.upsert)
-        that.subscription.on('leave', that.remove)
-        that.subscription.on('delete', that.remove)
-      }).catch(console.error);
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -99,21 +89,32 @@ Page ({
   },
   onUnload: function(){
     this.subscription.unsubscribe();
-    this.subscription.off('create', this.upsert)
-    this.subscription.off('update', this.upsert)
-    this.subscription.off('enter', this.upsert)
-    this.subscription.off('leave', this.remove)
-    this.subscription.off('delete', this.remove)
+    this.unbind();
   },
 
-  idcheck: require('../../util/util.js').idcheck,
-
-  fOrder: function(e){
+  fSupplie: function(e){
     var that = this;
     wx.scanCode({
       success: function(resCode){
         that.setData({c:resCode.result});
       }
+    })
+  },
+
+  fSupplies: function(e){
+    var that = this;
+    let specId = e.currentTarget.id;
+    let confimate = that.data.quantity[specId];
+    let setSingle = [];
+    that.specPlans[specId].set('specStock':that.specPlans[specId].specStock-confimate);
+    that.specPlans[specId].set('payment':that.specPlans[specId].payment-confimate);
+    that.specPlans[specId].set('delivering':that.specPlans[specId].delivering+confimate);
+    that.specPlans[specId].save().then(()=>{
+      that.data.mPage[specId].forEach(cId=>{
+        that.supplies[cId].set();
+
+      })
+      e.detail.value['chSpec-'+specId].forEach(chSpec=>{})
     })
   },
 
