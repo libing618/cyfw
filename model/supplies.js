@@ -52,17 +52,20 @@ class supplies extends AV.Object {
   get deliver() { return this.get('deliver'); }
   set deliver(value) { this.set('deliver', value); }
 
-  get deliverAt() { return this.get('deliverAt'); }
-  set deliverAt(value) { this.set('deliverAt', value); }
+  get deliverArr() { return this.get('deliverArr'); }
+  set deliverArr(value) { this.set('deliverArr', value); }
 
-  get deliverNo() { return this.get('deliverNo'); }
-  set deliverNo(value) { this.set('deliverNo', value); }
+  get deliverTotal() { return this.get('deliverTotal'); }
+  set deliverTotal(value) { this.set('deliverTotal', value); }
 
   get receipt() { return this.get('receipt'); }
   set receipt(value) { this.set('receipt', value); }
 
-  get receiptAt() { return this.get('receiptAt'); }
-  set receiptAt(value) { this.set('receiptAt', value); }
+  get receiptArr() { return this.get('receiptArr'); }
+  set receiptArr(value) { this.set('receiptArr', value); }
+
+  get receiptTotal() { return this.get('receiptTotal'); }
+  set receiptTotal(value) { this.set('receiptTotal', value); }}
 }
 AV.Object.register(supplies);
 

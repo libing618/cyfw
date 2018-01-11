@@ -23,7 +23,7 @@ Page({
     } else {
       return Promise.resolve( AV.User.current()).then(lcuser => {           //读缓存登录信息
         if (lcuser) {                //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
-          app.globalData.user = Object.assign(lcuser.toJSON(),userAuthorize: 0);
+          app.globalData.user = lcuser.toJSON();
           fetchMenu().then(()=>{ that.setData({ userAuthorize: 0, grids: app.wmenu.initVale[0] }) });
         } else {
           wx.getSetting({

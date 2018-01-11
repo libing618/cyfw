@@ -2,7 +2,7 @@
 <import src="../../../libs/wedetail.wxml"/>
 <view class="page">
   <view class="page__bd">
-    <block wx:for="{{oArray}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="i">
+    <block wx:for="{{indexList}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="i">
       <view class="weui-cells">
         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
           <template is="{{ achecked==ac ? 'selecticon1' : 'selecticon2'}}" />

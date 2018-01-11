@@ -68,7 +68,7 @@ module.exports = {
       .notEqualTo('userRol.updatedAt',app.wmenu.updatedAt)
       .include(['userRol'])
       .select(['userRol'])
-      .get(that.globalData.user.objectId).then( fetchUser =>{
+      .get(app.globalData.user.objectId).then( fetchUser =>{
         if (fetchUser) {                          //菜单在云端有变化
           app.wmenu = fetchUser.get('userRol');
           wx.setStorage({ key: 'menudata', data: mUser.userRol });
@@ -79,28 +79,27 @@ module.exports = {
         withCredentials: false,
         success: function (wxuserinfo) {
           if (wxuserinfo) {
-            if (fuAt != that.globalData.user.updatedAt) {             //客户信息有变化
+            if (fuAt != app.globalData.user.updatedAt) {             //客户信息有变化
               AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
-                that.globalData.user = rLoginUser.toJSON();
-                that.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-                that.globalData.user.nickName = wxuserinfo.userInfo.nickName;
+                app.globalData.user = rLoginUser.toJSON();
+                app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
+                app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
                 resolve();
               }).catch(uerr=> reject(uerr))
             } else {
-              that.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-              that.globalData.user.nickName = wxuserinfo.userInfo.nickName;
+              app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
+              app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
               resolve();
             }
           }
         }
       })
     }).then( ()=>{
-      getRols(that.globalData.user.unit);
-      app.imLogin(that.globalData.user.username);
+      getRols(app.globalData.user.unit);
+      app.imLogin(app.globalData.user.username);
       return
     }).catch( console.error );
   },
-
 
   updateData: function(isDown,pNo) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
@@ -154,13 +153,9 @@ module.exports = {
     })
   },
 
-  fetchData: function(requery,indexField,sumField) {                     //同步云端数据到本机
+  fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
-      requery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
-      requery.limit(1000);                      //取最大数量
-      requery.find().then((readData) => {
-        var lena = arp.length;
-        if (readData) {
+
           let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
           arp.forEach(onedata => {
             aData[onedata.id] = onedata;

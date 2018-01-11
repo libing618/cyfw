@@ -1,7 +1,7 @@
 // 供货操作
 const AV = require('../../libs/leancloud-storage.js');
 const prosPlan = require('../../model/prosplan.js');
-const Orders = require('../../model/supplies.js');
+const supplies = require('../../model/supplies.js');
 const { fetchData,checkRols } = require('../../util/util.js');
 
 var app = getApp();
@@ -13,18 +13,52 @@ Page ({
     pageData: []
   },
   specPlans: {},
-  supplies: {},
+  suppliesArr: {},
 
-  remove: function(value) {
-    stats = this.data.pageData.filter(target => target.id !== value.id)
-    return setOrderData(stats)
+  fetchData: function(oState) {
+    var that = this;
+    let supplieQuery = new AV.Query(supplies);
+    supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
+    supplieQuery.ascending('paidAt');           //按付款时间升序排列
+    switch (oState){
+      case 0:
+        supplieQuery.edoesNotExist('confirmer');      //查询确认人为空的记录
+        break;
+      case 1:
+        supplieQuery.notEqualTo('quantity','deliverTotal');      //查询发货量不等于订单的记录
+        break;
+      case 2:
+        supplieQuery.notEqualTo('quantity','deliverTotal');      //查询到货不等于订单的记录
+        break;
+    }
+    supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
+    supplieQuery.limit(1000);                      //取最大数量
+    supplieQuery.find().then(arp => {
+      let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
+      if (readData) {
+        arp.forEach(onedata => {
+          aData[onedata.id] = onedata;
+          iField = onedata.get(indexField);                  //索引字段读数据数
+          if (indexList.indexOf(iField<0)) {
+            indexList.push(iField);
+            mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
+            iSum[iField] = onedata.get(sumField);
+          } else {
+            iSum[iField] += onedata.get(sumField);
+            mData[iField].push(onedata.id);
+          };
+          mChecked[onedata.id] = true;
+        });
+        that.setData({indexList:indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
+      }
+      return supplieQuery.subscribe();
+    }).then(subscription=>{
+      this.subscription = subscription;
+      if (this.unbind) this.unbind();
+      this.unbind = bind(subscription, todos, setTodos);
+    }).catch(console.error)
   },
-  upsert: function(value) {
-    let existed = false;
-    stats = this.data.pageData.map(target => (target.id === value.id ? ((existed = true), value) : target))
-    if (!existed) {stats = [value, ...stats]}
-    return setOrderData(stats)
-  },
+
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
     let oClass = require('../../model/operationclass.js')[1];
@@ -36,7 +70,7 @@ Page ({
         if (specPlans){
           that.specPlans = specPlans;
           specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.specObjectId] = specPlan.specStock });
-          that.setData({specCount:that.data.specCount});
+          that.setData({specCount:that.data.specCount,oState:ops.oState});
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
           setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -45,17 +79,12 @@ Page ({
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
-      let supplieQuery = new AV.Query(supplies)
-
-
-      supplieQuery.edoesNotExist('confirmer')      //查询确认人为空的记录
-      supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
-      supplieQuery.ascending('paidAt');           //按付款时间升序排列
 
 
 
-      
-      return Promise.all([orderQuery.find().then(setOrderData),orderQuery.subscribe()]).then((untreatedOrders,subscription) => {
+
+
+      return Promise.all([orderQuery.find().then(setOrderData),orderQuery.subscribe()]).then((untreatedsupplies,subscription) => {
         that.subscription = subscription;
         that.subscription.on('create', that.upsert)
         that.subscription.on('update', that.upsert)
