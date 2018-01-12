@@ -14,6 +14,8 @@ Page ({
   },
   specPlans: {},
   suppliesArr: {},
+  indexField: 'specObjectId',      //定义索引字段
+  sumField: 'quantity',          //定义汇总字段
 
   fetchData: function(oState) {
     var that = this;
@@ -27,9 +29,13 @@ Page ({
         break;
       case 1:
         supplieQuery.notEqualTo('quantity','deliverTotal');      //查询发货量不等于订单的记录
+        that.sumField = 'deliverTotal';
         break;
       case 2:
-        supplieQuery.notEqualTo('quantity','deliverTotal');      //查询到货不等于订单的记录
+        supplieQuery.notEqualTo('quantity','receiptTotal');      //查询到货不等于订单的记录
+        supplieQuery.greaterThan('serFamily',1);
+        that.indexField = 'address';
+        that.sumField = 'receiptTotal';
         break;
     }
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
@@ -38,13 +44,13 @@ Page ({
       if (readData) {
         arp.forEach(onedata => {
           aData[onedata.id] = onedata;
-          iField = onedata.get(indexField);                  //索引字段读数据数
+          iField = onedata.get(that.indexField);                  //索引字段读数据数组
           if (indexList.indexOf(iField<0)) {
             indexList.push(iField);
             mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
-            iSum[iField] = onedata.get(sumField);
+            iSum[iField] = onedata.get(that.sumField);
           } else {
-            iSum[iField] += onedata.get(sumField);
+            iSum[iField] += onedata.get(that.sumField);
             mData[iField].push(onedata.id);
           };
           mChecked[onedata.id] = true;
@@ -59,9 +65,19 @@ Page ({
     }).catch(console.error)
   },
 
-  setRecord
+  setRecord: function(sId){
+    var that = this;
+    let sData = {};
+    that.data.mData[]
+  }
 
-  onLoad: function (ops) {        //传入参数为pNo,不得为空06
+  addArrElement: function(e){
+    var that = this;
+    var sId = e.currentTarget.id;
+
+  }
+
+  onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
     let oClass = require('../../model/operationclass.js')[1];
     if (checkRols(app.globalData.user.userRolName,oClass.ouRoles[ops.oState])){  //检查用户操作权限
@@ -73,7 +89,7 @@ Page ({
           that.specPlans = specPlans;
           specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.specObjectId] = specPlan.specStock });
           that.setData({specCount:that.data.specCount,oState:ops.oState});
-          that.idcheck = idcheck;
+          if (ops.oState==0) { that.idcheck = idcheck };
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
           setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -87,6 +103,7 @@ Page ({
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },
+
   onUnload: function(){
     this.subscription.unsubscribe();
     this.unbind();

@@ -99,14 +99,16 @@ module.exports = [
 {
   "pNo": 4,
   "pName": "服务",
-  "afamily":['快递','物流','柜台提货','店铺消费'],
+  "afamily":['快递送货','货运自提','柜台提货','店铺消费'],
   "pSuccess": [
     {gname:"uName", p:'名称', t:"h3" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
     {gname:"address", p: '服务地址', t: "ed" },
     {gname:"price", p:'价格', t:"dg" },
-    {gname:"serlist", p:['服务方','联系人','电话'], t:"table" }
+    {gname:"serParty", p:'服务方', t:"h4" },
+    {gname:"serName", p:'联系人姓名', t:"h4" },
+    {gname:"serPhone", p:'联系人电话', t:"h4" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -121,7 +123,7 @@ module.exports = [
   "pName": "产品规格",
   "pSuccess": [
     {gname:"proObjectId", p:'产品', inclose: true,t:"sproduct", provalue:[0,0] },
-    {gname:"serObjectId", p:'服务', inclose: true,t:"sproduct", provalue:[0,0] },
+    {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },

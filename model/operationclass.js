@@ -19,7 +19,7 @@ module.exports = [
     "oprocess": ['订单确认', '成品出货', '店铺确认'],
     "oSuccess": [
       { gname: "specObjectId", t: "specs", p: "规格" },
-      { gname: "serObjectId", t: "sivers", p: "服务" },
+      { gname: "serFamily", t: "sivers", p: "服务" },
       { gname: "addressObjectId", t: "adds", p: "地点" }
     ],
     "ouRoles": [0,1,1,3],

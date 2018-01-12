@@ -23,8 +23,8 @@ class supplies extends AV.Object {
   get prepayId() { return this.get('prepayId'); }
 //  set prepayId(value) { this.set('prepayId', value); }
 
-  get serObjectId() { return this.get('serObjectId'); }
-//  set serObjectId(value) { this.set('serObjectId', value); }
+  get serFamily() { return this.get('serFamily'); }
+//  set serFamily(value) { this.set('serFamily', value); }
   get serName() { return this.get('serName'); }
 
   get specObjectId() { return this.get('specObjectId'); }
