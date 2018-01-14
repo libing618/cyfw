@@ -55,7 +55,7 @@ module.exports = {
             ]
           };
           break;
-        case 'sproduct' :                    //产品选择字段
+        case 'sProcedure' :                    //产品选择字段
           that.data.reqData[i].mD = app.mData.prdct3;
           that.data.reqData[i].ad = app.aData[3];
           break;
@@ -106,9 +106,9 @@ module.exports = {
   },
 
   tabClick: function (e) {                                //点击tab
-    app.mData[pCk+this.data.pNo] = Number(e.currentTarget.id)
+    app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
     this.setData({
-      pageCk: app.mData[pCk+this.data.pNo]                //点击序号切换
+      pageCk: app.mData['pCk'+this.data.pNo]                //点击序号切换
     });
   },
 
@@ -274,7 +274,7 @@ module.exports = {
     })
   },
 
-  i_sproduct: function (e) {                         //选择产品服务
+  i_sProcedure: function (e) {                         //选择产品服务
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     var id = e.currentTarget.id.substring(0, 2);

@@ -1,33 +1,33 @@
 const AV = require('../libs/leancloud-storage.js');
-var unitId = getApp().uUnit.objectId
+var app = getApp()
 class proportions extends AV.Object {
   get unitId() {
     return this.get('unitId');
   }
   set unitId(value) {
-    this.set('unitId', unitId);
+    this.set('unitId', app.uUnit.objectId);
   }
-  get prObjectId() {
-    return this.get('prObjectId');
+  get goods() {
+    return this.get('goods');
   }
-  set prObjectId(value) {
-    this.set('prObjectId', value);
+  set goods(value) {
+    this.set('goods', value);
   }
-  get channel() {
+  get channel() {     //渠道分成
     return this.get('channel');
   }
   set channel(value) {
     this.set('channel', value);
   }
 
-  get extension() {
+  get extension() {     //推广分成
     return this.get('extension');
   }
   set extension(value) {
     this.set('extension', value);
   }
 
-  get mCost() {
+  get mCost() {     //厂家收入占比
     return this.get('mCost');
   }
   set mCost(value) {

@@ -1,5 +1,4 @@
 module.exports = {
-  "afamily": 0,
   uName: '枣夹核桃',
 title: '枣夹核桃,尽享休闲美味',
 aGeoPoint: { __type: 'GeoPoint', latitude: 37.79517436379926, longitude: 112.56480059271237 },

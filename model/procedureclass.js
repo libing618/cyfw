@@ -2,7 +2,7 @@ module.exports = [
 {
   "pNo": 0,
   "pName": "单位名称和负责人",
-  "afamily": ['产品经理','生产厂家','电子商务企业'],
+  "afamily": ['电商服务站','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdvalue:[0, 0, 0] },
     {gname:"nick", p:'单位简称',t:"h3" },
@@ -74,19 +74,18 @@ module.exports = [
     {gname: "uName", p:'名称', t:"h3" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype", pdva:[0, 0, 0] },
     {gname:"title", p:'简介',t:"h4" },
-    {gname:"desc", p:'描述',t:"p" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
-    {gname:"pics", p:'图片集',t:"pics"},
-    {gname:"tvidio", p:'视频简介',t: "vidio" },
-    {gname:"aGeoPoint", p: '地理位置', t: "chooseAd" },
-    {gname:"address", p: '地址', t: "ed" },
+    {gname:"aGeoPoint", p:'地理位置', t: "chooseAd" },
+    {gname:"address", p:'地址', t: "ed" },
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
     {gname:"PARM_attention", p:'注意事项', t:"h4" },
     {gname:"PARM_period", p:'期限(天)', t:"dg" },
     {gname:"standard_code", p:'执行标准', t:"h4" },
     {gname:"license_no", p:'许可证号', t:"h4" },
-    {gname:"details", p:'详情',t:"eDetail" }
+    {gname:"surface", p:'外观范围', t:"addarr" },
+    {gname:"size", p:'尺寸范围', t:"addarr" },
+    {gname:"weight", p:'重量范围', t:"addarr" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -99,9 +98,9 @@ module.exports = [
 {
   "pNo": 4,
   "pName": "服务",
-  "afamily":['快递送货','货运自提','柜台提货','店铺消费'],
   "pSuccess": [
     {gname:"uName", p:'名称', t:"h3" },
+    {gname:"afamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费']},
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
     {gname:"address", p: '服务地址', t: "ed" },
@@ -120,13 +119,15 @@ module.exports = [
 },
 {
   "pNo": 5,
-  "pName": "产品规格",
+  "pName": "成品",
   "pSuccess": [
-    {gname:"proObjectId", p:'产品', inclose: true,t:"sproduct", provalue:[0,0] },
-    {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
+    {gname:"product", p:'产品', inclose: true,t:"sProcedure", provalue:[0,0] },
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
+    {gname:"s_surface", p:'外观范围', t:"arrsel" },
+    {gname:"s_size", p:'尺寸范围', t:"arrsel" },
+    {gname:"s_weight", p:'重量范围', t:"addsel" },
     {gname:"retail_price", p:'零售价', t:"dg" },
     {gname:"stock", p:'库存', t:"dg" }
   ],
@@ -136,14 +137,58 @@ module.exports = [
     "11"
   ],
   "sFinallyRole": "12",
-  "pModle": "shelves"
+  "pModle": "cargo"
 },
 {
   "pNo": 6,
+  "pName": "商品",
+  "pSuccess": [
+    {gname: "uName", p:'名称', t:"h3" },
+    {inclose: true, gname:"goodstype", p:'商品类别',t:"goodstype", pdva:[0, 0, 0] },
+    {gname:"title", p:'简介',t:"h4" },
+    {gname:"desc", p:'描述',t:"p" },
+    {gname:"afamily", p:'规格类型', inclose: true,t:"arrsel", aList:['单品','套餐']},
+    {gname:"thumbnail", p:'图片简介',t:"thumb" },
+    {gname:"pics", p:'图片集',t:"pics"},
+    {gname:"tvidio", p:'视频简介',t: "vidio" },
+    {gname:"details", p:'详情',t:"eDetail" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
+  "puRoles": [
+    "12",
+    "11"
+  ],
+  "sFinallyRole": "12",
+  "pModle": "goods"
+},
+{
+  "pNo": 7,
+  "pName": "商品规格",
+  "pSuccess": [
+    {gname:"uName", p:'名称', t:"h3" },
+    {gname:"product", p:'产品', inclose: true,t:"sProcedure", provalue:[0,0] },
+    {gname:"cargo", p:'成品', inclose: true,t:"sProcedure", provalue:[0,0] },
+    {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
+    {gname:"title", p:'简介',t:"h4" },
+    {gname:"desc", p:'描述',t:"p" },
+    {gname:"thumbnail", p:'图片简介',t:"thumb" },
+    {gname:"package", p:'包装内数量', t:"dg" },
+    {gname:"price", p:'零售价', t:"dg" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
+  "puRoles": [
+    "12",
+    "11"
+  ],
+  "sFinallyRole": "12",
+  "pModle": "specs"
+},
+{
+  "pNo": 8,
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"specObjectId", p:'产品规格', inclose: true,t:"sproduct" },
+    {gname:"specs", p:'商品规格', inclose: true,t:"sProcedure" },
     {gname:"base_price", p:'基础优惠价', t:"dg" },
     {gname:"base_amount", p:'基础目标数量',t:"dg" },
     {gname:"big_price", p:'大额优惠价', t:"dg" },
@@ -159,13 +204,13 @@ module.exports = [
   "pModle": "promotion"
 },
 {
-  "pNo": 7,
+  "pNo": 9,
   "pName": "生产计划",
-  "afamily":['3年','每年','半年','每季','每月','每日'],
   "pSuccess": [
-    {gname: "specObjectId", p:'产品规格', inclose: true,t:"sproduct" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sProcedure" },
     {gname:"uName", p:'计划名称', t:"h3" },
     {gname:"title", p:'计划简述',t:"p" },
+    {gname:"afamily", p:'计划周期',inclose: true,t:"arrsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"assetArr", p:'生产用固定资产', t:"assetarray",inclose:true },
     {gname:"dOutput", p:'计划产量', t:"dg" },

@@ -22,7 +22,7 @@ Page({
               that.data.specData = app.aData[4];
               let shelves={};
               that.data.mPage.forEach(pObjectId=>{
-                shelves[pObjectId] = specData.mPage.filter(spec => {that.data.specPage[spec].proObjectId==pObjectId})
+                shelves[pObjectId] = specData.mPage.filter(spec => {that.data.specPage[spec].product==pObjectId})
               })
               that.data.specPage = shelves;
             }
@@ -50,20 +50,20 @@ Page({
     .limit(1000)
     .find().then(orderlist=>{
       if (orderlist) {
-        that.data.mPage.forEach(proObjectId=>{
+        that.data.mPage.forEach(product=>{
           let sumPro = 0;
-          that.data.specPage[proObjectId].forEach(specObjectId=>{
+          that.data.specPage[product].forEach(cargo=>{
             let sumOrder = 0, specOrder = [];
             orderlist.forEach(order=>{
-              if (order.specObjectId==specObjectId) {
+              if (order.cargo==cargo) {
                 specOrder.push(order);
                 sumOrder += order.amount};
             })
             that.data.specOrder = specOrder;
-            that.data.sumspec[specObjectId] = sumOrder;
+            that.data.sumspec[cargo] = sumOrder;
             sumPro += sumOrder;
           })
-          that.data.sumpro[proObjectId] = sumPro;
+          that.data.sumpro[product] = sumPro;
         })
         that.setData(that.data);
       }

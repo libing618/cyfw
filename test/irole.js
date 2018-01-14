@@ -1,4 +1,4 @@
-module.exports={"afamily": 3,
+module.exports={"afamily": 2,
 "indType":[10104,620406],
 "nick":'山西乐农汇',
 "title": '山西乐农汇',

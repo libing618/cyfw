@@ -1,5 +1,4 @@
 module.exports = {
-  "afamily": 0,
   uName: '琥珀核桃（罐装）',
   title: '琥珀核桃（罐装）',
   aGeoPoint: { __type: 'GeoPoint', latitude: 37.79517436379926, longitude: 112.56480059271237 },

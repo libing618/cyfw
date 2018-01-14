@@ -12,28 +12,33 @@ Page({
       {gname: "mCost", p: '销售管理总占比', t: "fg"}
     ],
     vData:{"channel":7, "extension":10,"mCost":70},
-    sProObjectId: ""
+    mPage: app.mData.goods,
+    pageData: app.aData.goods,
+    sproduct: ""
   },
   onLoad:function(options){
     var that = this;
     if ( app.globalData.user.userRolName == 'admin' && app.globalData.user.emailVerified ) {
-      updateData(true,3).then(pData=>{
-        let sproportions=[],mproportions=[];
+      updateData(true,6).then((reNew)=>{
+        let sproportions=[],mproportions=[],pData={};
+        if (reNew) {                     //商品数据有更新
+          pData.pageData = app.aData.goods;
+          pData.mPage = app.mData.goods;
+        }
         new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find().then(manufactor=>{
-          if (manufactor) {
+          if (manufactor) {                    //已设置过商品分销策略的数据
             manufactor.forEach(prodata=>{
-        //      prodata = proportion.toJSON();
               pData.sData[prodata.objectId] = prodata;
-              pData.mPage[0].forEach(mData=>{
-                if (prodata.objectId==mData.objectId){
+              app.mData.goods.forEach(goodsId=>{
+                if (prodata.objectId==goodsId){
                   sproportions.push(prodata.objectId);
-                } else {mproportions.push(mData.objectId)}
+                } else {mproportions.push(goodsId)}
               })
             })
             pData.sPage = sproportions;
-            pData.mPage[0] = mproportions;
+            pData.mPage = mproportions;
           }
-          that.setData(pData);
+          if (pData) { that.setData(pData); }
         }).catch(console.error);
       }).catch(console.error);
     } else {
@@ -42,8 +47,8 @@ Page({
     };
   },
 
-  f_sProObjectId:function(options){
-    this.setData({sProObjectId:e.target.id});
+  f_sproduct:function(options){
+    this.setData({sproduct:e.target.id});
   },
 
   f_mCost:function(e){
@@ -51,17 +56,19 @@ Page({
     inmcost = Number(e.detail.value);
     let vdSet = {};
     if (isNaN(inmcost)){
-      vdSet['vData.'+this.data.reqData[n].gname] = 0;
+      vdSet['vData.'+this.data.reqData[n].gname] = 0;      //不能输入非数字
     } else {
-      vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;
+      vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;      //不能超过30%
     }
     vdSet.vData.mCost = 85-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
     this.setData( vdSet );
   },
+
   fSave:function(e){
     var that = this;
-    new proportions({unitId:'0',
-      prObjectId:that.data.sProObjectId,
+    new proportions.set({
+      unitId:'0',
+      goods:that.data.sproduct,                   //选择商品的ID
       channel:e.detail.value.channel,
       extension:e.detail.value.extension,
       mCost:e.detail.value.mCost
@@ -70,7 +77,7 @@ Page({
       that.data.sPage.unshift(prodata.objectId);
       let mwz = that.data.mPage[0].indexOf(prodata.objectId);
       if (mwz>=0){that.data.mPage[0].splice(mwz,1)};
-      that.data.sProObjectId = '';
+      that.data.sproduct = '';
       that.setData(that.data);
     }).catch( console.error );
   }

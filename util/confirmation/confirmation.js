@@ -10,7 +10,7 @@ const setOrderData = untreatedsupplies =>{
     return uOrder.tradeId});
   new AV.Query(prosPlan).find().then((plans)=>{
     let prosdata={};
-    plans.forEach(plan=>{ prosdata[plan.proObjectId] = plan})
+    plans.forEach(plan=>{ prosdata[plan.product] = plan})
     this.setData({
       pageData: untreatedsupplies,
       pros: prosdata,
@@ -38,19 +38,19 @@ Page ({
     var that = this;
     let supplieQuery = new AV.Query(supplies)
     supplieQuery.edoesNotExist('confirmer')      //查询确认人为空的记录
-    supplieQuery.select(['tradeId','quantity','proName','specObjectId','specName','address','paidAt'])
+    supplieQuery.select(['tradeId','quantity','proName','cargo','specName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
     .find().then(confirmOrder => {
       if (confirmOrder){
         let cSpec = [],cantSpec = {},mData = {},mChecked = {};
         confirmOrder.forEach(cOrder=>{
           that.supplies[cOrder.objectId] = cOrder;
-          if ( cSpec.indexOf(cOrder.specObjectId)<0 ) {
-            cSpec.push(cOrder.specObjectId);
-            cantSpec[cOrder.specObjectId)] = cOrder.quantity;
-mData[cOrder.specObjectId].push([cOrder.objectId])
+          if ( cSpec.indexOf(cOrder.cargo)<0 ) {
+            cSpec.push(cOrder.cargo);
+            cantSpec[cOrder.cargo)] = cOrder.quantity;
+mData[cOrder.cargo].push([cOrder.objectId])
           } else {
-            cantSpec[cOrder.specObjectId)] += cOrder.quantity;
+            cantSpec[cOrder.cargo)] += cOrder.quantity;
 
           };
           mChecked[cOrder.objectId] = true;
@@ -72,11 +72,11 @@ mData[cOrder.specObjectId].push([cOrder.objectId])
     if (weutil.checkRols(app.globalData.user.userRolName,0)){  //检查用户为综合条线或创始人
       new AV.Query(prosPlan)
       .equalTo('unitId',app.uUnit.objectId)
-      .select(['unitId','specObjectId','specStock','payment','delivering'])
+      .select(['unitId','cargo','specStock','payment','delivering'])
       .find().then(specPlans=>{
         if (specPlans){
           that.specPlans = specPlans;
-          specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.specObjectId] = specPlan.specStock });
+          specPlans.forEach(specPlan=>{ that.data.specCount[specPlan.cargo] = specPlan.specStock });
           that.setData({specCount:that.data.specCount});
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });

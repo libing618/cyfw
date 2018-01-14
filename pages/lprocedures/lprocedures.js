@@ -1,4 +1,4 @@
-const { updateData } = require('../../util/util.js');
+const { updateData,className } = require('../../util/util.js');
 var app = getApp()
 Page ({
   data: {
@@ -13,11 +13,13 @@ Page ({
     let pno = Number(ops.pNo);
     let artid = Number(ops.artId);
     if (! isNaN(pno)) {
-      that.data.pNo = pno;
-      if(!isNaN(artid)) {that.data.dObjectId = artid};
-      that.data.pageData = app.aData[pno];
-      that.data.mPage = isNaN(artid) ? app.mData['prdct'+pno] : app.mData['prdct'+pno][artid];
-      that.setData( that.data )
+      let cName = className(pno);
+      that.setData({
+        pNo: pno,
+        dObjectId: isNaN(artid) ? 0 : artid,
+        pageData: app.aData[cName],
+        mPage: isNaN(artid) ? app.mData[cName] : app.mData[cName][artid],
+      });
     } else {
       wx.showToast({ title: '数据传输有误，请联系客服！', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);

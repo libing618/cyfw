@@ -16,9 +16,9 @@ module.exports = [
   {
     "oNo": 1,
     "oName": "订单处理",
-    "oprocess": ['订单确认', '成品出货', '店铺确认'],
+    "oprocess": ['订单确认', '成品出货', '送到确认'],
     "oSuccess": [
-      { gname: "specObjectId", t: "specs", p: "规格" },
+      { gname: "cargo", t: "specs", p: "规格" },
       { gname: "serFamily", t: "sivers", p: "服务" },
       { gname: "addressObjectId", t: "adds", p: "地点" }
     ],

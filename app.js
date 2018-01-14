@@ -8,7 +8,7 @@ const VideoMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js
 const LocationMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').LocationMessage;
 const FileMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').FileMessage;
 const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
-const sProcedure = 8;     //本小程序中审批流程的类型数
+
 AV.init({
     appId: "Trce3aqbc6spacl6TjA1pndr-gzGzoHsz",                    // 初始化存储 SDK
     appKey: "CBbIFAhL4zOyCT9PQM5273bP"
@@ -24,8 +24,9 @@ const realtime = new Realtime({
 App({
   globalData: require('globaldata.js').globalData,
   wmenu: require('globaldata.js').wmenu,
-  mData: require('globaldata.js').mData,
-  aData: new Array(sProcedure),                           //以objectId为key的数据记录
+  mData: require('globaldata.js').mData,                          //以objectId为key的数据记录
+  aData: {},
+  iData: {},
   procedures: {},
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
@@ -156,10 +157,7 @@ App({
         };
       }
     });
-    for (let i=0;i<sProcedure;i++){
-      that.aData[i] = {};
-      that.mData.procedures[i] = [];
-    }
+    for (let i=0;i<11;i++){ that.mData.procedures[i] = []; }
     that.aData = wx.getStorageSync('aData') || that.aData;              //读数据记录的缓存
     that.mData = wx.getStorageSync('mData') || that.mData;              //读数据管理的缓存
     that.procedures = wx.getStorageSync('procedures') || that.procedures;              //读流程的缓存

@@ -105,52 +105,54 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var pClass = procedureclass[pNo];
       var readProcedure = new AV.Query(pClass.pModle);                                      //进行数据库初始化操作
-      var upName = 'pAt'+pNo;
       if (pNo>1){readProcedure.equalTo('unitId',app.uUnit.objectId)};                //除单位和文章类数据外只能查本单位数据
       if (isDown) {
-        readProcedure.greaterThan('updatedAt', app.mData[upName][1]);          //查询本地最新时间后修改的记录
+        readProcedure.greaterThan('updatedAt', app.mData.pAt[pClass.pModle][1]);          //查询本地最新时间后修改的记录
         readProcedure.ascending('updatedAt');           //按更新时间升序排列
         readProcedure.limit(1000);                      //取最大数量
       } else {
-        readProcedure.lessThan('updatedAt', app.mData[upName][0]);          //查询最后更新时间前修改的记录
+        readProcedure.lessThan('updatedAt', app.mData.pAt[pClass.pModle][0]);          //查询最后更新时间前修改的记录
         readProcedure.descending('updatedAt');           //按更新时间降序排列
       };
       let inFamily = typeof pClass.afamily != 'undefined';
-      let aaName = 'prdct'+pNo
       readProcedure.find().then((arp) => {
         var lena = arp.length;
         if (arp) {
           let aPlace = -1;
           if (isDown) {
-            app.mData[upName][1] = arp[lena-1].updatedAt;                          //更新本地最新时间
-            app.mData[upName][0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
+            app.mData.pAt[pClass.pModle][1] = arp[lena-1].updatedAt;                          //更新本地最新时间
+            app.mData.pAt[pClass.pModle][0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
           }else{
-            app.mData[upName][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
+            app.mData.pAt[pClass.pModle][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
           };
           arp.forEach(aProcedure => {
             if (isDown){
               if (inFamily) {                         //存在afamily类别
-                aPlace = app.mData[aaName][aProcedure.afamily].indexOf(aProcedure.id);
-                if (aPlace>=0) {app.mData[aaName][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
-                app.mData[aaName][aProcedure.afamily].unshift(aProcedure.id);
+                aPlace = app.mData[pClass.pModle][aProcedure.afamily].indexOf(aProcedure.id);
+                if (aPlace>=0) {app.mData[pClass.pModle][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
+                app.mData[pClass.pModle][aProcedure.afamily].unshift(aProcedure.id);
               } else {
-                aPlace = app.mData[aaName].indexOf(aProcedure.id);
-                if (aPlace>=0) {app.mData[aaName].splice(aPlace,1)}           //删除本地的重复记录列表
-                app.mData[aaName].unshift(aProcedure.id);
+                aPlace = app.mData[pClass.pModle].indexOf(aProcedure.id);
+                if (aPlace>=0) {app.mData[pClass.pModle].splice(aPlace,1)}           //删除本地的重复记录列表
+                app.mData[pClass.pModle].unshift(aProcedure.id);
               }
             }else{
               if (inFamily) {
-                app.mData[aaName][aProcedure.afamily].push(aProcedure.id);
+                app.mData[pClass.pModle][aProcedure.afamily].push(aProcedure.id);
               } else {
-                app.mData[aaName].push(aProcedure.id);                   //分类ID数组增加对应ID
+                app.mData[pClass.pModle].push(aProcedure.id);                   //分类ID数组增加对应ID
               }
             };
-            app.aData[pNo][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
+            app.aData[pClass.pModle][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
           });
-          resolve() ;
-        }
+          resolve(true);               //数据有更新
+        } else {resolve(false);}               //数据无更新
       }).catch( error=> {reject(error)} );
     })
+  },
+
+  className: function(pNo) {
+    return procedureclass[pNo].pModle
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

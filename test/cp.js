@@ -1,5 +1,4 @@
 module.exports = {
-  "afamily": 0,
   uName: '黒小米',
 
 title: '谷中营养之王',

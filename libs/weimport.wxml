@@ -444,22 +444,22 @@
   </view>
 </template>
 
-<template name="s_sproduct">
+<template name="s_sProcedure">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{p}}:</view>
     <view class="weui-cell__ft">{{ ad[c].uName }}</view>
   </view>
 </template>
 
-<template name="i_sproduct">
+<template name="i_sProcedure">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{ad[c ? c : mD[provalue[0]][provalue[1]] ]}} </view>
     <view hidden="true"><input name="{{gname}}" value="{{c ? c : mD[provalue[0]][provalue[1]]}}" /></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_sproduct" type="search" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_sProcedure" type="search" size="32"/>
   </view>
   <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{provalue}}" bindchange="i_sproduct">
+    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{provalue}}" bindchange="i_sProcedure">
       <picker-view-column>
           <view wx:for="{{['产品','服务']}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
       </picker-view-column>
