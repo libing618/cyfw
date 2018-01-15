@@ -101,50 +101,68 @@ module.exports = {
     }).catch( console.error );
   },
 
-  updateData: function(isDown,pNo,unitId) {    //更新页面显示数据,isDown下拉刷新
+  updateData: function(isDown,pNo,uId) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
-      var pClass = procedureclass[pNo];
-      var readProcedure = new AV.Query(pClass.pModle);                                      //进行数据库初始化操作
-      if (pNo>1){readProcedure.equalTo('unitId',unitId ? unitId : app.uUnit.objectId)};                //除单位和文章类数据外只能查本单位数据
+      var cName = procedureclass[pNo].pModle;
+      var unitId = uId ? uId : app.uUnit.objectId;
+      let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
+      var umdata = [];
+      var updAt = app.mData.pAt[cName];
+      var readProcedure = new AV.Query(cName);                                      //进行数据库初始化操作
+      if (pNo>1){
+        readProcedure.equalTo('unitId',unitId);                //除权限和文章类数据外只能查指定单位的数据
+        updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [new Date(0),new Date(0)] : app.mData.pAt[cName][unitId];
+      };
       if (isDown) {
-        readProcedure.greaterThan('updatedAt', app.mData.pAt[pClass.pModle][1]);          //查询本地最新时间后修改的记录
+        readProcedure.greaterThan('updatedAt', updAt[1]);          //查询本地最新时间后修改的记录
         readProcedure.ascending('updatedAt');           //按更新时间升序排列
         readProcedure.limit(1000);                      //取最大数量
       } else {
-        readProcedure.lessThan('updatedAt', app.mData.pAt[pClass.pModle][0]);          //查询最后更新时间前修改的记录
+        readProcedure.lessThan('updatedAt', updAt[0]);          //查询最后更新时间前修改的记录
         readProcedure.descending('updatedAt');           //按更新时间降序排列
       };
-      let inFamily = typeof pClass.afamily != 'undefined';
       readProcedure.find().then((arp) => {
         var lena = arp.length;
         if (arp) {
+          if (pNo>1) {
+            umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
+          } else {
+            umdata = app.mData[cName];
+          }
           let aPlace = -1;
           if (isDown) {
-            app.mData.pAt[pClass.pModle][1] = arp[lena-1].updatedAt;                          //更新本地最新时间
-            app.mData.pAt[pClass.pModle][0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
+            updAt[1] = arp[lena-1].updatedAt;                          //更新本地最新时间
+            updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
           }else{
-            app.mData.pAt[pClass.pModle][0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
+            updAt[0] = arp[lena-1].updatedAt;          //更新本地最后更新时间
           };
           arp.forEach(aProcedure => {
             if (isDown){
               if (inFamily) {                         //存在afamily类别
-                aPlace = app.mData[pClass.pModle][aProcedure.afamily].indexOf(aProcedure.id);
-                if (aPlace>=0) {app.mData[pClass.pModle][aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
-                app.mData[pClass.pModle][aProcedure.afamily].unshift(aProcedure.id);
+                aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.id);
+                if (aPlace>=0) {umdata[aProcedure.afamily].splice(aPlace,1)}           //删除本地的重复记录列表
+                umdata[aProcedure.afamily].unshift(aProcedure.id);
               } else {
-                aPlace = app.mData[pClass.pModle].indexOf(aProcedure.id);
-                if (aPlace>=0) {app.mData[pClass.pModle].splice(aPlace,1)}           //删除本地的重复记录列表
-                app.mData[pClass.pModle].unshift(aProcedure.id);
+                aPlace = umdata.indexOf(aProcedure.id);
+                if (aPlace>=0) {umdata.splice(aPlace,1)}           //删除本地的重复记录列表
+                umdata.unshift(aProcedure.id);
               }
             }else{
               if (inFamily) {
-                app.mData[pClass.pModle][aProcedure.afamily].push(aProcedure.id);
+                umdata[aProcedure.afamily].push(aProcedure.id);
               } else {
-                app.mData[pClass.pModle].push(aProcedure.id);                   //分类ID数组增加对应ID
+                umdata.push(aProcedure.id);                   //分类ID数组增加对应ID
               }
             };
-            app.aData[pClass.pModle][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
+            app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
           });
+          if (pNo>1){
+            app.mData.pAt[cName][unitId] = updAt;
+            app.mData[cName][unitId] = umdata;
+          } else {
+            app.mData.pAt[cName] = updAt;
+            app.mData[cName] = umdata;
+          };
           resolve(true);               //数据有更新
         } else {resolve(false);}               //数据无更新
       }).catch( error=> {reject(error)} );
@@ -155,18 +173,37 @@ module.exports = {
     return procedureclass[pNo].pModle
   },
 
-  integration: function(pNo,unitId) {
+  integration: function(pNo,unitId) {           //整合选择数组
     var unitValue = {};
     switch (pNo){
       case 3:
-        this.updateData(true,3,unitId).then(()=>{
-          unitValue[unitId] = app.mData[this.className(3)]
-        });
+        this.updateData(true,3,unitId).then(()=>{           //通过产品选择成品
+          this.updateData(true,5,unitId).then(()=>{
+            unitValue = app.mData.product[unitId].map(proId=>{
+              return {product:proId,cargo:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[cargoId].product==proId)}
+            })
+          })
+        }).catch( console.error );
+        break;
+      case 6:
+        this.updateData(true,6,unitId).then(()=>{           //通过商品选择规格
+          this.updateData(true,7,unitId).then(()=>{
+            this.updateData(true,5,unitId).then(()=>{
+              let specToCargo = app.mData.specs[unitId].map(specId=>{
+                return {specs:specId,cargo:app.mData.cargo[unitId].filter( cargoId=> cargoId==app.aData.spec[specId].cargo)}
+              })
+              unitValue = app.mData.goods[unitId].map( goodsId=>{
+                return { goods:goodsId,specs:specToCar.filter( spec=> app.aData.cargo[spec.cargo].goods==goodsId)}
+              })
+            })
+          })
+        }).catch( console.error );
         break;
       default:
         return
         break;
     }
+    return unitValue;
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

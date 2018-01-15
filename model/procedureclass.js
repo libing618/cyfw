@@ -121,13 +121,11 @@ module.exports = [
   "pNo": 5,
   "pName": "成品",
   "pSuccess": [
-    {gname:"product", p:'产品', inclose: true,t:"sProcedure", provalue:[0,0] },
+    {gname:"product", p:'产品', inclose: true,t:"sObject" },
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
-    {gname:"s_surface", p:'外观范围', t:"arrsel" },
-    {gname:"s_size", p:'尺寸范围', t:"arrsel" },
-    {gname:"s_weight", p:'重量范围', t:"addsel" },
+    {gname:"s_spec", p:'外观尺寸重量', t:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg" },
     {gname:"stock", p:'库存', t:"dg" }
   ],
@@ -165,8 +163,8 @@ module.exports = [
   "pNo": 7,
   "pName": "商品规格",
   "pSuccess": [
+    {gname:"goods", p:'商品', inclose: true,t:"sObject" },
     {gname:"uName", p:'名称', t:"h3" },
-    {gname:"product", p:'产品', inclose: true,t:"sProcedure", provalue:[0,0] },
     {gname:"cargo", p:'成品', inclose: true,t:"sProcedure", provalue:[0,0] },
     {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
@@ -188,7 +186,7 @@ module.exports = [
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"specs", p:'商品规格', inclose: true,t:"sProcedure" },
+    {gname:"goods", p:'商品', inclose: true,t:"sObject" },
     {gname:"base_price", p:'基础优惠价', t:"dg" },
     {gname:"base_amount", p:'基础目标数量',t:"dg" },
     {gname:"big_price", p:'大额优惠价', t:"dg" },
