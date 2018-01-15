@@ -7,7 +7,7 @@
         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
           <template is="{{ achecked==ac ? 'selecticon1' : 'selecticon2'}}" />
           <view class="weui-cell__hd">{{pageData[mPage[ac][0]].proName}}</view>
-          <view class="weui-cell__bd">{{pageData[mPage[ac][0]].specName}}</view>
+          <view class="weui-cell__bd">{{pageData[mPage[ac][0]].cargoName}}</view>
         </view>
         <form bindsubmit="fOrder">
           <view class="weui-cell__bd">可供{{specStock[ac]}}份</view>

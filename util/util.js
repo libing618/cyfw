@@ -101,11 +101,11 @@ module.exports = {
     }).catch( console.error );
   },
 
-  updateData: function(isDown,pNo) {    //更新页面显示数据,isDown下拉刷新
+  updateData: function(isDown,pNo,unitId) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
       var pClass = procedureclass[pNo];
       var readProcedure = new AV.Query(pClass.pModle);                                      //进行数据库初始化操作
-      if (pNo>1){readProcedure.equalTo('unitId',app.uUnit.objectId)};                //除单位和文章类数据外只能查本单位数据
+      if (pNo>1){readProcedure.equalTo('unitId',unitId ? unitId : app.uUnit.objectId)};                //除单位和文章类数据外只能查本单位数据
       if (isDown) {
         readProcedure.greaterThan('updatedAt', app.mData.pAt[pClass.pModle][1]);          //查询本地最新时间后修改的记录
         readProcedure.ascending('updatedAt');           //按更新时间升序排列
@@ -153,6 +153,20 @@ module.exports = {
 
   className: function(pNo) {
     return procedureclass[pNo].pModle
+  },
+
+  integration: function(pNo,unitId) {
+    var unitValue = {};
+    switch (pNo){
+      case 3:
+        this.updateData(true,3,unitId).then(()=>{
+          unitValue[unitId] = app.mData[this.className(3)]
+        });
+        break;
+      default:
+        return
+        break;
+    }
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

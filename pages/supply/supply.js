@@ -22,7 +22,7 @@ Page ({
     var that = this;
     let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
     let supplieQuery = new AV.Query(supplies);
-    supplieQuery.select(['tradeId','quantity','proName','cargo','specName','address','paidAt'])
+    supplieQuery.select(['tradeId','quantity','proName','cargo','cargoName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
     switch (oState){
       case 0:

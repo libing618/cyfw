@@ -38,7 +38,7 @@ Page ({
     var that = this;
     let supplieQuery = new AV.Query(supplies)
     supplieQuery.edoesNotExist('confirmer')      //查询确认人为空的记录
-    supplieQuery.select(['tradeId','quantity','proName','cargo','specName','address','paidAt'])
+    supplieQuery.select(['tradeId','quantity','proName','cargo','cargoName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
     .find().then(confirmOrder => {
       if (confirmOrder){
