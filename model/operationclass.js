@@ -16,14 +16,14 @@ module.exports = [
   {
     "oNo": 1,
     "oName": "订单处理",
-    "oprocess": ['订单确认', '成品出货', '送到确认'],
+    "oprocess": ['订单确认', '成品出货', '到货确认'],
     "oSuccess": [
-      { gname: "cargo", t: "specs", p: "规格" },
-      { gname: "serFamily", t: "sivers", p: "服务" },
-      { gname: "addressObjectId", t: "adds", p: "地点" }
+      { indexField: 'cargo', sumField: 'quantity'},
+      { indexField: 'address', sumField: 'deliverTotal' },
+      { indexField: 'address', sumField: 'receiptTotal' }
     ],
-    "ouRoles": [0,1,1,3],
-    "oBewrite": "综合条线确认订单,产品条线制造成品并出货,服务条线进行店铺确认。",
-    "oModle": "orderOperate"
+    "ouRoles": [1,1,3],
+    "oBewrite": "产品条线确认订单并出货,服务条线进行店铺确认。",
+    "oModle": "cargoPlan"
   }
 ]

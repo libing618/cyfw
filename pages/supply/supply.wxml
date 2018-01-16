@@ -2,23 +2,23 @@
 <import src="../../../libs/wedetail.wxml"/>
 <view class="page">
   <view class="page__bd">
-    <block wx:for="{{indexList}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="i">
+    <block wx:for="{{indexList}}" wx:key="{{index}}" wx:for-item="ac">
       <view class="weui-cells">
         <view wx:if="{{oState==0}}">
-          <form bindsubmit="Supplies">
+          <form bindsubmit="fSupplies">
             <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
               <template is="{{ achecked==ac ? 'selecticon1' : 'selecticon2'}}" />
               <view class="weui-cell__hd">{{pageData[mPage[ac][0]].proName}}</view>
-              <view class="weui-cell__bd">{{pageData[mPage[ac][0]].cargoName}} 可供{{specStock[ac]}}份</view>
+              <view class="weui-cell__bd">{{pageData[mPage[ac][0]].cargoName}} 可供{{cargoCount[ac]}}份</view>
               <view class="weui-cell__ft weui-cell__ft_in-access">
-                <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{quantity[ac]}}份</button>
+                <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{iSum[ac]}}份</button>
               </view>
             </view>
             <view hidden="{{achecked!=ac}}">
               <checkbox-group name="chSpec-{{ac}}" bindchange="checkboxChange">
-                <block class="weui-agree" wx:for="{{mPage[ac]}}">
-                  <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mCheck[item]}}">{{pageData[item].address}}
-                  <view clase="weui-agree__text">于pageData[id].paidAt,订pageData[id].quantity</view>
+                <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}">
+                  <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mChecked[item]}}">{{pageData[item].address}}
+                  <view clase="weui-agree__text">于pageData[item].paidAt,订pageData[item].quantity</view>
                   </checkbox>
                 </block>
               </checkbox-group>
@@ -26,20 +26,24 @@
           </form>
         </view>
         <view wx:else>
-          <view class="weui-cell">地址:{{specStock[ac]}}份</view>
-          <form bindsubmit="fOrder">
-            <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
+          <view class="weui-cell">地址:{{ac}}</view>
+          <view class="weui-cell">应发{{qCount[ac]}}份 已包{{iSum[ac]}}份</view>
+            <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}" wx:for-index="i">
+              <form bindsubmit="fSupplies">
+              <view class="weui-cell__hd">出品包装号</view>
+              <<input name="{{c}}" value="{{p.quantity}}" />
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
               <template is="{{ achecked==ac ? 'selecticon1' : 'selecticon2'}}" />
-              <view class="weui-cell__hd">{{pageData[mPage[ac][0]].proName}}</view>
-              <view class="weui-cell__bd">{{pageData[mPage[ac][0]].cargoName}} 可供{{specStock[ac]}}份</view>
+              <view class="weui-cell__hd">{{pageData[item].proName}}</view>
+              <view class="weui-cell__bd">{{pageData[item].cargoName}}</view>
               <view class="weui-cell__ft weui-cell__ft_in-access">
                 <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{quantity[ac]}}份</button>
               </view>
             </view>
             <view hidden="{{achecked!=ac}}">
               <checkbox-group name="chSpec-{{ac}}" bindchange="checkboxChange">
-                <block class="weui-agree" wx:for="{{mPage[ac]}}">
-                  <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mCheck[item]}}">{{pageData[item].address}}
+
+                  <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mChecked[item]}}">{{pageData[item].address}}
                   <view clase="weui-agree__text">于pageData[id].paidAt,订pageData[id].quantity</view>
                   </checkbox>
                 </block>
@@ -56,7 +60,7 @@
 <template name="i_products">
   <view class="weui-cell">规格：{{p.shelves.uName}} 订单:{{p.orders.uName}}</view>
   <switch class="weui-cell__hd"/>
-  <view class="weui-cell__bd">订{{p.quantity}}份</view>
-  <view class="weui-cell__ft">出品包装号</view>
+  <view class="weui-cell__bd">订{{p.quantity}}份
+  <view class="weui-cell__ft"></view>
   <input name="{{c}}" value="{{p.quantity}}" />
 </template>

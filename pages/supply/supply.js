@@ -1,7 +1,8 @@
 // 供货操作
 const AV = require('../../libs/leancloud-storage.js');
-const prosPlan = require('../../model/prosplan.js');
+const cargoPlan = require('../../model/cargoPlan.js');
 const supplies = require('../../model/supplies.js');
+const oClass = require('../../model/operationclass.js')[1]
 const { checkRols,idcheck,binddata } = require('../../util/util.js');
 
 var app = getApp();
@@ -13,10 +14,10 @@ Page ({
     pageData: [],
     specCount: {}
   },
-  specPlans: {},               //定义索引字段
+  cargoPlans: {},               //定义成品查询对象
   suppliesArr: {},
-  indexField: 'cargo',      //定义索引字段
-  sumField: 'quantity',          //定义汇总字段
+  indexField:'',      //定义索引字段
+  sumField:'',          //定义汇总字段
 
   fetchData: function(oState) {
     var that = this;
@@ -29,14 +30,10 @@ Page ({
         break;
       case 1:
         supplieQuery.notEqualTo('quantity','deliverTotal');      //查询发货量不等于订单的记录
-        that.indexField = 'address';
-        that.sumField = 'deliverTotal';
         break;
       case 2:
         supplieQuery.notEqualTo('quantity','receiptTotal');      //查询到货不等于订单的记录
         supplieQuery.greaterThan('serFamily',1);
-        that.indexField = 'address';
-        that.sumField = 'receiptTotal';
         break;
     }
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
@@ -53,40 +50,41 @@ Page ({
 
   setReqData: function(readData){
     var that = this;
-    let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
+    let pageData = {}, mPage = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
     readData.forEach(onedata => {
-      aData[onedata.id] = onedata;
+      pageData[onedata.id] = onedata;
       iField = onedata.get(that.indexField);                  //索引字段读数据数组
       if (indexList.indexOf(iField)<0) {
         indexList.push(iField);
-        mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
+        mPage[iField] = [onedata.id];                   //分类ID数组增加对应ID
         iSum[iField] = onedata.get(that.sumField);
         qCount[iField] = onedata.get('quantity');
       } else {
         iSum[iField] += onedata.get(that.sumField);
         qCount[iField] += onedata.get('quantity');
-        mData[iField].push(onedata.id);
+        mPage[iField].push(onedata.id);
       };
       mChecked[onedata.id] = false;
     });
     indexList.forEach(iRecord=>{ mChecked[iRecord] = true });
-    that.setData({indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
+    that.setData({indexList,pageData,mPage,iSum,mChecked}) ;
   },
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
-    let oClass = require('../../model/operationclass.js')[1];
     if (checkRols(app.globalData.user.userRolName,oClass.ouRoles[ops.oState])){  //检查用户操作权限
-      new AV.Query(prosPlan)
+      that.indexField = oClass.oSuccess[ops.oState].indexField;
+      that.sumField = oClass.oSuccess[ops.oState].sumField;
+      new AV.Query(cargoPlan)
       .equalTo('unitId',app.uUnit.objectId)
-      .select(['unitId','cargo','specStock','payment','delivering'])
-      .find().then(specPlans=>{
-        if (specPlans){
-          specPlans.forEach(specPlan=>{
-            that.specPlans[specPlan.cargo] = specPlan;
-            that.data.specCount[specPlan.cargo] = specPlan.specStock;
+      .select(['unitId','cargo','cargoStock','payment','delivering'])
+      .find().then(cargoPlans=>{
+        if (cargoPlans){
+          cargoPlans.forEach(cPlan=>{
+            that.cargoPlans[cPlan.cargo] = cPlan;
+            that.data.cargoCount[cPlan.cargo] = cPlan.cargoStock;
           });
-          that.setData({specCount:that.data.specCount,oState:ops.oState});
+          that.setData({cargoCount:that.data.cargoCount,oState:ops.oState});
           if (ops.oState==0) { that.idcheck = idcheck };
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
@@ -112,10 +110,10 @@ Page ({
     let specId = e.currentTarget.id;
     let confimate = that.data.quantity[specId];
     let setSingle = [];
-    that.specPlans[specId].set('specStock':that.specPlans[specId].specStock-confimate);
-    that.specPlans[specId].set('payment':that.specPlans[specId].payment-confimate);
-    that.specPlans[specId].set('delivering':that.specPlans[specId].delivering+confimate);
-    that.specPlans[specId].save().then(()=>{
+    that.cargoPlans[specId].set('cargoStock':that.cargoPlans[specId].cargoStock-confimate);
+    that.cargoPlans[specId].set('payment':that.cargoPlans[specId].payment-confimate);
+    that.cargoPlans[specId].set('delivering':that.cargoPlans[specId].delivering+confimate);
+    that.cargoPlans[specId].save().then(()=>{
       that.data.mPage[specId].forEach(cId=>{
         that.supplies[cId].set();
 

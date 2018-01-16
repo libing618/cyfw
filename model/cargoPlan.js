@@ -1,6 +1,6 @@
 const AV = require('../libs/leancloud-storage.js');
 
-class prosPlan extends AV.Object {
+class cargoPlan extends AV.Object {
   get unitId() { return this.get('unitId'); }
   set unitId(value) { this.set('done', unitId); }
 
@@ -10,8 +10,8 @@ class prosPlan extends AV.Object {
   get canSupply() { return this.get('canSupply'); }    //可供应量
   set canSupply(value) { this.set('canSupply', value); }
 
-  get specStock() { return this.get('specStock'); }    //库存
-  set specStock(value) { this.set('specStock', value); }
+  get cargoStock() { return this.get('cargoStock'); }    //库存
+  set cargoStock(value) { this.set('cargoStock', value); }
 
   get yield() { return this.get('yield'); }    //产量
   set yield(value) { this.set('yield', value); }
@@ -29,5 +29,5 @@ class prosPlan extends AV.Object {
   set delivered(value) { this.set('delivered', value); }
 }
 
-AV.Object.register(prosPlan, 'prosPlan');
-module.exports = prosPlan;
+AV.Object.register(cargoPlan, 'cargoPlan');
+module.exports = cargoPlan;
