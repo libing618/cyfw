@@ -2,7 +2,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const prosPlan = require('../../model/prosplan.js');
 const supplies = require('../../model/supplies.js');
-const { fetchData,checkRols,idcheck } = require('../../util/util.js');
+const { checkRols,idcheck,binddata } = require('../../util/util.js');
 
 var app = getApp();
 Page ({
@@ -20,7 +20,6 @@ Page ({
 
   fetchData: function(oState) {
     var that = this;
-    let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
     let supplieQuery = new AV.Query(supplies);
     supplieQuery.select(['tradeId','quantity','proName','cargo','cargoName','address','paidAt'])
     supplieQuery.ascending('paidAt');           //按付款时间升序排列
@@ -43,45 +42,36 @@ Page ({
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
     supplieQuery.find().then(arp => {
-      if (readData) {
-        arp.forEach(onedata => {
-          aData[onedata.id] = onedata;
-          iField = onedata.get(that.indexField);                  //索引字段读数据数组
-          if (indexList.indexOf(iField)<0) {
-            indexList.push(iField);
-            mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
-            iSum[iField] = onedata.get(that.sumField);
-            qCount[iField] = onedata.get('quantity');
-          } else {
-            iSum[iField] += onedata.get(that.sumField);
-            qCount[iField] = onedata.get('quantity');
-            mData[iField].push(onedata.id);
-          };
-          mChecked[onedata.id] = false;
-        });
-        indexList.forEach(iRecord=>{ mChecked[iRecord] = true });
-        that.setData({indexList:indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
-      }
+      if (arp) { this.setReqData(arp) };
       return supplieQuery.subscribe();
     }).then(subscription=>{
       this.subscription = subscription;
       if (this.unbind) this.unbind();
-      this.unbind = bind(subscription, aData, setRecord);
+      this.unbind = binddata(subscription, arp, setReqData);
     }).catch(console.error)
   },
 
-  setRecord: function(sId){
+  setReqData: function(readData){
     var that = this;
-    let sData = {};
-    let iField = onedata.get(that.indexField);                  //索引字段读数据数组
-    that.data.mData[that.data.sId]
-  }
-
-  addArrElement: function(e){
-    var that = this;
-    var sId = e.currentTarget.id;
-
-  }
+    let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
+    readData.forEach(onedata => {
+      aData[onedata.id] = onedata;
+      iField = onedata.get(that.indexField);                  //索引字段读数据数组
+      if (indexList.indexOf(iField)<0) {
+        indexList.push(iField);
+        mData[iField] = [onedata.id];                   //分类ID数组增加对应ID
+        iSum[iField] = onedata.get(that.sumField);
+        qCount[iField] = onedata.get('quantity');
+      } else {
+        iSum[iField] += onedata.get(that.sumField);
+        qCount[iField] += onedata.get('quantity');
+        mData[iField].push(onedata.id);
+      };
+      mChecked[onedata.id] = false;
+    });
+    indexList.forEach(iRecord=>{ mChecked[iRecord] = true });
+    that.setData({indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
+  },
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
@@ -116,7 +106,6 @@ Page ({
     this.subscription.unsubscribe();
     this.unbind();
   },
-
 
   fSupplies: function(e){
     var that = this;

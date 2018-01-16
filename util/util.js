@@ -188,13 +188,8 @@ module.exports = {
       case 6:
         this.updateData(true,6,unitId).then(()=>{           //通过商品选择规格
           this.updateData(true,7,unitId).then(()=>{
-            this.updateData(true,5,unitId).then(()=>{
-              let specToCargo = app.mData.specs[unitId].map(specId=>{
-                return {specs:specId,cargo:app.mData.cargo[unitId].filter( cargoId=> cargoId==app.aData.spec[specId].cargo)}
-              })
-              unitValue = app.mData.goods[unitId].map( goodsId=>{
-                return { goods:goodsId,specs:specToCar.filter( spec=> app.aData.cargo[spec.cargo].goods==goodsId)}
-              })
+            unitValue = app.mData.goods[unitId].map( goodsId=>{
+              return { goods:goodsId,specs:app.mData.specs[unitId].filter( spec=> app.aData.specs[spec].goods==goodsId)}
             })
           })
         }).catch( console.error );
@@ -208,7 +203,6 @@ module.exports = {
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
-
           let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
           arp.forEach(onedata => {
             aData[onedata.id] = onedata;
@@ -226,7 +220,6 @@ module.exports = {
           resolve({indexList:indexList,pageData:aData,quantity:iSum,mCheck:mChecked}) ;
         }
       }).catch( error=> {reject(error)} );
-    })
   },
 
   binddata: function(subscription, initialStats, onChange) => {
@@ -255,10 +248,10 @@ module.exports = {
    }
 
   pName: function(pNo){
-    let familyLength = procedureclass[pNo].afamily.length;
+    let familyLength =;
     let psData = {};
-    if (familyLength>0) {
-      psData.fLength = familyLength;
+    if (typeof procedureclass[pNo].afamily != 'undefined') {
+      psData.fLength = procedureclass[pNo].afamily.length;
       psData.pageCk = app.mData['pCk'+pNo];
       psData.tabs = procedureclass[pNo].afamily;
     };
