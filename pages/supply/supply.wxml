@@ -15,7 +15,7 @@
               </view>
             </view>
             <view hidden="{{achecked!=ac}}">
-              <checkbox-group name="chSpec-{{ac}}" bindchange="checkboxChange">
+              <checkbox-group name="chCargo-{{ac}}" bindchange="checkboxChange">
                 <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}">
                   <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mChecked[item]}}">{{pageData[item].address}}
                   <view clase="weui-agree__text">于pageData[item].paidAt,订pageData[item].quantity</view>
@@ -28,10 +28,14 @@
         <view wx:else>
           <view class="weui-cell">地址:{{ac}}</view>
           <view class="weui-cell">应发{{qCount[ac]}}份 已包{{iSum[ac]}}份</view>
+          <form class="weui-cell" bindsubmit="fPackingId">
+            <view class="weui-cell__hd">出品包装号</view>
+            <<input name="nowPacking" value="{{}}" />
+            <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{quantity[ac]}}份</button>
+          </form>
             <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}" wx:for-index="i">
               <form bindsubmit="fSupplies">
-              <view class="weui-cell__hd">出品包装号</view>
-              <<input name="{{c}}" value="{{p.quantity}}" />
+
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="idcheck">
               <template is="{{ achecked==ac ? 'selecticon1' : 'selecticon2'}}" />
               <view class="weui-cell__hd">{{pageData[item].proName}}</view>
@@ -41,7 +45,7 @@
               </view>
             </view>
             <view hidden="{{achecked!=ac}}">
-              <checkbox-group name="chSpec-{{ac}}" bindchange="checkboxChange">
+              <checkbox-group name="chCargo-{{ac}}" bindchange="checkboxChange">
 
                   <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{{mChecked[item]}}">{{pageData[item].address}}
                   <view clase="weui-agree__text">于pageData[id].paidAt,订pageData[id].quantity</view>
@@ -55,12 +59,3 @@
     </block>
   </view>
 </view>
-
-
-<template name="i_products">
-  <view class="weui-cell">规格：{{p.shelves.uName}} 订单:{{p.orders.uName}}</view>
-  <switch class="weui-cell__hd"/>
-  <view class="weui-cell__bd">订{{p.quantity}}份
-  <view class="weui-cell__ft"></view>
-  <input name="{{c}}" value="{{p.quantity}}" />
-</template>

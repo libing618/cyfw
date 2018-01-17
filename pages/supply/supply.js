@@ -38,10 +38,8 @@ Page ({
     }
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
-    supplieQuery.find().then(arp => {
-      if (arp) { this.setReqData(arp) };
-      return supplieQuery.subscribe();
-    }).then(subscription=>{
+    const setReqData = this.setReqData.bind(this);
+    return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then([reqData,subscription])=> {
       this.subscription = subscription;
       if (this.unbind) this.unbind();
       this.unbind = binddata(subscription, arp, setReqData);
@@ -49,25 +47,24 @@ Page ({
   },
 
   setReqData: function(readData){
-    var that = this;
     let pageData = {}, mPage = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {},qCount = {};
     readData.forEach(onedata => {
       pageData[onedata.id] = onedata;
-      iField = onedata.get(that.indexField);                  //索引字段读数据数组
+      iField = onedata.get(this.indexField);                  //索引字段读数据数组
       if (indexList.indexOf(iField)<0) {
         indexList.push(iField);
         mPage[iField] = [onedata.id];                   //分类ID数组增加对应ID
-        iSum[iField] = onedata.get(that.sumField);
+        iSum[iField] = onedata.get(this.sumField);
         qCount[iField] = onedata.get('quantity');
       } else {
-        iSum[iField] += onedata.get(that.sumField);
+        iSum[iField] += onedata.get(this.sumField);
         qCount[iField] += onedata.get('quantity');
         mPage[iField].push(onedata.id);
       };
       mChecked[onedata.id] = false;
     });
     indexList.forEach(iRecord=>{ mChecked[iRecord] = true });
-    that.setData({indexList,pageData,mPage,iSum,mChecked}) ;
+    this.setData({indexList,pageData,mPage,iSum,mChecked}) ;
   },
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
