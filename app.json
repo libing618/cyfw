@@ -31,7 +31,6 @@
     "pages/customer/statistics/statistics",
     "pages/customer/communication/communication",
     "pages/customer/statement/statement",
-    "util/confirmation/confirmation",
     "util/wxchat/wxchat",
     "util/approve/approve",
     "util/addressedit/addressedit",

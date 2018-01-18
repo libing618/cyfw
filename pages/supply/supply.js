@@ -3,7 +3,7 @@ const AV = require('../../libs/leancloud-storage.js');
 const cargoPlan = require('../../model/cargoPlan.js');
 const supplies = require('../../model/supplies.js');
 const oClass = require('../../model/operationclass.js')[1]
-const { checkRols,idcheck,binddata } = require('../../util/util.js');
+const { checkRols,indexClick,binddata } = require('../../util/util.js');
 
 var app = getApp();
 Page ({
@@ -12,6 +12,7 @@ Page ({
     mPage: [],                 //页面管理数组
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
     pageData: [],
+    iClicked: '0',
     specCount: {}
   },
   cargoPlans: {},               //定义成品查询对象
@@ -61,9 +62,8 @@ Page ({
         qCount[iField] += onedata.get('quantity');
         mPage[iField].push(onedata.id);
       };
-      mChecked[onedata.id] = false;
+      mChecked[onedata.id] = this.data.oState==0 ? true : false;
     });
-    indexList.forEach(iRecord=>{ mChecked[iRecord] = true });
     this.setData({indexList,pageData,mPage,iSum,mChecked}) ;
   },
 
@@ -82,7 +82,7 @@ Page ({
             that.data.cargoCount[cPlan.cargo] = cPlan.cargoStock;
           });
           that.setData({cargoCount:that.data.cargoCount,oState:ops.oState});
-          if (ops.oState==0) { that.idcheck = idcheck };
+          that.indexClick = indexClick ;
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
           setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
@@ -92,7 +92,7 @@ Page ({
         title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
     } else {
-      wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
+      wx.showToast({ title: '权限不足请检查', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },

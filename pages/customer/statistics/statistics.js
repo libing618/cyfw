@@ -1,14 +1,14 @@
 //订单统计
 const AV = require('../../../libs/leancloud-storage.js');
 const orders = require('../../../model/supplies');
-const { updateData,formatTime } = require('../../../util/util.js');
+const { updateData,formatTime,indexClick,i_sedate } = require('../../../util/util.js');
 var app = getApp();
 
 Page({
   data:{
     reqData: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
     vData: {},
-    achecked: ''
+    iClicked: '0'
   },
   onLoad:function(options){
     var that = this;
@@ -39,8 +39,8 @@ Page({
     that.data.vData.start_end = [formatTime(Date.now() - 864000000, true), formatTime(Date.now(), true)];
     that.sumOrders();
   },
-  i_sedate: require('../../../libs/weimport.js').i_sedate,
-  idcheck: require('../../../util/util.js').idcheck,
+  i_sedate: i_sedate,
+  indexClick: indexClick,
   sumOrders:function(){
     var that = this;
     new AV.Query(orders)

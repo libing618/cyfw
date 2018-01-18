@@ -20,11 +20,11 @@
         </view>
       </view>
       <block wx:for="{{specPage[pro]}}" wx:key="{{index}}" wx:for-item="spec">
-        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{spec}}" bindtap="idcheck">
-          <template is="{{ achecked==spec ? 'selecticon1' : 'selecticon2'}}" />
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{spec}}" bindtap="indexClick">
+          <template is="{{ iClicked==spec ? 'selecticon1' : 'selecticon2'}}" />
           <view class="weui-cell__ft weui-cell__ft_in-access">{{specData[spec].uName}} 收入{{sumspec[spec]}}</view>
         </view>
-        <view wx:if="{{achecked==spec}}">
+        <view wx:if="{{iClicked==spec}}">
           <view class="weui-cell" wx:for="{{specOrder}}" wx:key="{{index}}">
             <view class="weui-cell__hd">{{item.user}}:</view>
             <view class="weui-cell__bd">于{{item.paidAt}}购{{item.quantity}}件</view>

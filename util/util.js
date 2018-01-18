@@ -258,8 +258,8 @@ module.exports = {
     return psData;
   },
 
-  idcheck: function(e){                           //选择打开的数组本身id
-    this.setData({ achecked: e.currentTarget.id });
+  indexClick: function(e){                           //选择打开的索引数组本身id
+    this.setData({ iClicked: e.currentTarget.id });
   },
   tabClick: function (e) {                                //点击tab
     app.mData['pCk'+that.data.pNo] = Number(e.currentTarget.id)
@@ -267,10 +267,9 @@ module.exports = {
       pageCk: app.mData['pCk'+that.data.pNo]               //点击序号切换
     });
   },
-  arrClick: function (e) {                      //点击arrClick
-    let aNumber = Number(e.currentTarget.id)
+  mClick: function (e) {                      //点击mClick
     let pSet = {};
-    pSet['mPage['+aNumber+'].'+'arrClicked'] = !this.data.mPage[aNumber].arrClicked;
+    pSet['mChecked['+e.currentTarget.id+']'] = !this.data.mClicked[e.currentTarget.id].;
     this.setData(pSet)
   },
   formatTime: function(date,isDay) {

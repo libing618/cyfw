@@ -12,7 +12,7 @@ Page({
     uIdearArray: ['通 过', '退回发起人 ','废 弃' ],
     cResult: -1,
     pBewrite: '',
-    achecked: [true,true,false]
+    aprvClicked: [true,true,false]
   },
 
   onLoad:function(options){
@@ -33,10 +33,10 @@ Page({
     })
   },
 
-  accheck: function(e){
+  aprvClick: function(e){
     let i = parseInt(e.currentTarget.id.substring(3))      //选择审批流程类型的数组下标
-    this.data.achecked[i] = ! this.data.achecked[i];
-    this.setData({ achecked: this.data.achecked })
+    this.data.aprvClicked[i] = ! this.data.aprvClicked[i];
+    this.setData({ aprvClicked: this.data.aprvClicked })
   },
   resultChange: function(e){
     var nInstace = Number(this.data.aValue.cInstance);

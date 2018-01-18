@@ -11,7 +11,7 @@ Page({
     pageData: {},
     ats: [[],[],[]],
     tabs:['待我审','处理中','已结束'],
-    achecked: app.mData.proceduresCk
+    anClicked: app.mData.proceduresCk
   },
 
   onLoad:function(options){
@@ -36,7 +36,7 @@ Page({
       pClassName: this.data.pClassName,
       atotal: this.data.atotal,
       ats: ats,
-      achecked: app.mData.proceduresCk,
+      anClicked: app.mData.proceduresCk,
       pageData: app.procedures
     });
   },
@@ -47,9 +47,9 @@ Page({
     })
   },
 
-  accheck: function(e){                           //选择审批流程类型的数组下标
+  anClick: function(e){                           //选择审批流程类型的数组下标
     app.mData.proceduresCk = parseInt(e.currentTarget.id.substring(3));
-    this.setData({ achecked: app.mData.proceduresCk });
+    this.setData({ anClicked: app.mData.proceduresCk });
   },
 
   updatepending: function(isDown){                          //更新数据 ，0上拉刷新，1下拉刷新

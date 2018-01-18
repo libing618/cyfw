@@ -3,11 +3,11 @@ const app=getApp();
 Page({
   data:{
     vData:[],
-    achecked: -1
+    iClicked: '0'
   },
   onLoad:function(options){
     this.setData({vData:[app.uUnit,app.sUnit]});
-    this.idcheck = require('../../../util/util.js').idcheck;
+    this.indexClick = require('../../../util/util.js').indexClick;
   },
   onReady:function(){
     // 页面渲染完成
