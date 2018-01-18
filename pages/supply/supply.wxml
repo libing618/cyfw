@@ -25,18 +25,15 @@
             </view>
           </form>
         </view>
-        <view wx:else>
-          <template is="{{ iClicked==ac ? 'selecticon1' : 'selecticon2'}}" />
-          <view class="weui-cell">地址:{{ac}}</view>
-          <view class="weui-cell">应发{{qCount[ac]}}份 已包{{iSum[ac]}}份</view>
+
+        <view wx:elif="{{oState==1}}">
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="indexClick">
+            <template is="{{ iClicked==ac ? 'selecticon1' : 'selecticon2'}}" />
+            <view class="weui-cell">地址:{{ac}}</view>
+            <view class="weui-cell">应发{{qCount[ac]}}份 已包{{iSum[ac]}}份</view>
+          </view>
           <view hidden="{{iClicked!=ac}}">
-            <view class="weui-search-bar">
-              <view class="weui-search-bar__label">出品包装号</view>
-              <form class="weui-search-bar__form" bindsubmit="fPackingId">
-                <<inputclass="weui-search-bar__input" name="nowPacking" value="{{npId}}" />
-                <button class="weui-search-bar__cancel-btn" type="primary" size="mini" formType="submit" id="{{ac}}">{{oState==1 ? '' : ''}}份</button>
-              </form>
-            </view>
+            <template is="{{inScan}}" data="{{...reqData[0],c:nowPacking}}"/>
             <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}" wx:for-index="i">
               <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{item}}" bindtap="mChick">
                 <view class="weui-cell__hd">{{pageData[item].proName}}</view>
@@ -44,28 +41,47 @@
                 <view class="weui-cell__ft weui-cell__ft_in-access">订{{pageData[item].quantity}}</view>
               </view>
               <view wx:if="{{{mChecked[item]}}">
-              <form bindsubmit="fSupplies">
-                <view
-
-
-            <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="indexClick">
-
-
-                <checkbox clase="weui-agree__checkbox" value="{{item}}" checked="{}}">
-
-                  <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{quantity[ac]}}份</button>
-                </view>
-
-
-              <checkbox-group name="chCargo-{{ac}}" bindchange="checkboxChange">
-
-                  {{pageData[item].address}}
-                  <view clase="weui-agree__text">于pageData[id].paidAt,订pageData[id].quantity</view>
-                  </checkbox>
+                <block wx:for="{{pageData[item].deliverArr}}"
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{item}}" bindtap="delDeliver">成品号{{dla.cargoPackId}},包装号{{dla.packingId}}</view>
                 </block>
-              </checkbox-group>
-            </view>
-          </form>
+                <form bindsubmit="fDeliver">
+                  <inputclass="weui-search-bar__input" name="nowCargo" value="{{npId}}" />
+                  <button class="weui-search-bar__cancel-btn" type="primary" size="mini" id="{{nowCargoScan}}">扫码</button>
+                  <button class="weui-search-bar__cancel-btn" type="primary" size="mini" formType="submit" id="{{nowAdd}}">添加</button>
+                </form>
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <view wx:else>
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="indexClick">
+            <template is="{{ iClicked==ac ? 'selecticon1' : 'selecticon2'}}" />
+            <view class="weui-cell">地址:{{ac}}</view>
+            <view class="weui-cell">应发{{qCount[ac]}}份 已收{{iSum[ac]}}份</view>
+          </view>
+          <view hidden="{{iClicked!=ac}}">
+            <template is="{{inScan}}" data="{{...packinCard,c:nowPacking}}"/>
+            <block class="weui-agree" wx:for="{{mPage[ac]}}" wx:key="{{index}}" wx:for-index="i">
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{item}}" bindtap="mChick">
+                <view class="weui-cell__hd">{{pageData[item].proName}}</view>
+                <view class="weui-cell__bd">{{pageData[item].cargoName}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access">订{{pageData[item].quantity}}</view>
+              </view>
+              <view wx:if="{{{mChecked[item]}}">
+                <form bindsubmit="fReceipt">
+                  <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{pageData[item].receiptTotal}}份</button>
+                  <checkbox-group name="{{ac}}" bindchange="checkboxChange">
+                  <block wx:for="{{pageData[item].deliverArr}}" wx:key="{{index}}" wx:for-item="dla">
+                    <checkbox clase="weui-agree__checkbox" value="{{dla.packingId==npId}}">
+                      <view clase="weui-agree__text">成品号{{dla.cargoPackId}},包装号{{dla.packingId}}</view>
+                    </checkbox>
+                  </block>
+                  </checkbox-group>
+                </form>
+              </view>
+            </block>
+          </view>
         </view>
       </view>
     </block>

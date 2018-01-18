@@ -145,6 +145,24 @@ module.exports = {
     }
   },
 
+  i_inScan: function(e) {                         //扫描及输入
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0,2);
+    switch (id) {
+      case 'sc' :
+        wx.scanCode({
+          success: (res) => {
+            that.setData(vdSet(that.data.reqData[n].gname, res.result) );
+          }
+        })
+        break;
+      case 'su' :
+        that.setData(vdSet(that.data.reqData[n].gname, e.detail.value[that.data.reqData[n].gname]));
+        break;
+    }
+  },
+
   i_assettype: function(e) {                         //选择固定资产类型
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标

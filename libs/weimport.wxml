@@ -121,6 +121,26 @@
   </view>
 </template>
 
+<template name="s_inScan">
+  <view class="weui-search-bar">
+    <view class="weui-cell__hd">
+      <view class="weui-label">{{p}}:</view>
+    </view>
+    <view class="weui-cell__bd">{{c}}</view>
+  </view>
+</template>
+
+<template name="i_inScan">
+  <view class="weui-search-bar">
+    <view class="weui-search-bar__label">{{p}}</view>
+    <form class="weui-search-bar__form" bindsubmit="i_inScan">
+      <inputclass="weui-search-bar__input" name="{{gname}}" value="{{c}}" />
+      <button class="weui-search-bar__cancel-btn" type="primary" size="mini" id="sc-{{n}}" bindtap="i_inScan">扫码</button>
+      <button class="weui-search-bar__cancel-btn" type="primary" size="mini" formType="submit" id="su-{{n}}">确定</button>
+    </form>
+  </view>
+</template>
+
 <template name="s_arrsel">
   <view class="weui-cell">{{p}}: {{alist[c]}}</view>
 </template>
@@ -183,7 +203,7 @@
 <template name="i_h4">
   <view class="weui-cell weui-cell_input" style="font-size: 24rpx;">
     <view class="weui-cell__hd">
-        <view class="weui-label">{{p}}:</view>
+      <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
       <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入{{p}}" />
@@ -201,7 +221,7 @@
 <template name="i_dg">
   <view class="weui-cell weui-cell_input">
     <view class="weui-cell__hd">
-        <view class="weui-label">{{p}}:</view>
+      <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
       <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="digit" bindinput="f_{{f}}"/>

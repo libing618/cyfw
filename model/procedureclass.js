@@ -57,7 +57,7 @@ module.exports = [
     {gname:"aGeoPoint", p:'地理位置',t:"chooseAd" },
     {gname: "address", p: '详细地址', t: "ed"},
     {gname:"thumbnail", p: '图片简介',t: "thumb" },
-    {gname:"fcode", p: '二维码编号（请扫描）',t: "tv"  }
+    {gname:"fcode", p: '编号',t: "inScan"  }
   ],
   "pBewrite": "综合条线提出固定资产设置或修改申请，由条线负责人进行审批。",
   "puRoles": [

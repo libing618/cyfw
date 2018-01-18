@@ -2,7 +2,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const cargoPlan = require('../../model/cargoPlan.js');
 const supplies = require('../../model/supplies.js');
-const oClass = require('../../model/operationclass.js')[1]
+const oClass = require('../../model/operationclass.js')[1];
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
 
 var app = getApp();
@@ -13,6 +13,8 @@ Page ({
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
     pageData: [],
     iClicked: '0',
+    reqData:[{gname:"nowPacking", p: '出品包装号',t: "inScan",n:0}],
+    nowPacking: '',
     specCount: {}
   },
   cargoPlans: {},               //定义成品查询对象
@@ -101,6 +103,8 @@ Page ({
     this.subscription.unsubscribe();
     this.unbind();
   },
+
+  i_inScan: require()'../../libs/weimport.js').i_inScan,
 
   fSupplies: function(e){
     var that = this;
