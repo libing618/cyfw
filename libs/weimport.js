@@ -1,4 +1,5 @@
 const AV = require('./leancloud-storage.js');
+const { integration } = require('../util/util')
 var app = getApp();
 const nt = ['-1','-6'];
 const vdSet=function(sname,sVal){
@@ -20,91 +21,7 @@ function getdate(idate){
   var day = rdate.getDate();
   return year+'-'+( month<10 ? '0'+month : month)+'-'+( day<10 ? '0'+day : day)
 };
-
 module.exports = {
-  initData: function(that,aaData){
-    let vifData = typeof aaData == 'undefined';
-    if (!vifData) { that.data.vData = aaData };
-    var lName='0';
-    for (let i=0;i<that.data.reqData.length;i++){
-      switch (that.data.reqData[i].t){
-        case 'chooseAd' :
-          if (vifData) { lName=that.data.reqData[i].gname };          //地理位置字段
-          break;
-        case 'eDetail' :
-          if (vifData) {                      //详情字段
-            that.data.vData[that.data.reqData[i].gname]=[                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
-              { t: "h2", e: "大标题"},
-              { t: "p" ,e: "正文简介"},
-              { t: "h3", e: "中标题" },
-              { t: "p", e: "正文" },
-              { t: "h4", e: "1、小标题" },
-              { t: "p", e: "图片文章混排说明" },
-              { t: "-2", c: 'http://ac-trce3aqb.clouddn.com/eb90b6ebd3ef72609afc.png', e: "图片内容说明" },
-              { t: "p", e: "正文" },
-              { t: "h4", e: "2、小标题" },
-              { t: "p", e: "音频文章混排" },
-              { t: "-3", c: "https://i.y.qq.com/v8/playsong.html?songid=108407446&source=yqq", e: "录音内容说明" },
-              { t: "p", e: "正文" },
-              { t: "h4", p: "3、小标题" },
-              { t: "p", p: "视频文章混排" },
-              { t: "-4", c: "https://v.qq.com/x/page/f05269wf11h.html?ptag=2_5.9.0.13560_copy", e: "视频内容说明" },
-              { t: "p", e: "正文" },
-              { t: "p", e: "章节结尾" },
-              { t: "p", e: "文章结尾" }
-            ]
-          };
-          break;
-        case 'sProcedure' :                    //产品选择字段
-          that.data.reqData[i].mD = app.mData.prdct3;
-          that.data.reqData[i].ad = app.aData[3];
-          break;
-        case 'producttype' :
-          that.data.reqData[i].indlist = app.uUnit.indType;
-          if (vifData) { that.data.vData[that.data.reqData[i].gname] = app.uUnit.indType[0] };
-          break;
-        case 'industrytype':
-          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [] };
-          break;
-        case 'arrsel':
-          if (vifData) { that.data.vData[that.data.reqData[i].gname] = 0 };
-          break;
-        case 'sedate' :
-          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)] }
-          break;
-      }
-    };
-    if (lName!='0'){
-      return new Promise((resolve,reject)=>{
-        wx.getSetting({
-          success(res) {
-            if (res.authSetting['scope.userLocation']) {                   //用户已经同意小程序使用用户地理位置
-              resolve(true)
-            } else {
-              wx.authorize({scope: 'scope.userLocation',
-                success() { resolve(true) },
-                fail() {
-                  wx.showToast({ title: '请授权使用位置信息，否则本模块无法使用！', duration: 2500, icon: 'loading' });
-                  setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-                  reject(); }
-              })
-            };
-          }
-        })
-      }).then((vifAuth)=>{
-        wx.getLocation({
-          type: 'wgs84',
-          success: function (res) {
-            that.data.vData[lName]  = new AV.GeoPoint(res.latitude,res.longitude);
-            that.setData(that.data);
-          }
-        })
-      }).catch(console.error)
-    } else {
-      that.setData( that.data );
-    }
-  },
-
   tabClick: function (e) {                                //点击tab
     app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
     this.setData({
@@ -292,7 +209,7 @@ module.exports = {
     })
   },
 
-  i_sProcedure: function (e) {                         //选择产品服务
+  i_sCargo: function (e) {                         //选择产品服务
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     var id = e.currentTarget.id.substring(0, 2);

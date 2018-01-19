@@ -83,9 +83,9 @@ module.exports = [
     {gname:"PARM_period", p:'期限(天)', t:"dg" },
     {gname:"standard_code", p:'执行标准', t:"h4" },
     {gname:"license_no", p:'许可证号', t:"h4" },
-    {gname:"surface", p:'外观范围', t:"addarr" },
-    {gname:"size", p:'尺寸范围', t:"addarr" },
-    {gname:"weight", p:'重量范围', t:"addarr" }
+    {gname:"surface", p:'外观范围', t:"arrList" },
+    {gname:"size", p:'尺寸范围', t:"arrList" },
+    {gname:"weight", p:'重量范围', t:"arrList" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -165,7 +165,7 @@ module.exports = [
   "pSuccess": [
     {gname:"goods", p:'商品', inclose: true,t:"sObject" },
     {gname:"uName", p:'名称', t:"h3" },
-    {gname:"cargo", p:'成品', inclose: true,t:"sProcedure", provalue:[0,0] },
+    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", provalue:[0,0] },
     {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
@@ -205,7 +205,7 @@ module.exports = [
   "pNo": 9,
   "pName": "生产计划",
   "pSuccess": [
-    {gname:"cargo", p:'成品', inclose: true,t:"sProcedure" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sCargo" },
     {gname:"uName", p:'计划名称', t:"h3" },
     {gname:"title", p:'计划简述',t:"p" },
     {gname:"afamily", p:'计划周期',inclose: true,t:"arrsel", aList:['3年','每年','半年','每季','每月','每日'] },
