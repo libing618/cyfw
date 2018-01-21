@@ -1,4 +1,4 @@
-// 店铺货架
+//原材料
 const AV = require('../../../libs/leancloud-storage.js');
 const weutil = require('../../../util/util.js');
 var app = getApp()

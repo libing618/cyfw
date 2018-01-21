@@ -1,4 +1,4 @@
-// pages/marketing/statement/statement.js对账结算
+//对账结算
 Page({
   data:{},
   onLoad:function(options){

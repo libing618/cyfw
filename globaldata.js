@@ -19,23 +19,10 @@ module.exports={
     sysinfo: null
   },
   wmenu: {
-    initVale:[                         //用户未注册时的基础菜单
-      [{"tourl": "./signup/signup",
-      "mIcon": "../../images/index.png",
-      "mName": "我的信息"}],
-      [{
-      "tourl": "/pages/fprocedure/fprocedure?pNo=3&artId=0",
-      "mIcon": "../../images/iconfont-produce.png",
-      "mName": "新增产品"}],
-      [{
-      "tourl": "/pages/fprocedure/fprocedure?pNo=3&artId=3",
-      "mIcon": "../../images/iconfont-edit.png",
-      "mName": "宣传文章"}],
-      [{
-      "tourl": "pages/lprocedures/lprocedures?pNo=1&artId=7",
-      "mIcon": "../../images/iconfont-abook.png",
-      "mName": "常见问题"}]
-      ],
+    manage:[100,114],                         //用户未注册时的基础菜单
+    plan:[],
+    production:[],
+    customer:[],
     updatedAt: '0'
     }
   mData: {

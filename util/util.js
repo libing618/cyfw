@@ -17,20 +17,108 @@ function getRols(rId){
     }).catch(console.error())
   } else { return {} }
 };
+function exitPage(){
+  wx.showToast({ title: '权限不足请检查', duration: 2500 });
+  setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+}
 module.exports = {
-  checkRols: function(userRolName,ouRole){
-    if (userRolName=='admin'){
-      return true;
-    } else {
-      let roleLine = parseInt(substring(userRolName,1,1));
-      if (roleLine==ouRole) {
-        return true;
-      } else { return false }
-    }
+  openWxLogin: function(lStatus) {            //注册登录（本机登录状态）
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success: function(wxlogined) {
+          if ( wxlogined.code ) {
+            wx.getUserInfo({ withCredentials: true,
+            success: function(wxuserinfo) {
+              if (wxuserinfo) {
+                AV.Cloud.run( 'wxLogin0',{ code:wxlogined.code, encryptedData:wxuserinfo.encryptedData, iv:wxuserinfo.iv } ).then( function(wxuid){
+                  let signuser = {};
+                  signuser['uid'] = wxuid.uId;
+                  AV.User.signUpOrlogInWithAuthData(signuser,'openWx').then((statuswx)=>{    //用户在云端注册登录
+                    if (lStatus==-2){
+                      app.globalData.user = statuswx.toJSON();
+                      resolve(1);                        //客户已注册在本机初次登录成功
+                    } else {                         //客户在本机授权登录则保存信息
+                      let newUser = wxuserinfo.userInfo;
+                      newUser['wxapp' + wxappNumber] = wxuid.oId;         //客户第一次登录时将openid保存到数据库且客户端不可见
+                      statuswx.set(newUser).save().then( (wxuser)=>{
+                        app.globalData.user = wxuser.toJSON();
+                        resolve(0);                //客户在本机刚注册，无菜单权限
+                      }).catch(err => { reject({ ec:0, ee:err}) });
+                    }
+                  }).catch((cerror)=> { reject( { ec: 2, ee: cerror }) });    //客户端登录失败
+                }).catch((error)=>{ reject( {ec:1,ee:error} ) });       //云端登录失败
+              }
+            } })
+          } else { reject( {ec:3,ee:'微信用户登录返回code失败！'} )};
+        },
+        fail: function(err) { reject( {ec:4,ee:err.errMsg} ); }     //微信用户登录失败
+      })
+    });
   },
 
-  className: function(pNo) {
-    return procedureclass[pNo].pModle
+  fetchMenu: function(){
+    return new AV.Query('_User')
+      .notEqualTo('userRol.updatedAt',app.wmenu.updatedAt)
+      .include(['userRol'])
+      .select(['userRol'])
+      .get(app.globalData.user.objectId).then( fetchUser =>{
+        if (fetchUser) {                          //菜单在云端有变化
+          let mUserRole = = fetchUser.toJSON();
+          ['manage','plan','production','customer'].forEach(mname=>{
+            if (mrole) { app.wmenu[mname] = mUserRole.userRol.filter(rn=>{rn==0}) }
+          })
+          app.wmenu.updatedAt = mUserRole.updatedAt;
+          wx.setStorage({ key: 'menudata', data: app.wmenu });
+        }
+        return new Promise.resolve(fetchUser.updatedAt);
+    }).then( fuAt=>{
+      wx.getUserInfo({
+        withCredentials: false,
+        success: function (wxuserinfo) {
+          if (wxuserinfo) {
+            if (fuAt != app.globalData.user.updatedAt) {             //客户信息有变化
+              AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
+                app.globalData.user = rLoginUser.toJSON();
+                app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
+                app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
+                resolve();
+              }).catch(uerr=> reject(uerr))
+            } else {
+              app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
+              app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
+              resolve();
+            }
+          }
+        }
+      })
+    }).then( ()=>{
+      getRols(app.globalData.user.unit);
+      app.imLogin(app.globalData.user.username);
+      return
+    }).catch( console.error );
+  },
+
+  iMenu: function(index){
+    let mValue = require('../libs/allmenu.js')[index];
+    let mArr = app.wmenu[index].map(rNumber=>{
+      return {tourl:mValue['N'+rNumber].tourl, mIcon:mValue['m'+rNumber],mName:mValue['N'+rNumber].mName}
+    });
+    if (index=='manage'){ mArr[0].mIcon=app.globalData.user.avatarUrl }      //把微信头像地址存入第一个菜单icon
+    return mArr;
+  }
+
+  checkRols: function(userRolName,ouRole,emailVerified){
+    if (app.globalData.user.userRolName=='admin' && app.globalData.user.emailVerified){
+      return true;
+    } else {
+      let roleLine = parseInt(substring(app.globalData.user.userRolName,1,1));
+      if (roleLine==ouRole && app.globalData.user.emailVerified) {
+        return true;
+      } else {
+        exitPage();
+        return false
+      }
+    }
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

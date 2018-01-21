@@ -2,7 +2,7 @@ module.exports = [
 {
   "pNo": 0,
   "pName": "单位名称和负责人",
-  "afamily": ['电商服务站','生产厂家','电子商务企业'],
+  "afamily": ['产品制造人','物流服务人','电商服务站','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", apdvalue:[0, 0, 0] },
     {gname:"nick", p:'单位简称',t:"h3" },
@@ -121,7 +121,7 @@ module.exports = [
   "pNo": 5,
   "pName": "成品",
   "pSuccess": [
-    {gname:"product", p:'产品', inclose: true,t:"sObject" },
+    {gname:"product", p:'产品', inclose: true,t:"sId" },
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
@@ -163,14 +163,14 @@ module.exports = [
   "pNo": 7,
   "pName": "商品规格",
   "pSuccess": [
-    {gname:"goods", p:'商品', inclose: true,t:"sObject" },
+    {gname:"goods", p:'商品', inclose: true,t:"sId" },
     {gname:"uName", p:'名称', t:"h3" },
     {gname:"cargo", p:'成品', inclose: true,t:"sCargo", provalue:[0,0] },
     {gname:"serFamily", p:'服务类型', inclose: true,t:"arrsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
-    {gname:"package", p:'包装内数量', t:"dg" },
+    {gname:"package", p:'成品数量', t:"dg" },
     {gname:"price", p:'零售价', t:"dg" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
@@ -186,7 +186,7 @@ module.exports = [
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"goods", p:'商品', inclose: true,t:"sObject" },
+    {gname:"specs", p:'商品规格', inclose: true,t:"sSpecs" },
     {gname:"base_price", p:'基础优惠价', t:"dg" },
     {gname:"base_amount", p:'基础目标数量',t:"dg" },
     {gname:"big_price", p:'大额优惠价', t:"dg" },
@@ -212,7 +212,7 @@ module.exports = [
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"assetArr", p:'生产用固定资产', t:"assetarray",inclose:true },
     {gname:"dOutput", p:'计划产量', t:"dg" },
-    {gname:"rawStocks", p:'原材料', t:"stockArr",inclose:true },
+    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
     {gname:"startTime", p:'起点时间', t:"datetime" },
     {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true }
   ],

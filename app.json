@@ -1,40 +1,13 @@
 {
   "pages":[
-    "pages/index/index",
-    "pages/index/signup/signup",
-    "pages/index/f_Role/f_Role",
-    "pages/index/structure/structure",
-    "pages/index/procedures/procedures",
-    "pages/index/distributor/distributor",
-    "pages/index/distribution/distribution",
-    "pages/index/accounting/accounting",
-    "pages/index/rcustomer/rcustomer",
-    "pages/index/addresslist/addresslist",
-    "pages/index/workconnection/workconnection",
-    "pages/plan/plan",
-    "pages/plan/adjustment/adjustment",
-    "pages/fprocedure/fprocedure",
-    "pages/vprocedure/vprocedure",
-    "pages/lprocedures/lprocedures",
-    "pages/production/production",
-    "pages/production/material/material",
-    "pages/production/process/process",
-    "pages/production/storage/storage",
-    "pages/production/stocks/stocks",
-    "pages/production/live/live",
-    "pages/production/capital/capital",
-    "pages/customer/customer",
-    "pages/supply/supply",
-    "pages/customer/returns/returns",
-    "pages/customer/logistics/logistics",
-    "pages/customer/evaluate/evaluate",
-    "pages/customer/statistics/statistics",
-    "pages/customer/communication/communication",
-    "pages/customer/statement/statement",
+    "index/manage/manage",
+    "index/plan/plan",
+    "index/production/production",
+    "index/customer/customer",
     "util/wxchat/wxchat",
     "util/approve/approve",
     "util/addressedit/addressedit",
-    "util/productsct/productsct",
+    "util/goodssct/goodssct",
     "util/mapsunit/mapsunit",
     "util/ceimage/ceimage",
     "util/filesct/filesct"
@@ -50,26 +23,74 @@
   "tabBar": {
     "selectedColor": "#FF0033",
     "list": [{
-      "pagePath": "pages/index/index",
-      "text": "首页",
+      "pagePath": "index/manage/manage",
+      "text": "管理",
       "iconPath": "images/index.png",
       "selectedIconPath": "images/index-1.png"
     },{
-      "pagePath": "pages/plan/plan",
+      "pagePath": "index/plan/plan",
       "text": "计划",
       "iconPath": "images/shops.png",
       "selectedIconPath": "images/shops-1.png"
     },{
-      "pagePath": "pages/production/production",
+      "pagePath": "index/production/production",
       "text": "生产",
       "iconPath": "images/marketing.png",
       "selectedIconPath": "images/marketing-1.png"
     },{
-      "pagePath": "pages/customer/customer",
+      "pagePath": "index/customer/customer",
       "text": "销售",
       "iconPath":"images/customer.png",
       "selectedIconPath":"images/customer-1.png"
     }
     ]
-  }
+  },
+  "subPackages": [
+    {
+      "root": "pages",
+      "pages": [
+        "manage/signup/signup",
+        "manage/structure/structure",
+        "manage/procedures/procedures",
+        "manage/rcustomer/rcustomer",
+        "manage/addresslist/addresslist",
+        "manage/workconnection/workconnection",
+        "vprocedure/vprocedure",
+        "lprocedures/lprocedures",
+        "production/material/material",
+        "production/process/process",
+        "production/storage/storage",
+        "production/stocks/stocks",
+        "production/live/live",
+        "production/capital/capital",
+        "customer/returns/returns",
+        "customer/logistics/logistics",
+        "customer/evaluate/evaluate",
+        "customer/communication/communication",
+        "customer/statement/statement"
+      ]
+    },
+    {
+      "root": "inputedit",
+      "pages": [
+        "import/impedit"
+        "f_Role/f_Role",
+        "adjustment/adjustment",
+        "accounting/accounting",
+        "distributor/distributor",
+        "distribution/distribution",
+        "packing/packing",
+        "fprocedure/fprocedure",
+        "supply/supply",
+        "statistics/statistics"
+      ]
+    }
+  ],
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "debug": false
 }

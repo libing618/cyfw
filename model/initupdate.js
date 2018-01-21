@@ -1,5 +1,5 @@
 const AV = require('../libs/leancloud-storage.js');
-const procedureclass = require('../model/procedureclass.js');
+const procedureclass = require('./procedureclass.js');
 var app = getApp();
 function cLocation(){
   return new Promise((resolve,reject)=>{
@@ -28,78 +28,6 @@ function cLocation(){
   }).catch(console.error)
 }
 module.exports = {
-  openWxLogin: function(lStatus) {            //注册登录（本机登录状态）
-    return new Promise((resolve, reject) => {
-      wx.login({
-        success: function(wxlogined) {
-          if ( wxlogined.code ) {
-            wx.getUserInfo({ withCredentials: true,
-            success: function(wxuserinfo) {
-              if (wxuserinfo) {
-                AV.Cloud.run( 'wxLogin0',{ code:wxlogined.code, encryptedData:wxuserinfo.encryptedData, iv:wxuserinfo.iv } ).then( function(wxuid){
-                  let signuser = {};
-                  signuser['uid'] = wxuid.uId;
-                  AV.User.signUpOrlogInWithAuthData(signuser,'openWx').then((statuswx)=>{    //用户在云端注册登录
-                    if (lStatus==-2){
-                      app.globalData.user = statuswx.toJSON();
-                      resolve(1);                        //客户已注册在本机初次登录成功
-                    } else {                         //客户在本机授权登录则保存信息
-                      let newUser = wxuserinfo.userInfo;
-                      newUser['wxapp' + wxappNumber] = wxuid.oId;         //客户第一次登录时将openid保存到数据库且客户端不可见
-                      statuswx.set(newUser).save().then( (wxuser)=>{
-                        app.globalData.user = wxuser.toJSON();
-                        resolve(0);                //客户在本机刚注册，无菜单权限
-                      }).catch(err => { reject({ ec:0, ee:err}) });
-                    }
-                  }).catch((cerror)=> { reject( { ec: 2, ee: cerror }) });    //客户端登录失败
-                }).catch((error)=>{ reject( {ec:1,ee:error} ) });       //云端登录失败
-              }
-            } })
-          } else { reject( {ec:3,ee:'微信用户登录返回code失败！'} )};
-        },
-        fail: function(err) { reject( {ec:4,ee:err.errMsg} ); }     //微信用户登录失败
-      })
-    });
-  },
-
-  fetchMenu: function(){
-    return new AV.Query('_User')
-      .notEqualTo('userRol.updatedAt',app.wmenu.updatedAt)
-      .include(['userRol'])
-      .select(['userRol'])
-      .get(app.globalData.user.objectId).then( fetchUser =>{
-        if (fetchUser) {                          //菜单在云端有变化
-          app.wmenu = fetchUser.get('userRol');
-          wx.setStorage({ key: 'menudata', data: mUser.userRol });
-        }
-        return new Promise.resolve(fetchUser.updatedAt);
-    }).then( fuAt=>{
-      wx.getUserInfo({
-        withCredentials: false,
-        success: function (wxuserinfo) {
-          if (wxuserinfo) {
-            if (fuAt != app.globalData.user.updatedAt) {             //客户信息有变化
-              AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
-                app.globalData.user = rLoginUser.toJSON();
-                app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-                app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
-                resolve();
-              }).catch(uerr=> reject(uerr))
-            } else {
-              app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-              app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
-              resolve();
-            }
-          }
-        }
-      })
-    }).then( ()=>{
-      getRols(app.globalData.user.unit);
-      app.imLogin(app.globalData.user.username);
-      return
-    }).catch( console.error );
-  },
-
   updateData: function(isDown,pNo,uId) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
       var cName = procedureclass[pNo].pModle;
@@ -168,6 +96,10 @@ module.exports = {
     })
   },
 
+  className: function(pNo) {
+    return procedureclass[pNo].pModle
+  },
+
   integration: function(pNo,unitId) {           //整合选择数组
     var unitValue = {};
     switch (pNo){
@@ -195,7 +127,7 @@ module.exports = {
     }
     return unitValue;
   },
-  
+
   initData: function(that,aaData){
     let vifData = typeof aaData == 'undefined';
     if (!vifData) { that.data.vData = aaData };

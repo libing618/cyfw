@@ -149,7 +149,7 @@ App({
         that.globalData.sysinfo = res;
         let sdkvc = res.SDKVersion.split('.');
         let sdkVersion = parseFloat(sdkvc[0]+'.'+sdkvc[1]+sdkvc[2]);
-        if (sdkVersion<1.5) {
+        if (sdkVersion<1.9) {
           wx.showModal({
             title: '提示',
             content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。'

@@ -40,7 +40,7 @@ Page({
 
   fEditProcedure: function(e){
     var that = this;
-    var url='/pages/fprocedure/fprocedure?pNo='+that.data.pNo;
+    var url='/inputedit/fprocedure/fprocedure?pNo='+that.data.pNo;
     switch (e.currentTarget.id){
       case 'fModify' :
         url += '&artId='+that.data.viewData.objectId;

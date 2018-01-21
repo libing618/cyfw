@@ -1,4 +1,4 @@
-const { updateData,className } = require('../../util/util.js');
+const { updateData,className } = require('../../model/initupdate');
 var app = getApp()
 Page ({
   data: {
@@ -21,7 +21,7 @@ Page ({
         mPage: isNaN(artid) ? app.mData[cName] : app.mData[cName][artid],
       });
     } else {
-      wx.showToast({ title: '数据传输有误，请联系客服！', duration: 2500 });
+      wx.showToast({ title: '数据传输有误', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },

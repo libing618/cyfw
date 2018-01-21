@@ -1,5 +1,5 @@
-// pages/customer/evaluate/evaluate.js客户评价及统计
-const weutil = require('../../../util/util.js');
+//客户评价及统计
+const {checkRols,arrClose} = require('../../../util/util.js');
 var app = getApp();
 Page({
   data:{
@@ -9,20 +9,17 @@ Page({
   },
   onLoad:function(options){          //参数oState为0客户评价1评价统计
     var that = this;
-    if (weutil.checkRols(app.globalData.user.userRolName,3)){  //检查用户操作权限
-      that.setData({
-        req: oClass.oSuccess[options.oState],
-        oArray: weutil.arrClose(options.oState ? 'evaluate' : 'ordObjectId',app.mData.oped1),     //确定数组分类字段
-        pageData: app.oData[1],
-        mPage: app.mData.oped1
-      });
+    if (checkRols(app.globalData.user.userRolName,3,app.globalData.user.emailVerified)){  //检查用户操作权限
+      // that.setData({
+      //   req: oClass.oSuccess[options.oState],
+      //   oArray: arrClose(options.oState ? 'evaluate' : 'ordObjectId',app.mData.oped1),     //确定数组分类字段
+      //   pageData: app.oData[1],
+      //   mPage: app.mData.oped1
+      // });
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的'+ options.oState ? '评价统计' : '客户评价'
       })
-    } else {
-      wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
-      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-    };
+    }
   },
   onReady:function(){
     // 页面渲染完成
