@@ -135,18 +135,21 @@ module.exports = {
   initData: function(that,aaData){
     let vifData = typeof aaData == 'undefined';
     if (!vifData) { that.data.vData = aaData };
-    let unitId = aaData.unitId ? aaData.unitId : app.uUnit.objectId;
+    let unitId = aaData.unitId ? aaData.unitId : app.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
     for (let i=0;i<that.data.reqData.length;i++){
+      let fName = that.data.reqData[i].gname;       //字段名
       switch (that.data.reqData[i].t){
         case 'chooseAd' :
           if (vifData) {
-            cLocation().then(cl=>{
-              that.data.vData[that.data.reqData[i].gname]  = cl;
-            });          //地理位置字段
+            cLocation().then(cl=>{that.data.vData[fName]  = cl;});          //地理位置字段
+          }
+          break;
+        case 'MD':
+          that.data.reqData[i].e = vifData ? '点击选择服务单位' : app.sUnit.uName ;
           break;
         case 'eDetail' :
           if (vifData) {                      //详情字段
-            that.data.vData[that.data.reqData[i].gname]=[                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
+            that.data.vData[fName]=[                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
               { t: "h2", e: "大标题"},
               { t: "p" ,e: "正文简介"},
               { t: "h3", e: "中标题" },
@@ -169,22 +172,29 @@ module.exports = {
           };
           break;
         case 'sCargo' :                    //产品选择字段
-          integration(3,unitId).then()
+          integration(3,unitId).then(())
           that.data.reqData[i].mData = app.mData.procedure[unitId];
           that.data.reqData[i].aData = app.aData.procedure[unitId];
           break;
+        case 'assettype':
+          that.data.reqData[i].aVl = [0,0,0];
+          if (vifData) {that.data.vData[fName] = { code:0,sName:''} };
+          break;
         case 'producttype' :
           that.data.reqData[i].indlist = app.uUnit.indType;
-          if (vifData) { that.data.vData[that.data.reqData[i].gname] = app.uUnit.indType[0] };
+          that.data.reqData[i].aVl = [0,0,0];
+          if (vifData) { that.data.vData[fName] = app.uUnit.indType[0] };
           break;
         case 'industrytype':
-          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [] };
+          that.data.reqData[i].aVl = [0,0,0];
+          if (vifData) {that.data.vData[fName] = { code:[],sName:[]} };
           break;
-        case 'arrsel':
-          if (vifData) { that.data.vData[that.data.reqData[i].gname] = 0 };
+        case 'arrplus':
+          that.data.reqData[i].aVl = [0,0,0];
+          if (vifData) { that.data.vData[fName] = { code:0,sName:''} };
           break;
         case 'sedate' :
-          if (vifData) {that.data.vData[that.data.reqData[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)] }
+          if (vifData) {that.data.vData[fName] = [getdate(Date.now()), getdate(Date.now() + 864000000)] }
           break;
       }
     };

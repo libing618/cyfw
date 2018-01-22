@@ -29,7 +29,7 @@ module.exports = {
     });
   },
 
-  i_arrsel: function (e) {                         //选择类型
+  i_listsel: function (e) {                         //选择类型
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     this.setData( vdSet(this.data.reqData[n].gname,Number(e.detail.value)) )
   },
@@ -38,26 +38,28 @@ module.exports = {
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     var id = e.currentTarget.id.substring(0,2);
+    let fName = that.data.reqData[n].gname;
     switch (id) {
       case 'se' :                                   //按下载ICON打开选择框
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
         break;
       case 'su' :                                   //按确定ICON确认选择
-        let apdv = that.data.reqData[n].apdvalue;
-        that.data.vData[that.data.reqData[n].gname].push(Number(e.currentTarget.dataset.sapdv));
-        that.setData( vdSet(that.data.reqData[n].gname,that.data.vData[that.data.reqData[n].gname]) )
+        that.data.vData[fName].code.push(Number(e.currentTarget.dataset.capdv));
+        that.data.vData[fName].sName.push(e.currentTarget.dataset.sapdv);
+        that.setData( vdSet(fName,that.data.vData[fName]) )
         break;
       case 'pa' :
         let val = e.detail.value;
-        if (that.data.reqData[n].apdvalue[0] == val[0]) {
-          if (that.data.reqData[n].apdvalue[1] != val[1]) { val[2] = 0 }
+        if (that.data.reqData[n].aVl[0] == val[0]) {
+          if (that.data.reqData[n].aVl[1] != val[1]) { val[2] = 0 }
         } else { val[1] = 0; val[2] = 0 }
-        that.setData( rdSet(n, 'apdvalue', val) );
+        that.setData( rdSet(n, 'aVl', val) );
         break;
       case 'lj' :                                   //按显示类型名称进行删除
         let i = Number(e.currentTarget.dataset.id);
-        that.data.vData[that.data.reqData[n].gname].splice(i,1);
-        that.setData( vdSet(that.data.reqData[n].gname,that.data.vData[that.data.reqData[n].gname]) )
+        that.data.vData[fName].code.splice(i,1);
+        that.data.vData[fName].sName.splice(i,1);
+        that.setData( vdSet(fName,that.data.vData[fName]) )
         break;
     }
   },
@@ -66,16 +68,17 @@ module.exports = {
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
     var id = e.currentTarget.id.substring(0,2);
+    let fName = that.data.reqData[n].gname;
     switch (id) {
       case 'sc' :
         wx.scanCode({
           success: (res) => {
-            that.setData(vdSet(that.data.reqData[n].gname, res.result) );
+            that.setData(vdSet(fName, res.result) );
           }
         })
         break;
       case 'su' :
-        that.setData(vdSet(that.data.reqData[n].gname, e.detail.value[that.data.reqData[n].gname]));
+        that.setData(vdSet(fName, e.detail.value[fName]));
         break;
     }
   },
@@ -86,16 +89,17 @@ module.exports = {
     var id = e.currentTarget.id.substring(0,2);
     switch (id) {
       case 'ac' :
+        if (!that.data.reqData[n].inclose){
+          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
+        }
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
         break;
       case 'pa' :
         let aval = e.detail.value;
-        if (that.data.reqData[n].ascvalue[0] == aval[0]) {
-          if (that.data.reqData[n].ascvalue[1] != aval[1]){ aval[2] = 0 ; }
+        if (that.data.reqData[n].aVl[0] == aval[0]) {
+          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
         } else { aval[1] = 0 ; aval[2] = 0 ; }
-        that.setData(rdSet(n, 'ascvalue',aval),()=>
-          {that.setData(vdSet(that.data.reqData[n].gname, Number(e.currentTarget.dataset.sassv)));}
-        );
+        that.setData( rdSet(n, 'aVl',aval) );
         break;
     }
   },
@@ -106,15 +110,17 @@ module.exports = {
     var id = e.currentTarget.id.substring(0,2);
     switch (id) {
       case 'ac' :
+        if (!that.data.reqData[n].inclose) {
+          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
+        };
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
-        if (!that.data.reqData[n].inclose) {that.setData(vdSet(that.data.reqData[n].gname,0 ))};
         break;
       case 'pa' :
         let aval = e.detail.value;
-        if (that.data.reqData[n].pdva[0] == aval[0]) {
-          if (that.data.reqData[n].pdva[1] != aval[1]){ aval[2] = 0 ; }
+        if (that.data.reqData[n].aVl[0] == aval[0]) {
+          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
         } else { aval[1] = 0; aval[2] = 0; }
-        that.setData(rdSet(n, 'pdva',aval));
+        that.setData(rdSet(n, 'aVl',aval));
         break;
     }
   },
@@ -136,6 +142,27 @@ module.exports = {
         break;
     }
     that.setData( rSet );
+  },
+
+  i_arrsel: function(e) {                         //数组选择类型
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0,2);
+    switch (id) {
+      case 'ac' :
+        if (!that.data.reqData[n].inclose){
+          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
+        }
+        that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
+        break;
+      case 'pa' :
+        let aval = e.detail.value;
+        if (that.data.reqData[n].aVl[0] == aval[0]) {
+          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
+        } else { aval[1] = 0 ; aval[2] = 0 ; }
+        that.setData( rdSet(n, 'aVl',aval) );
+        break;
+    }
   },
 
   i_thumb: function(e) {                         //编辑缩略图

@@ -169,13 +169,11 @@ App({
       success: function(res) {
         if ( res.currentSize>(res.limitSize-512) ) {          //如缓存占用大于限制容量减512kb，将大数据量的缓存移除。
           wx.removeStorage({key:"aData"});
-          wx.removeStorage({key:"oData"});
           wx.removeStorage({key:"mData"});
           wx.removeStorage({key:"procedures"});
         }else{
           wx.setStorage({key:"aData", data:that.aData});
           wx.setStorage({key:"mData", data:that.mData});
-          wx.setStorage({key:"oData", data:that.oData});
           wx.setStorage({key:"procedures", data:that.procedures});
         }
       }

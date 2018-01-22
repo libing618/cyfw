@@ -1,6 +1,15 @@
 <import src="wedetail.wxml" />
 <wxs src="weimport.wxs" module="wewxs" />
 
+<template name="c-arrsel">
+<view class="weui-cell">
+  <view class="weui-cell__bd">{{p}}:</view>
+  <view class="weui-cell__ft">
+    <view wx:for="{{c.sName}}" wx:key="{{index}}">{{item}}{{wewxs.mDot(index,c.sName)}}</view>
+  </view>
+</view>
+</template>
+
 <template name="s_p">
   <view class="weui-cells__title">{{p}}:</view>
   <view class="weui-cells weui-cells_after-title">
@@ -33,10 +42,6 @@
     </view>
     <view class="weui-cell__bd">{{c}}</view>
   </view>
-</template>
-
-<template name="s_arrsel">
-  <view class="weui-cell">{{p}}: {{alist[c]}}</view>
 </template>
 
 <template name="s_h1">
@@ -124,26 +129,10 @@
   </view>
 </template>
 
-<template name="s_industrytype">
+<template name="c-listsel">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">
-      <view wx:for="{{c}}" wx:key="{{index}}">{{ apdv['s'+item] }}{{wewxs.mDot(index,c)}}</view>
-    </view>
-  </view>
-</template>
-
-<template name="s_producttype">
-  <view class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__ft">{{ apdv['s'+c] }} </view>
-  </view>
-</template>
-
-<template name="s_assettype">
-  <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{ assv['a'+c] }}</view>
+    <view class="weui-cell__ft">{{c.sName}}</view>
   </view>
 </template>
 

@@ -6,7 +6,7 @@ Page({
   data:{
     reqData:[
       {gname: "uName", p:'名称', t:"h3" },
-      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", apdclist:[11301,11302,11303,11304,11305], apdvalue:[0, 0, 0] },
+      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
       {gname:"title", p:'简介',t:"p" },
       {gname:"desc", p:'描述',t:"p" },
       {gname:"thumbnail", p:'图片简介',t:"thumb" },

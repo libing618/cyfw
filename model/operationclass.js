@@ -5,7 +5,7 @@ module.exports = [
     "oprocess": ['采购计划', '原料采购', '原料入库'],
     "oSuccess": [
       {gname: "uName", p:'名称', t:"h3" },
-      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", apdclist:[11301,11302,11303,11304,11305], apdvalue:[0, 0, 0] },
+      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
       { gname: "thumbnail", p: '图片', t: "thumb" },
       { gname: "sUnit", p: '供货商', t: "h3", e: '单位名称' }
     ],
