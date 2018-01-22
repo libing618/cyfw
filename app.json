@@ -1,5 +1,5 @@
 {
-  "pages":[
+  "pages": [
     "index/manage/manage",
     "index/plan/plan",
     "index/production/production",
@@ -10,39 +10,44 @@
     "util/goodssct/goodssct",
     "util/mapsunit/mapsunit",
     "util/ceimage/ceimage",
-    "util/filesct/filesct"
+    "util/filesct/filesct",
+    "inputedit/packing"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "创业服务平台",
-    "navigationBarTextStyle":"black",
+    "navigationBarTextStyle": "black",
     "backgroundColor": "#f8f8f8",
     "enablePullDownRefresh": true
   },
   "tabBar": {
     "selectedColor": "#FF0033",
-    "list": [{
-      "pagePath": "index/manage/manage",
-      "text": "管理",
-      "iconPath": "images/index.png",
-      "selectedIconPath": "images/index-1.png"
-    },{
-      "pagePath": "index/plan/plan",
-      "text": "计划",
-      "iconPath": "images/shops.png",
-      "selectedIconPath": "images/shops-1.png"
-    },{
-      "pagePath": "index/production/production",
-      "text": "生产",
-      "iconPath": "images/marketing.png",
-      "selectedIconPath": "images/marketing-1.png"
-    },{
-      "pagePath": "index/customer/customer",
-      "text": "销售",
-      "iconPath":"images/customer.png",
-      "selectedIconPath":"images/customer-1.png"
-    }
+    "list": [
+      {
+        "pagePath": "index/manage/manage",
+        "text": "管理",
+        "iconPath": "images/index.png",
+        "selectedIconPath": "images/index-1.png"
+      },
+      {
+        "pagePath": "index/plan/plan",
+        "text": "计划",
+        "iconPath": "images/shops.png",
+        "selectedIconPath": "images/shops-1.png"
+      },
+      {
+        "pagePath": "index/production/production",
+        "text": "生产",
+        "iconPath": "images/marketing.png",
+        "selectedIconPath": "images/marketing-1.png"
+      },
+      {
+        "pagePath": "index/customer/customer",
+        "text": "销售",
+        "iconPath": "images/customer.png",
+        "selectedIconPath": "images/customer-1.png"
+      }
     ]
   },
   "subPackages": [
@@ -73,7 +78,7 @@
     {
       "root": "inputedit",
       "pages": [
-        "import/impedit"
+        "import/impedit",
         "f_Role/f_Role",
         "adjustment/adjustment",
         "accounting/accounting",

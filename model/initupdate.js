@@ -83,7 +83,7 @@ module.exports = {
             };
             app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
           });
-          if (pNo>1){
+          if (pNo!=1){
             app.mData.pAt[cName][unitId] = updAt;
             app.mData[cName][unitId] = umdata;
           } else {
@@ -99,6 +99,10 @@ module.exports = {
   className: function(pNo) {
     return procedureclass[pNo].pModle
   },
+
+  classInFamily: function(pNo) {
+    return (typeof procedureclass[pNo].afamily != 'undefined');
+  }
 
   integration: function(pNo,unitId) {           //整合选择数组
     var unitValue = {};
