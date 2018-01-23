@@ -89,7 +89,7 @@
   <view class="weui-cell__hd">
     <view class="weui-label">{{p}}:</view>
   </view>
-  <view class="weui-cell__bd">{{c}}</view>
+  <view class="weui-cell__bd">{{c.sName}}</view>
 </template>
 
 <template name="s_eDetail">

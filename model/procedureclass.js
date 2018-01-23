@@ -1,9 +1,9 @@
-//gname为字段名称，p为显示的没字名，t为编辑类型，css为存储和显示类型，csl为字段长度（数组选择型字段为一维数组长度
+//gname为字段名称，p为显示的没字名，t为编辑类型，css为存储和显示类型
 //csc对应关系：aslist数组选择，存储{code：代码数组，sName:代码对应值的数组}
 //csc对应关系：arrsel数组选择，存储{code：选择值，sName:选择对应的值}
 //csc对应关系：objsel对象选择，存储{code：gname对应数据表选择的ID值，uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
 //csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname][unitId].uName
-//csc对应关系：dg为数据型,csl代表小数点长度，0则为整数型
+//csc对应关系：t:"dg"为数据型,csc的float代表2位小数点浮点数，number则为整数型
 module.exports = [
 {
   "pNo": 0,
@@ -11,7 +11,7 @@ module.exports = [
   "afamily": ['产品制造人','物流服务人','电商服务站','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", csc:"aslist" },
-    {gname:"nick", p:'单位简称',t:"h3",csl:30 },
+    {gname:"nick", p:'单位简称',t:"h3" },
     {gname: "title", p:'单位简介', t:"h2"},
     {gname: "desc", p: '单位描述', t: "p"},
     {gname: "thumbnail", p: '图片简介', t: "thumb" },
@@ -86,7 +86,7 @@ module.exports = [
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
     {gname:"PARM_attention", p:'注意事项', t:"h4" },
-    {gname:"PARM_period", p:'期限(天)', t:"ht",csc:"dg",csl:0 },
+    {gname:"PARM_period", p:'期限(天)', t:"dg",csc:"float" },
     {gname:"standard_code", p:'执行标准', t:"h4" },
     {gname:"license_no", p:'许可证号', t:"h4" },
     {gname:"surface", p:'外观范围', t:"arrList" },
@@ -110,7 +110,7 @@ module.exports = [
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
     {gname:"address", p: '服务地址', t: "ed" },
-    {gname:"price", p:'价格', t:"h4",csc:"dg",csl:2 },
+    {gname:"price", p:'价格', t:"dg",csc:"float" },
     {gname:"serParty", p:'服务方', t:"h4" },
     {gname:"serName", p:'联系人姓名', t:"h4" },
     {gname:"serPhone", p:'联系人电话', t:"h4" }
@@ -132,8 +132,8 @@ module.exports = [
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_spec", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
-    {gname:"retail_price", p:'零售价', t:"ht",csc:"dg",csl:2 },
-    {gname:"stock", p:'库存', t:"ht",csc:"dg",csl:0 }
+    {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },
+    {gname:"stock", p:'库存', t:"dg",csc:"number" }
   ],
   "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -176,8 +176,8 @@ module.exports = [
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
-    {gname:"package", p:'含成品数量', t:"ht",csc:"dg",csl:0 },
-    {gname:"price", p:'零售价', t:"ht",csc:"dg",csl:2 }
+    {gname:"package", p:'含成品数量', t:"dg",csc:"number" },
+    {gname:"price", p:'零售价', t:"dg",csc:"float" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -193,10 +193,10 @@ module.exports = [
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
     {gname:"specs", p:'商品规格', inclose: true,t:"sSpecs", csc:"idsel", csl:2 },
-    {gname:"base_price", p:'基础优惠价', t:"ht",csc:"dg",csl:2 },
-    {gname:"base_amount", p:'基础目标数量',t:"ht",csc:"dg",csl:0 },
-    {gname:"big_price", p:'大额优惠价', t:"ht",csc:"dg",csl:2 },
-    {gname:"big_amount", p:'大额目标数量',t:"ht",csc:"dg",csl:0 },
+    {gname:"base_price", p:'基础优惠价', t:"dg",csc:"float" },
+    {gname:"base_amount", p:'基础目标数量',t:"dg",csc:"number" },
+    {gname:"big_price", p:'大额优惠价', t:"dg",csc:"float" },
+    {gname:"big_amount", p:'大额目标数量',t:"dg",csc:"number" },
     {gname:"start_end", p:'活动起止日期', t:"sedate",endif:false}
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
@@ -217,7 +217,7 @@ module.exports = [
     {gname:"afamily", p:'计划周期',inclose: true,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"assetArr", p:'生产用固定资产', t:"assetarray",inclose:true },
-    {gname:"dOutput", p:'计划产量', t:"ht",csc:"dg",csl:0 },
+    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
     {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
     {gname:"startTime", p:'起点时间', t:"datetime" },
     {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true }

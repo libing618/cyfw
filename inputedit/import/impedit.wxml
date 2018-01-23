@@ -49,19 +49,29 @@
 <template name="i_inScan">
   <view class="weui-search-bar">
     <view class="weui-search-bar__label">{{p}}</view>
-    <input class="weui-search-bar__input" name="{{gname}}" value="{{c}}" id="si-{{n}}" bindinput="i_inScan" />
+    <input class="weui-search-bar__input" name="{{gname}}" value="{{c}}" id="si-{{n}}" bindblur="i_inScan" />
     <button class="weui-search-bar__cancel-btn" type="primary" size="mini" id="sc-{{n}}" bindtap="i_inScan">扫码</button>
   </view>
 </template>
 
 <template name="i_listsel">
-  <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{aList}}" bindchange="i_listsel">
   <view  class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd" id="ds-{{n}}">{{aList[c]}}</view>
+    <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{aList}}" bindchange="i_listsel">
+      <view class="weui-cell__bd" id="ds-{{n}}">{{aList[c]}}</view>
+    </picker>
   </view>
-  </picker>
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
+</template>
+
+<template name="i_sId">
+  <view  class="weui-cell">
+    <view class="weui-cell__hd">{{p}}:</view>
+    <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{mPage}}" bindchange="f_idsel">
+      <view class="weui-cell__bd" id="ds-{{n}}">{{pageData[mPage[c]].uName}}</view>
+    </picker>
+  </view>
+  <view hidden="true"><input name="{{gname}}" value="{{mPage[c]}}"/></view>
 </template>
 
 <template name="i_h1">
@@ -104,7 +114,7 @@
       <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
-      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="digit" bindinput="f_{{f}}"/>
+      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="{{csc}}" bindblur="f_{{func: func : csc}}"/>
     </view>
   </view>
 </template>
@@ -130,14 +140,13 @@
 
 <template name="i_ed">
   <view class="weui-cell weui-cell_input">
-    <navigator url="/util/addressedit/addressedit?reqName={{gname}}">
+    <navigator url="/import/addressedit/addressedit?reqName={{gname}}">
       <view class="weui-cell__hd">
         <view class="weui-label">{{p}}(点此选择)</view>
       </view>
+      <input hidden="true" name="{{gname}}" value="{{c.sName}}""/>
     </navigator>
-    <view class="weui-cell__bd">
-      <input disabled="true" name="{{gname}}" value="{{c}}" placeholder="请输入{{p}}"/>
-    </view>
+    <view class="weui-cell__bd">{{c.sName}}</view>
   </view>
 </template>
 
@@ -195,7 +204,7 @@
     <view class="weui-cell__ft" id="se-{{n}}" bindtap="i_arrList"><image class="weui-media-box__thumb" src="/images/jian.png" background-size="cover"/></view>
   </view>
   <view wx:if="{{fieldSelect==n}}" class="weui-cell">
-    <input class="weui-cell__bd" id="ai-{{n}}" bindinput="i_arrList"/>
+    <input class="weui-cell__bd" id="ai-{{n}}" bindblur="i_arrList"/>
     <view class="weui-cell__ft"><icon id="su-{{n}}" data-ivalue="{{arrValue}}" bindtap="i_arrList" type="success" size="32"/></view>
   </view>
 </template>
@@ -278,10 +287,10 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{ inclose ? c.sName : A[aVl[0]]+B[aVl[1]]+C[aVl[2]] }}</view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{''+aVl[0]]+aVl[1]+aVl[2]}}" data-sa="{{A[aVl[0]]+B[aVl[1]]+C[aVl[2]]}}" bindtap="i_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{''+aVl[0]]+aVl[1]+aVl[2]}}" data-sa="{{A[aVl[0]]+B[aVl[1]]+C[aVl[2]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
   </view>
   <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="i_arrsel">
+    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="f_arrsel">
         <picker-view-column>
             <view wx:for="{{A}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
         </picker-view-column>

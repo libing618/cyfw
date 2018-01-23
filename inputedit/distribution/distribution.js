@@ -8,9 +8,9 @@ var app = getApp();
 Page({
   data:{
     reqData:[
-      { gname: "channel", p:'渠道分成比例%',t: "dg",f:"mCost"},
-      { gname: "extension", p:'推广分成比例%',t: "dg",f:"mCost"},
-      {gname: "mCost", p: '销售管理总占比', t: "fg"}
+      { gname: "channel", p:'渠道分成比例%',t:"dg",func:"mCost"},
+      { gname: "extension", p:'推广分成比例%',t:"dg",func:"mCost"},
+      {gname: "mCost", p:'销售管理总占比', t: "fg"}
     ],
     vData:{"channel":7, "extension":10,"mCost":70},
     mPage: app.mData.goods[app.uUnit.objectId],
@@ -56,7 +56,7 @@ Page({
     } else {
       vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;      //不能超过30%
     }
-    vdSet.vData.mCost = 85-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
+    vdSet.vData.mCost = 87-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
     this.setData( vdSet );
   },
 

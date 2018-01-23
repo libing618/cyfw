@@ -6,7 +6,6 @@
     "index/customer/customer",
     "util/wxchat/wxchat",
     "util/approve/approve",
-    "util/addressedit/addressedit",
     "util/goodssct/goodssct",
     "util/mapsunit/mapsunit",
     "util/ceimage/ceimage",
@@ -78,7 +77,7 @@
     {
       "root": "inputedit",
       "pages": [
-        "import/impedit",
+        "import/addressedit",
         "f_Role/f_Role",
         "adjustment/adjustment",
         "accounting/accounting",

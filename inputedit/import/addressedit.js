@@ -1,4 +1,4 @@
-//地址编辑util/addressedit/addressedit.js
+//地址编辑
 const AV = require('../../libs/leancloud-storage.js');
 var app = getApp()
 Page({
@@ -18,7 +18,10 @@ Page({
     that.reqField = 'vData.' + options.reqName;
     let pages = getCurrentPages();                //获取当前页面路由栈的信息
     that.prevPage = pages[pages.length - 2];        //上个页面
-    that.setData({ address1: that.prevPage.data.vData[options.reqName] });
+    that.setData({
+      address1: that.prevPage.data.vData[options.reqName].sName,
+      saddv: that.prevPage.data.vData[options.reqName].code
+    });
   },
 
   faddclass: function (e) {                         //选择行政区划
@@ -59,7 +62,7 @@ Page({
   i_address: function (e) {
     var that = this;
     let reqField = {};
-    reqField[that.reqField] = e.detail.value.address1 + e.detail.value.address2;
+    reqField[that.reqField] = {code: that.data.saddv, sName:e.detail.value.address1 + e.detail.value.address2};
     that.prevPage.setData( reqField );
     wx.navigateBack({ delta: 1 })                // 回退前 delta(默认为1) 页面
   }
