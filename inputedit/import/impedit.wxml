@@ -56,22 +56,22 @@
 
 <template name="i_listsel">
   <view  class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:</view>
     <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{aList}}" bindchange="i_listsel">
-      <view class="weui-cell__bd" id="ds-{{n}}">{{aList[c]}}</view>
+      <view class="weui-cell__hd">{{p}}:</view>
+      <view class="weui-cell__bd">{{aList[c]}}</view>
     </picker>
   </view>
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
 </template>
 
 <template name="i_sId">
-  <view  class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:</view>
-    <picker id="ac-{{n}}" mode="selector" value="{{c}}" range="{{mPage}}" bindchange="f_idsel">
-      <view class="weui-cell__bd" id="ds-{{n}}">{{pageData[mPage[c]].uName}}</view>
+  <view class="weui-cell">
+    <picker id="ac-{{n}}" mode="selector" value="{{mn}}" range="{{mData}}" bindchange="f_idsel">
+      <view class="weui-cell__hd">{{p}}:</view>
+      <view class="weui-cell__bd">{{aData[mData[mn]].uName}}</view>
     </picker>
   </view>
-  <view hidden="true"><input name="{{gname}}" value="{{mPage[c]}}"/></view>
+  <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
 </template>
 
 <template name="i_h1">
@@ -214,17 +214,17 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">
       <view wx:for="{{c.sName}}" wx:key="{{index}}">
-        <view class="weui-cell_link" style='display: inline-block;' id="lj-{{n}}" data-id="{{index}}" bindtap="i_industrytype">{{item}}{{wewxs.mDot(index,c.sName)}}</view>
+        <view class="weui-cell_link" style='display: inline-block;' id="lj-{{n}}" data-id="{{index}}" bindtap="f_aslist">{{item}}{{wewxs.mDot(index,c.sName)}}</view>
       </view>
     </view>
-    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="i_industrytype" type="download" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="f_aslist" type="download" size="32"/></view>
   </view>
   <view hidden="{{inclose}}">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{apdv['s'+apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]] }}</view>
-    <view class="weui-cell__ft"><icon id="su-{{n}}" data-ca="{{apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]}}" data-sa="{{apdv['s'+apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]]}}" bindtap="i_industrytype" type="success" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="su-{{n}}" data-ca="{{apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]}}" data-sa="{{apdv['s'+apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]]}}" bindtap="f_aslist" type="success" size="32"/></view>
   </view>
-    <picker-view  id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="i_industrytype">
+    <picker-view  id="pa-{{n}}" indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{aVl}}" bindchange="f_aslist">
         <picker-view-column>
             <view wx:for="{{apdclist}}" wx:key="{{index}}" style="line-height: 36rpx">{{item.n}}</view>
         </picker-view-column>
@@ -239,24 +239,27 @@
 </template>
 
 <template name="i_producttype">
-  <view class="weui-cell">
-    <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd">{{ inclose ? c.sName : apdv['s'+wewxs.glist(indlist,aVl,2))] }}</view>
+  <view class="weui-picker">
+    <view class="weui-picker__hd">
+    <view class="weui-cell">
+      <view class="weui-cell__hd">{{p}}:</view>
+      <view class="weui-cell__bd" id="ac-{{n}}" data-ca="{{wewxs.glist(indlist,aVl,2))]}}" data-sa="{{apdv['s'+wewxs.glist(indlist,aVl,2))]}}" bindtap="f_arrsel">{{inclose ? c.sName : apdv['s'+wewxs.glist(indlist,aVl,2))] }}</view>
+      <view wx:if="{{! inclose}}" class="weui-cell__ft"><image src="{{item}}"></image>
+    </view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{wewxs.glist(indlist,aVl,2))]}}" data-sa="{{apdv['s'+wewxs.glist(indlist,aVl,2))]}}" bindtap="i_producttype" type="{{inclose ? 'download' : 'success'}}" size="32"/>
-  </view>
-  <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="i_producttype">
-        <picker-view-column>
-            <view wx:for="{{indlist}}" wx:key="{{index}}" style="line-height: 36rpx">{{apdv['s'+item]}}</view>
-        </picker-view-column>
-        <picker-view-column>
-            <view wx:for="{{wewxs.glist(indlist,aVl,0)}}" wx:key="{{index}}" style="line-height: 36rpx">{{apdv['s'+item]}}</view>
-        </picker-view-column>
-        <picker-view-column>
-            <view wx:for="{{wewxs.glist(indlist,aVl,1)}}" wx:key="{{index}}" style="line-height: 36rpx">{{apdv['s'+item]}}</view>
-        </picker-view-column>
-    </picker-view>
+    <view hidden="{{inclose}}" class="weui-picker__bd">
+      <picker-view id="pa-{{n}}" indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{aVl}}" bindchange="f_arrsel">
+          <picker-view-column>
+              <view wx:for="{{indlist}}" wx:key="{{index}}" style="line-width: 30%">{{apdv['s'+item]}}</view>
+          </picker-view-column>
+          <picker-view-column>
+              <view wx:for="{{wewxs.glist(indlist,aVl,0)}}" wx:key="{{index}}" style="line-width: 30%">{{apdv['s'+item]}}</view>
+          </picker-view-column>
+          <picker-view-column>
+              <view wx:for="{{wewxs.glist(indlist,aVl,1)}}" wx:key="{{index}}" style="line-width: 30%">{{apdv['s'+item]}}</view>
+          </picker-view-column>
+      </picker-view>
+    </view>
   </view>
 </template>
 
@@ -265,10 +268,10 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{inclose ? c.sName : assv['a'+assclist[aVl[0]].st[aVl[1]].ct[aVl[2]] ]}} </view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}" /></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" data-cassv="{{assclist[aVl[0]].st[aVl[1]].ct[aVl[2]]}}" data-sassv="{{assv['s'+assclist[aVl[0]].st[aVl[1]].ct[aVl[2]]]}}" bindtap="i_assettype" type="{{inclose ? 'download' : 'success'}}" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" data-cassv="{{assclist[aVl[0]].st[aVl[1]].ct[aVl[2]]}}" data-sassv="{{assv['s'+assclist[aVl[0]].st[aVl[1]].ct[aVl[2]]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
   </view>
   <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="i_assettype">
+    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="f_arrsel">
       <picker-view-column>
           <view wx:for="{{assclist}}" wx:key="{{index}}" style="line-height: 36rpx">{{item.n}}</view>
       </picker-view-column>

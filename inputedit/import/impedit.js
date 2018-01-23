@@ -34,12 +34,12 @@ module.exports = {
     this.setData( vdSet(this.data.reqData[n].gname,Number(e.detail.value)) )
   },
 
-  f_idsel: function (e) {                         //选择类型
+  f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
-    this.setData( vdSet(this.data.reqData[n].gname,Number(e.detail.value)) )
+    this.setData( vdSet(this.data.reqData[n].gname,this.data.mData[Number(e.detail.value)] ) )
   },
 
-  i_industrytype: function (e) {                         //选择行业类型
+  f_aslist: function (e) {                         //选择行业类型
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     var id = e.currentTarget.id.substring(0,2);
@@ -100,48 +100,6 @@ module.exports = {
     let vdSet = {};
     vdSet['vData.'+this.data.reqData[n].gname] = isNaN(Number(e.detail.value)) ? '0.00' : parseFloat(Number(e.detail.value).toFixed(2) ) ;      //不能输入非数字,转换为浮点数保留两位小数
     this.setData( vdSet );
-  },
-
-  i_assettype: function(e) {                         //选择固定资产类型
-    var that = this;
-    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
-    var id = e.currentTarget.id.substring(0,2);
-    switch (id) {
-      case 'ac' :
-        if (!that.data.reqData[n].inclose){
-          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
-        }
-        that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
-        break;
-      case 'pa' :
-        let aval = e.detail.value;
-        if (that.data.reqData[n].aVl[0] == aval[0]) {
-          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
-        } else { aval[1] = 0 ; aval[2] = 0 ; }
-        that.setData( rdSet(n, 'aVl',aval) );
-        break;
-    }
-  },
-
-  i_producttype: function(e) {                         //选择产品类型
-    var that = this;
-    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
-    var id = e.currentTarget.id.substring(0,2);
-    switch (id) {
-      case 'ac' :
-        if (!that.data.reqData[n].inclose) {
-          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
-        };
-        that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
-        break;
-      case 'pa' :
-        let aval = e.detail.value;
-        if (that.data.reqData[n].aVl[0] == aval[0]) {
-          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
-        } else { aval[1] = 0; aval[2] = 0; }
-        that.setData(rdSet(n, 'aVl',aval));
-        break;
-    }
   },
 
   i_sedate: function(e) {                         //选择开始和结束日期

@@ -1,5 +1,5 @@
 //gname为字段名称，p为显示的没字名，t为编辑类型，css为存储和显示类型
-//csc对应关系：aslist数组选择，存储{code：代码数组，sName:代码对应值的数组}
+//csc对应关系：aslist行业数组选择，存储{code：代码数组，sName:代码对应值的数组}
 //csc对应关系：arrsel数组选择，存储{code：选择值，sName:选择对应的值}
 //csc对应关系：objsel对象选择，存储{code：gname对应数据表选择的ID值，uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
 //csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname][unitId].uName
@@ -192,7 +192,7 @@ module.exports = [
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"specs", p:'商品规格', inclose: true,t:"sSpecs", csc:"idsel", csl:2 },
+    {gname:"specs", p:'商品规格', inclose: true,t:"sSpecs", csc:"idsel" },
     {gname:"base_price", p:'基础优惠价', t:"dg",csc:"float" },
     {gname:"base_amount", p:'基础目标数量',t:"dg",csc:"number" },
     {gname:"big_price", p:'大额优惠价', t:"dg",csc:"float" },
@@ -211,7 +211,7 @@ module.exports = [
   "pNo": 9,
   "pName": "生产计划",
   "pSuccess": [
-    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"idsel", csl:2 },
+    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"idsel" },
     {gname:"uName", p:'计划名称', t:"h3" },
     {gname:"title", p:'计划简述',t:"p" },
     {gname:"afamily", p:'计划周期',inclose: true,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
