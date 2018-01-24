@@ -1,5 +1,6 @@
 // 通用的内容编辑pages
-const weImp = require('../import/impedit.js');
+const wImpEdit = require('../import/impedit.js');
+const {initData} = require('../../model/initupdate');
 var app = getApp()
 var sPage = {
   data: {
@@ -12,7 +13,6 @@ var sPage = {
     vData: {},
     reqData: []
   },
-  titleName: '的',
   onLoad: function (options) {        //传入参数为tgId或artId,不得为空
     var that = this;
     let aaData;
@@ -35,49 +35,47 @@ var sPage = {
       }
     }).then(ops=>{
       var pClass = require('../../model/procedureclass.js')[ops.pNo];
-      that.data.reqData = pClass.pSuccess;
-      that.data.reqData.forEach(upSuccess => {
-        let functionName = 'i_' + upSuccess.t;             //每个输入类型定义的字段长度大于2则存在对应处理过程
-        if (functionName.length > 4) {
-          that[functionName] = weImp[functionName];
-          if (functionName == 'i_eDetail') {
-            that.farrData = weImp.farrData;
-            that.i_insdata = weImp.i_insdata;
-          }
-        };
-      })
-      that.data.pNo = ops.pNo;
+      let cUnitName = '的'               //申请单位名称
       switch (typeof ops.pId){
         case 'number':           //传入参数为一位数字的代表类型
           that.data.dObjectId = pClass.pModle + ops.pId;      //根据类型建缓存KEY
           that.data.vData.afamily = ops.pId;       //未提交或新建的类型
-          that.titleName += pClass.afamily[ops.pId]
+          aaData = app.aData[pClass.pModle][app.uUnit.id][pClass.pModle + ops.pId] ;
+          titleName += pClass.afamily[ops.pId]
           break;
         case 'string':                   //传入参数为已发布ID，重新编辑已发布的数据
           that.data.dObjectId = ops.pId;
-          that.titleName += pClass.pName;
+          if (typeof aaData == 'undefined'){ aaData = app.aData[pClass.pModle][app.uUnit.id][that.data.dObjectId] ;}
+          titleName += pClass.pName;
           break;
         case 'undefined':               //未提交或新建的数据KEY为审批流程pModle的值
           that.data.dObjectId = pClass.pModle;
-          that.titleName += pClass.pName;
+          aaData = app.aData[pClass.pModle][app.uUnit.id][pClass.pModle] ;
+          titleName += pClass.pName;
           break;
       }
-      aaData = typeof aaData == 'undefined' ? app.aData[ops.pNo][that.data.dObjectId] : aaData;
-      weImp.initData(that,require('../../test/cp.js'));
+      initData(pClass.pSuccess,require('../../test/cp.js').then({that.data.reqData,that.data.vData,funcArr}=>{
+        funcArr.forEach(functionName => {
+          that[functionName] = wImpEdit[functionName];
+          if (functionName == 'i_eDetail') {             //每个输入类型定义的字段长度大于2则存在对应处理过程
+            that.farrData = wImpEdit.farrData;
+            that.i_insdata = wImpEdit.i_insdata;
+          }
+        });
+        that.data.pNo = ops.pNo;
+        that.setData(that.data) ;
+        wx.setNavigationBarTitle({
+          title: typeof options.tgId == 'string' ? app.procedures[this.data.targetId].unitName : (app.globalData.user.emailVerified ? app.uUnit.nick : '体验用户)' + titleName,
+        })
+      });
     }).catch((error)=>{
       console.log(error)
-      wx.showToast({ title: '数据传输有误', duration: 2500 });
+      wx.showToast({ title: '数据传输有误',icon:'loading', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     });
-  },
-
-  onReady: function(){
-    let cUnitName = this.data.targetId == '0' ? app.globalData.user.emailVerified ? app.uUnit.nick : '体验用户' : app.procedures[this.data.targetId].unitName;               //申请单位名称
-    wx.setNavigationBarTitle({
-      title: cUnitName + this.titleName,
-    })
   }
+
 };
-sPage['fSubmit'] = weImp.fSubmit;
+sPage['fSubmit'] = wImpEdit.fSubmit;
 
 Page(sPage)

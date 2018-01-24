@@ -32,7 +32,7 @@ App({
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
   urM: [],                           //未读信息
-  uUnit:{},                           //用户单位信息（若有）
+  uUnit:{id:'u0'},                           //用户单位信息（若有）
   sUnit:{},                           //上级单位信息（若有）
 
   imLogin: function(username){                               //实时通信客户端登录

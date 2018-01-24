@@ -105,24 +105,22 @@ module.exports = {
   }
 
   integration: function(pNo,unitId) {           //整合选择数组
-    var unitValue = {};
     switch (pNo){
-      case 3:
-        this.updateData(true,3,unitId).then(()=>{           //通过产品选择成品
-          this.updateData(true,5,unitId).then(()=>{
-            return app.mData.product[unitId].map(proId=>{
-              return {product:proId,cargo:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[cargoId].product==proId)}
-            })
+      case 3:         //通过产品选择成品
+        return Promise.all([this.updateData(true,3,unitId),this.updateData(true,5,unitId)]).then(()=>{
+          let drone = app.mData.product[unitId].map(proId=>{
+            return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
           })
+          return {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]};
         }).catch( console.error );
         break;
       case 6:
         this.updateData(true,6,unitId).then(()=>{           //通过商品选择规格
           this.updateData(true,7,unitId).then(()=>{
-            unitValue = app.mData.goods[unitId].map( goodsId=>{
-              return { goods:goodsId,specs:app.mData.specs[unitId].filter( spec=> app.aData.specs[spec].goods==goodsId)}
+            let drone = app.mData.goods[unitId].map( goodsId=>{
+              return { masterId:goodsId,slaveId:app.mData.specs[unitId].filter( specId=> app.aData.specs[unitId][specId].goods==goodsId)}
             })
-            return unitValue;
+            return {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]};
           })
         }).catch( console.error );
         break;
@@ -142,7 +140,7 @@ module.exports = {
             req[i].e = vifData ? '点击选择服务单位' : app.sUnit.uName ;
             break;
           case 'sCargo' :                    //产品选择字段
-            promArr.push( this.integration(3,unitId).then(proToCargo=>{req[i].pTC = proToCargo}) )
+            promArr.push( this.integration(3,unitId).then(proToCargo=>{ req[i].objarr = proToCargo}) )
             break;
           case 'producttype' :
             req[i].indlist = app.uUnit.indType;
@@ -150,6 +148,10 @@ module.exports = {
           case 'sId' :
             req[i].mData = app.mData[req[i].gname][unitId];
             req[i].aData = app.aData[req[i].gname][unitId];
+            break;
+          case 'arrplus' :
+            req[i].sId = app.mData.product[unitId][0];
+            req[i].objects = app.aData.product[unitId];
             break;
         }
         if (vifData) {

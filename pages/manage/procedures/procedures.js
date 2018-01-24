@@ -130,7 +130,7 @@ Page({
     return {
       title: '侠客岛创业服务平台', // 分享标题
       desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/index/index' // 分享路径
+      path: '/index/manage/manage' // 分享路径
     }
   }
 })

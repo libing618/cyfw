@@ -1,6 +1,7 @@
 //单位信息编辑
 const AV = require('../../libs/leancloud-storage.js');
-const weImp = require('../import/impedit');
+const {initData} = require('../../model/initupdate');
+const wImpEdit = require('../import/impedit');
 var app = getApp()
 var uniteditPage = {
   data: {
@@ -33,18 +34,18 @@ var uniteditPage = {
   //        that.data.vData.aGeoPoint = new AV.GeoPoint(that.data.vData.aGeoPoint);
 //          app.aData[spdata.objectId] = spdata;
         };
-        weImp.initData(reqDatas,that.data.vData).then( {that.data.reqData,that.data.vData,funcArr}=>{
-          funcArr.forEach(functionName => { that[functionName] = weImp[functionName] };
+        initData(reqDatas,that.data.vData).then( {that.data.reqData,that.data.vData,funcArr}=>{
+          funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] };
           that.setData(that.data) ;
         });
       }).catch( console.error )
     } else {
-      wx.showToast({ title: '您不是单位创始人，请在《我的信息》页创建单位！',duration: 2500 });
+      wx.showToast({ title: '您不是单位创始人，请在《我的信息》页创建单位！',icon:'none',duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     }
   }
 };
 
-uniteditPage.fSubmit = weImp.fSubmit;
+uniteditPage.fSubmit = wImpEdit.fSubmit;
 
 Page(uniteditPage)

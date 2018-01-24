@@ -37,6 +37,13 @@ module.exports = {
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     this.setData( vdSet(this.data.reqData[n].gname,this.data.mData[Number(e.detail.value)] ) )
+    let sIdKey = 's_'+this.data.reqData[n].gname;
+    for (let i=0;i<this.data.reqData.length;i++) {
+      if (this.data.reqData[i].gname==sIdKey){
+        this.setData( rdSet(i, 'sId', this.data.mData[Number(e.detail.value)]) );
+        break;
+      }
+    }
   },
 
   f_aslist: function (e) {                         //选择行业类型
@@ -119,6 +126,27 @@ module.exports = {
         break;
     }
     that.setData( rSet );
+  },
+
+  f_objsel: function(e) {                         //对象选择类型
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0,2);
+    switch (id) {
+      case 'ac' :
+        if (!that.data.reqData[n].inclose){
+          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
+        }
+        that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
+        break;
+      case 'pa' :
+        let aval = e.detail.value;
+        if (that.data.reqData[n].aVl[0] == aval[0]) {
+          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
+        } else { aval[1] = 0 ; aval[2] = 0 ; }
+        that.setData( rdSet(n, 'aVl',aval) );
+        break;
+    }
   },
 
   f_arrsel: function(e) {                         //数组选择类型
@@ -576,7 +604,7 @@ module.exports = {
                 setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
               }).catch(wx.showToast({ title: '提交保存失败,请重试。', duration: 2000 })) // 保存失败
             } else {
-              app.aData[that.data.targetId].dObject = that.data.vData;
+              app.aData[that.data.targetId][app.uUnit.id].dObject = that.data.vData;
               wx.navigateBack({ delta: 1 });
             }
             wx.hideLoading();

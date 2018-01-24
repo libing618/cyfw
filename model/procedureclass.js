@@ -56,12 +56,12 @@ module.exports = [
   "pNo": 2,
   "pName": "固定资产登记",
   "pSuccess": [
-    {gname: "uName", p:'固定资产名称', t:"h3" },
-    {inclose: true, gname:"assetType", p:'固定资产类别',t:"assettype", csc:"arrsel"},
+    {gname:"uName", p:'固定资产名称', t:"h3" },
+    {inclose:true, gname:"assetType", p:'固定资产类别',t:"assettype", csc:"arrsel"},
     {gname:"title", p:'固定资产简介',t:"p" },
     {gname:"desc", p:'固定资产描述',t:"p" },
     {gname:"aGeoPoint", p:'地理位置',t:"chooseAd" },
-    {gname: "address", p: '详细地址', t: "ed"},
+    {gname:"address", p: '详细地址', t: "ed"},
     {gname:"thumbnail", p: '图片简介',t: "thumb" },
     {gname:"fcode", p: '编号',t: "inScan"  }
   ],
@@ -131,7 +131,7 @@ module.exports = [
     {gname:"uName", p:'规格名称', t:"h3" },
     {gname:"title", p:'规格简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
-    {gname:"s_spec", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
+    {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },
     {gname:"stock", p:'库存', t:"dg",csc:"number" }
   ],
@@ -148,7 +148,7 @@ module.exports = [
   "pName": "商品",
   "pSuccess": [
     {gname: "uName", p:'名称', t:"h3" },
-    {inclose: true, gname:"goodstype", p:'商品类别',t:"goodstype",  csc:"arrsel" },
+    {inclose: true, gname:"goodstype", p:'商品类别',t:"goodstype",  csc:"objsel" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"afamily", p:'规格类型', inclose: true,t:"listsel", aList:['单品','套餐']},
@@ -211,12 +211,12 @@ module.exports = [
   "pNo": 9,
   "pName": "生产计划",
   "pSuccess": [
-    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"idsel" },
     {gname:"uName", p:'计划名称', t:"h3" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"objsel" },
     {gname:"title", p:'计划简述',t:"p" },
     {gname:"afamily", p:'计划周期',inclose: true,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"assetArr", p:'生产用固定资产', t:"assetarray",inclose:true },
+    {gname:"asset", p:'出货的固定资产', t:"sAss",inclose:true, csc:"idsel" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
     {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
     {gname:"startTime", p:'起点时间', t:"datetime" },
