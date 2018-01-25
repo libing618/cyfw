@@ -288,20 +288,20 @@
 <template name="i_arrplus">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd">{{ inclose ? c.sName : A[aVl[0]]+B[aVl[1]]+C[aVl[2]] }}</view>
+    <view class="weui-cell__bd">{{ inclose ? c.sName : objects[sId].surface[aVl[0]]+objects[sId].size[aVl[1]]+objects[sId].weight[aVl[2]] }}</view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{''+aVl[0]]+aVl[1]+aVl[2]}}" data-sa="{{A[aVl[0]]+B[aVl[1]]+C[aVl[2]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{''+aVl[0]]+aVl[1]+aVl[2]}}" data-sa="{{objects[sId].surface[aVl[0]]+objects[sId].size[aVl[1]]+objects[sId].weight[aVl[2]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
   </view>
   <view hidden="{{inclose}}">
     <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="f_arrsel">
         <picker-view-column>
-            <view wx:for="{{A}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+            <view wx:for="{{objects[sId].surface}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
         </picker-view-column>
         <picker-view-column>
-            <view wx:for="{{B}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+            <view wx:for="{{objects[sId].size}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
         </picker-view-column>
         <picker-view-column>
-            <view wx:for="{{C}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+            <view wx:for="{{objects[sId].weight}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
         </picker-view-column>
     </picker-view>
   </view>
@@ -317,15 +317,15 @@
   </view>
 </template>
 
-<template name="i_sCargo">
+<template name="i_sObject">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{ad[c ? c : cargoObject[provalue[0]][provalue[1]] ]}} </view>
     <view hidden="true"><input name="{{gname}}" value="{{c ? c : mD[provalue[0]][provalue[1]]}}" /></view>
-    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="i_sCargo" type="search" size="32"/>
+    <icon class="weui-cell__ft" id="ac-{{n}}" bindtap="f_objsel" type="search" size="32"/>
   </view>
   <view hidden="{{inclose}}">
-    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{provalue}}" bindchange="i_sCargo">
+    <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{provalue}}" bindchange="s_objsel">
       <picker-view-column>
           <view wx:for="{{proSelCargo}}" wx:key="{{index}}" style="line-height: 36rpx">{{item.product}}</view>
       </picker-view-column>

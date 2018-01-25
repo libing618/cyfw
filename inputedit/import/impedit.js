@@ -135,16 +135,14 @@ module.exports = {
     switch (id) {
       case 'ac' :
         if (!that.data.reqData[n].inclose){
-          that.setData( vdSet(that.data.reqData[n].gname,{code:Number(e.currentTarget.dataset.ca),sName:e.currentTarget.dataset.sa}) )
+          that.setData( vdSet(that.data.reqData[n].gname,{code:e.currentTarget.dataset.ca, ...that.data.reqData[n].drone.slave}) )
         }
         that.setData( rdSet(n, 'inclose', ! that.data.reqData[n].inclose) );
         break;
       case 'pa' :
         let aval = e.detail.value;
-        if (that.data.reqData[n].aVl[0] == aval[0]) {
-          if (that.data.reqData[n].aVl[1] != aval[1]){ aval[2] = 0 ; }
-        } else { aval[1] = 0 ; aval[2] = 0 ; }
-        that.setData( rdSet(n, 'aVl',aval) );
+        if (that.data.reqData[n].osv[0] == aval[0]) { osv[1] = 0 };
+        that.setData( rdSet(n, 'osv',aval) );
         break;
     }
   },

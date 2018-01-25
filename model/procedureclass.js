@@ -148,7 +148,7 @@ module.exports = [
   "pName": "商品",
   "pSuccess": [
     {gname: "uName", p:'名称', t:"h3" },
-    {inclose: true, gname:"goodstype", p:'商品类别',t:"goodstype",  csc:"objsel" },
+    {inclose: true, gname:"goodstype", p:'商品类别',t:"sObject",  csc:"objsel" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"afamily", p:'规格类型', inclose: true,t:"listsel", aList:['单品','套餐']},
@@ -171,7 +171,7 @@ module.exports = [
   "pSuccess": [
     {gname:"goods", p:'商品', inclose: true,t:"sId", csc:"idsel" },
     {gname:"uName", p:'名称', t:"h3" },
-    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"objsel" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"serFamily", p:'服务类型', inclose: true,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"desc", p:'描述',t:"p" },
@@ -212,7 +212,7 @@ module.exports = [
   "pName": "生产计划",
   "pSuccess": [
     {gname:"uName", p:'计划名称', t:"h3" },
-    {gname:"cargo", p:'成品', inclose: true,t:"sCargo", csc:"objsel" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"title", p:'计划简述',t:"p" },
     {gname:"afamily", p:'计划周期',inclose: true,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },

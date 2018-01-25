@@ -104,9 +104,9 @@ module.exports = {
     return (typeof procedureclass[pNo].afamily != 'undefined');
   }
 
-  integration: function(pNo,unitId) {           //整合选择数组
-    switch (pNo){
-      case 3:         //通过产品选择成品
+  integration: function(pName,unitId) {           //整合选择数组
+    switch (pName){
+      case 'cargo':         //通过产品选择成品
         return Promise.all([this.updateData(true,3,unitId),this.updateData(true,5,unitId)]).then(()=>{
           let drone = app.mData.product[unitId].map(proId=>{
             return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
@@ -114,7 +114,7 @@ module.exports = {
           return {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]};
         }).catch( console.error );
         break;
-      case 6:
+      case 'specs':
         this.updateData(true,6,unitId).then(()=>{           //通过商品选择规格
           this.updateData(true,7,unitId).then(()=>{
             let drone = app.mData.goods[unitId].map( goodsId=>{
@@ -139,8 +139,13 @@ module.exports = {
           case 'MS':
             req[i].e = vifData ? '点击选择服务单位' : app.sUnit.uName ;
             break;
-          case 'sCargo' :                    //产品选择字段
-            promArr.push( this.integration(3,unitId).then(proToCargo=>{ req[i].objarr = proToCargo}) )
+          case 'sObject' :                    //对象选择字段
+            req[i].osv = [0,0];
+            if (req[i].gname=='goodstype'){
+              req[i].objarr = require('../libs/goodstype');
+            } else {
+              promArr.push( this.integration(req[i].gname,unitId).then(drone=>{ req[i].objarr = drone}) );
+            };
             break;
           case 'producttype' :
             req[i].indlist = app.uUnit.indType;
