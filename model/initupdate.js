@@ -30,6 +30,9 @@ function cLocation(){
 module.exports = {
   updateData: function(isDown,pNo,uId) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
+      if (typeof pNo == 'string'){
+        procedureclass.forEach(pClass=>{ if (pClass.pModle==pNo) {pNo=pClass.pNo} } );
+      }
       var cName = procedureclass[pNo].pModle;
       var unitId = uId ? uId : app.uUnit.objectId;
       let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
@@ -127,14 +130,46 @@ module.exports = {
     }
   },
 
+  readShowFormat: function(req,uId){
+    var unitId = uId ? uId : app.uUnit.objectId;
+    return new  Promise((resolve, reject) => {
+      let promArr = [];               //定义一个Promise数组
+      for (let i=0;i<req.length;i++){
+        switch (req[i].t){
+          case 'MS':
+            req[i].e = app.sUnit.uName ;
+            break;
+          case 'sObject' :                    //对象选择字段
+            if (req[i].gname=='goodstype'){
+              req[i].objarr = require('../libs/goodstype');
+            } else {
+              promArr.push( this.integration(req[i].gname,unitId).then(drone=>{ req[i].objarr = drone}) );
+            };
+            break;
+          case 'sId' :
+            promArr.push(
+              this.updateData(true,req[i].gname,unitId).then(()=>{
+                req[i].mData = app.mData[req[i].gname][unitId];
+                req[i].aData = app.aData[req[i].gname][unitId];
+              });
+            )
+            break;
+        }
+      }
+      resolve(promArr);
+    }).then(pArr=>{
+      return Promise.all(pArr).then(()=>{ return req })
+    }).catch(console.error);
+  }
+
   initData: function(req,vData){      //对数据录入或编辑的格式数组和数据对象进行初始化操作
     let vifData = typeof vData == 'undefined';
     if (vifData) { vData = {} };             //数据对象初始化
     var funcArr = [];
     let unitId = vData.unitId ? vData.unitId : app.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
-    let promArr = [];               //定义一个Promise数组
-    for (let i=0;i<req.length;i++){
-      const nPromise = new Promise((resolve, reject) => {
+    return new  Promise((resolve, reject) => {
+      let promArr = [];               //定义一个Promise数组
+      for (let i=0;i<req.length;i++){
         switch (req[i].t){
           case 'MS':
             req[i].e = vifData ? '点击选择服务单位' : app.sUnit.uName ;
@@ -151,8 +186,10 @@ module.exports = {
             req[i].indlist = app.uUnit.indType;
             break;
           case 'sId' :
-            req[i].mData = app.mData[req[i].gname][unitId];
-            req[i].aData = app.aData[req[i].gname][unitId];
+            promArr.push( this.updateData(true,req[i].gname,unitId).then(()=>{
+              req[i].mData = app.mData[req[i].gname][unitId];
+              req[i].aData = app.aData[req[i].gname][unitId];
+            }); )
             break;
           case 'arrplus' :
             req[i].sId = app.mData.product[unitId][0];
@@ -208,11 +245,11 @@ module.exports = {
           if (['aslist','arrsell'].indexOf(req[i].csc)>=0){req[i].aVl = [0,0,0]};
         } else {
           if (req[i].t.length  > 2) {funcArr.push('i_'+req[i].t)};             //每个输入类型定义的字段长度大于2则存在对应处理过程
-        }
-      })
-      promArr.push(nPromise);
-    };
-    Promise.all(promArr).then(()=>{ return {req,vData,funcArr}
+        };
+      };
+      resolve(promArr);
+    }).then(pArr=>{
+      return Promise.all(pArr).then(()=>{ return {req,vData,funcArr} })
     }).catch(console.error);
   }
 

@@ -28,6 +28,24 @@
   </view>
 </template>
 
+<template name="c_objsel">
+  <view class="weui-cell">{{p}}:</view>
+  <view class="weui-cell">
+    <view class="weui-cell__hd"><image src="{{objarr.slave[c].thumbnail}}"/></view>
+    <view class="weui-cell__bd">objarr.slave[c].uName</view>
+    <view class="weui-cell__bd">objarr.slave[c].title</view>
+  </view>
+</template>
+
+<template name="c_idsel">
+  <view class="weui-cell">{{p}}:</view>
+  <view class="weui-cell">
+    <view class="weui-cell__hd"><image src="{{aData[c].thumbnail}}"/></view>
+    <view class="weui-cell__bd">aData[c].uName</view>
+    <view class="weui-cell__bd">aData[c].title</view>
+  </view>
+</template>
+
 <template name="c_float">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{p}}:</view>
@@ -69,10 +87,8 @@
 </template>
 
 <template name="s_inScan">
-  <view class="weui-search-bar">
-    <view class="weui-cell__hd">
-      <view class="weui-label">{{p}}:</view>
-    </view>
+  <view class="weui-cell">
+    <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{c}}</view>
   </view>
 </template>

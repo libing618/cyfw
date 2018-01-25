@@ -128,8 +128,8 @@ module.exports = [
   "pName": "成品",
   "pSuccess": [
     {gname:"product", p:'产品', inclose: true,t:"sId", csc:"idsel" },
-    {gname:"uName", p:'规格名称', t:"h3" },
-    {gname:"title", p:'规格简介',t:"p" },
+    {gname:"uName", p:'成品名称', t:"h3" },
+    {gname:"title", p:'成品简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },
@@ -192,7 +192,7 @@ module.exports = [
   "pName": "众筹团购及促销",
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
-    {gname:"specs", p:'商品规格', inclose: true,t:"sSpecs", csc:"idsel" },
+    {gname:"specs", p:'商品规格', inclose: true,t:"sId", csc:"idsel" },
     {gname:"base_price", p:'基础优惠价', t:"dg",csc:"float" },
     {gname:"base_amount", p:'基础目标数量',t:"dg",csc:"number" },
     {gname:"big_price", p:'大额优惠价', t:"dg",csc:"float" },

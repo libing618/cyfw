@@ -23,8 +23,8 @@ Page({
       updateData(true,6).then((reNew)=>{
         let sproportions=[],mproportions=[],pData={};
         if (reNew) {                     //商品数据有更新
-          pData.pageData = app.aData.goods;
-          pData.mPage = app.mData.goods;
+          pData.pageData = app.aData.goods[app.uUnit.objectId];
+          pData.mPage = app.mData.goods[app.uUnit.objectId];
         }
         new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find().then(manufactor=>{
           if (manufactor) {                    //已设置过商品分销策略的数据

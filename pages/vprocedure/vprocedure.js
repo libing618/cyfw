@@ -1,54 +1,63 @@
 // 浏览pages
+const {readShowFormat}=require('../../model/initupdate');
 var app=getApp()
 Page({
   data:{
     uEV: false,
-    viewData: {},
+    vData: {},
     reqData: []
   },
-
+  pno:0,
+  inFamily:false,
+  cName:'',
   onLoad: function(options) {
     var that = this ;
     let cUnitName = app.globalData.user.emailVerified ? app.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
-    let pno = Number(options.pNo);
+    that.pno = Number(options.pNo);
     let artid = Number(options.artId);
     if (!isNaN(pno) && isNaN(artid)) {             //检查参数
-      let apNo = 'prdct'+options.pNo;
-      let pClass = require('../../model/procedureclass.js')[pno];
-      that.data.reqData=pClass.pSuccess.map( rField=>{
-        switch (rField.t){
-          case 'sproduct' :
-            rField.ad = app.aData[3];
-            break;
-          case 'afamily' :
-            break;
-        }
-        return rField;
-      })
-      that.data.uEV = app.globalData.user.emailVerified && app.uUnit.objectId==app.aData[apNo][options.artId].unitId;
-      that.data.pNo = pno;
-      that.data.viewData = app.aData[apNo][options.artId];
-      that.setData(that.data);
+      let pClass = require('../../model/procedureclass.js')[that.pno];
+      that.cName = pClass.pModle;
+      if ( that.pno==1 ){                             //已发布的文章信息只有发布单位能修改
+        that.data.uEV = app.globalData.user.emailVerified && app.uUnit.objectId==app.aData.articles[options.artId].unitId;
+        that.data.vData = app.aData.articles[options.artId];
+      } else {
+        that.data.uEV = app.globalData.user.emailVerified;
+        that.data.vData = app.aData[that.cName][app.uUnit.id][options.artId];
+      }
+      that.inFamily = typeof pClass.afamily != 'undefined';
+      readShowFormat(pClass.pSuccess).then(req=>{
+        that.data.reqData=req;
+        that.setData(that.data);
+      });
       wx.setNavigationBarTitle({
-        title: cUnitName+ '的' + typeof pClass.afamily == 'Array' ? pClass.afamily[that.data.viewData.afamily] : ppClass.pName ,
+        title: cUnitName+ '的' + that.data.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName ,
       })
-    }else{
-      wx.showToast({ title: '数据传输有误，请检查！', duration: 2500 });
+    } else {
+      wx.showToast({ title: '数据传输有误！',icon:'loading', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     }
   },
 
   fEditProcedure: function(e){
     var that = this;
-    var url='/inputedit/fprocedure/fprocedure?pNo='+that.data.pNo;
+    var url='/inputedit/fprocedure/fprocedure?pNo='+that.pno;
     switch (e.currentTarget.id){
       case 'fModify' :
-        url += '&artId='+that.data.viewData.objectId;
+        url += '&artId='+that.data.vData.objectId;
         break;
       case 'fTemplate' :
-        if (typeof that.data.viewData.afamily=='number') {url += '&artId='+that.data.viewData.afamily};
-        let proName=require('../model/procedureclass.js')[that.data.pNo].pModle;
-        app.aData[that.data.pNo][proName] = that.data.viewData;
+        if (that.pno==1) {
+          url += '&artId='+that.data.vData.afamily;
+          app.aData.articles['articles'+that.data.vData.afamily] = that.data.vData;
+        } else {
+          if (that.inFamily) {
+            url += '&artId='+that.data.vData.afamily;
+            app.aData[that.cName][app.uUnit.id][that.cName+that.data.vData.afamily] = that.data.vData;
+          } else {
+            app.aData[that.cName][app.uUnit.id][that.cName] = that.data.vData;
+          }
+        };
         break;
     };
     wx.navigateTo({ url: url});

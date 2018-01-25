@@ -1,5 +1,6 @@
 //流程审批模块
 const AV = require('../../libs/leancloud-storage.js');
+const {readShowFormat}=require('../../model/initupdate');
 var app=getApp()
 Page({
   data:{
@@ -16,18 +17,21 @@ Page({
   },
 
   onLoad:function(options){
+    var that = this;
     let dProcedure = Number(app.procedures[options.approveId].dProcedure);
     let procedureClass = require('../../model/procedureclass.js')[dProcedure];
-    this.setData({
-      bsType: procedureClass.pSuccess,      //流程内容格式
-      pBewrite: procedureClass.pBewrite,     //流程说明
-      pModle: procedureClass.pModle,         //流程写入的数据表名
-      aValue: app.procedures[options.approveId],        //流程缓存
-      enEdit: app.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
-      enApprove: app.procedures[options.approveId].cFlowStep.indexOf(app.globalData.user.objectId) >= 0,     //当前用户为流程处理人
-      afamilys: procedureClass.afamily,                              //流程内容分组
-      cmLength: app.procedures[options.approveId].cManagers.length    //流程审批节点长度
-    });
+    readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].unitId).then(req=>{
+      that.setData({
+        bsType: req,      //流程内容格式
+        pBewrite: procedureClass.pBewrite,     //流程说明
+        pModle: procedureClass.pModle,         //流程写入的数据表名
+        aValue: app.procedures[options.approveId],        //流程缓存
+        enEdit: app.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
+        enApprove: app.procedures[options.approveId].cFlowStep.indexOf(app.globalData.user.objectId) >= 0,     //当前用户为流程处理人
+        afamilys: procedureClass.afamily,                              //流程内容分组
+        cmLength: app.procedures[options.approveId].cManagers.length    //流程审批节点长度
+      });
+    }).catch(console.error);
     wx.setNavigationBarTitle({
       title: procedureClass.pName     //将页面标题设置成流程名称
     })
@@ -38,6 +42,7 @@ Page({
     this.data.aprvClicked[i] = ! this.data.aprvClicked[i];
     this.setData({ aprvClicked: this.data.aprvClicked })
   },
+
   resultChange: function(e){
     var nInstace = Number(this.data.aValue.cInstance);
 	  switch (e.detail.value) {
@@ -53,6 +58,7 @@ Page({
     };
     this.setData({cResult:Number(e.detail.value), "aValue.cInstance":nInstace})
   },
+
   fsave:function(e) {                         //保存审批意见，流向下一节点
     var that = this;
     var nInstace = Number(that.data.aValue.cInstance);        //下一流程节点

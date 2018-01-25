@@ -35,7 +35,7 @@
     <view wx:if="{{aprvClicked[1]}}">
       <view wx:if="{{afamilys}}">类别：{{afamilys[aValue.dObject.afamily]}}</view>
       <block class="weui-cell" wx:for="{{bsType}}" wx:key="{{index}}">
-        <template is="s_{{item.t}}" data="{{ p: item.p, c: aValue.dObject[item.gname] }}" />
+        <template is="{{item.csc ? 'c_'+item.csc : 's_'+item.t}}" data="{{ ...item, c: aValue.dObject[item.gname] }}" />
       </block>
     </view>
     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="ac-2" bindtap="aprvClick">
