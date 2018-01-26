@@ -1,6 +1,6 @@
 //流程审批模块
 const AV = require('../../libs/leancloud-storage.js');
-const {readShowFormat}=require('../../model/initupdate');
+const {readShowFormat}=require('../../model/initupdate.js');
 var app=getApp()
 Page({
   data:{

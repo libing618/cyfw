@@ -1,5 +1,5 @@
 const AV = require('../libs/leancloud-storage.js');
-const procedureclass = require('./procedureclass.js');
+const procedureclass = require('procedureclass.js');
 var app = getApp();
 function cLocation(){
   return new Promise((resolve,reject)=>{
@@ -105,7 +105,7 @@ module.exports = {
 
   classInFamily: function(pNo) {
     return (typeof procedureclass[pNo].afamily != 'undefined');
-  }
+  },
 
   integration: function(pName,unitId) {           //整合选择数组
     switch (pName){
@@ -151,7 +151,7 @@ module.exports = {
               this.updateData(true,req[i].gname,unitId).then(()=>{
                 req[i].mData = app.mData[req[i].gname][unitId];
                 req[i].aData = app.aData[req[i].gname][unitId];
-              });
+              })
             )
             break;
         }
@@ -160,7 +160,7 @@ module.exports = {
     }).then(pArr=>{
       return Promise.all(pArr).then(()=>{ return req })
     }).catch(console.error);
-  }
+  },
 
   initData: function(req,vData){      //对数据录入或编辑的格式数组和数据对象进行初始化操作
     let vifData = typeof vData == 'undefined';
@@ -189,7 +189,7 @@ module.exports = {
             promArr.push( this.updateData(true,req[i].gname,unitId).then(()=>{
               req[i].mData = app.mData[req[i].gname][unitId];
               req[i].aData = app.aData[req[i].gname][unitId];
-            }); )
+            }) )
             break;
           case 'arrplus' :
             req[i].sId = app.mData.product[unitId][0];

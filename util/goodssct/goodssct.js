@@ -1,6 +1,6 @@
 //产品选择pages
 var app = getApp()
-var productPage = {                       //选择产品类型后列出该类产品并选择产品返回ID号
+Page = {                       //选择产品类型后列出该类产品并选择产品返回ID号
   data:{
     goods: app.mData.goods[app.uUnit.objectId],
     proShow: '',
@@ -23,5 +23,3 @@ var productPage = {                       //选择产品类型后列出该类产
     wx.navigateBack({ delta: 1 }) // 回退前 delta(默认为1) 页面
   }
 }
-
-Page(productPage)

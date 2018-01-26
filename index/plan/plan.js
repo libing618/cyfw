@@ -1,5 +1,5 @@
-const {iMenu,pName} = require('../../util/util');
-const { updateData } = require('../../model/initupdate');
+const {iMenu,pName} = require('../../util/util.js');
+const { updateData } = require('../../model/initupdate.js');
 var app = getApp();
 Page({
   data:{

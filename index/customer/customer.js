@@ -1,4 +1,4 @@
-const {iMenu} = require('../../util/util');
+const {iMenu} = require('../../util/util.js');
 var app = getApp()
 Page({
   data: {

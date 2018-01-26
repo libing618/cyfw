@@ -24,7 +24,7 @@ module.exports={
     production:[],
     customer:[],
     updatedAt: '0'
-    }
+    },
   mData: {
     pAt:{
       articles:[new Date(0),new Date(0)],            //缓存中已发布文章更新时间

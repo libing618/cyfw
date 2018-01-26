@@ -1,8 +1,7 @@
 <import src="wedetail.wxml" />
 <wxs module="mDot">
-  module.exports = {
+  module.exports = 
     function(i,cArray){ return i==cArray.length-1 ? '' : '、' }
-  }
  </wxs>
 
 <template name="c_aslist">

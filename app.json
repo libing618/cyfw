@@ -9,8 +9,7 @@
     "util/goodssct/goodssct",
     "util/mapsunit/mapsunit",
     "util/ceimage/ceimage",
-    "util/filesct/filesct",
-    "inputedit/packing"
+    "util/filesct/filesct"
   ],
   "window": {
     "backgroundTextStyle": "light",

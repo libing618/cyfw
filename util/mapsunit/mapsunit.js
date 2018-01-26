@@ -110,7 +110,7 @@ Page({
               })
             }
           }
-        }).catch( console.error });
+        }).catch( console.error );
       }
     })
   },
