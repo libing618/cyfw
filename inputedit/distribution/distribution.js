@@ -13,8 +13,8 @@ Page({
       {gname: "mCost", p:'销售管理总占比', t: "fg"}
     ],
     vData:{"channel":7, "extension":10,"mCost":70},
-    mPage: app.mData.goods[app.uUnit.objectId],
-    pageData: app.aData.goods[app.uUnit.objectId],
+    mPage: app.mData.goods[app.uUnit.objectId] ? app.mData.goods[app.uUnit.objectId] : [],
+    pageData: app.mData.goods[app.uUnit.objectId] ? app.aData.goods[app.uUnit.objectId] : {},
     iClicked: ''
   },
   onLoad:function(options){

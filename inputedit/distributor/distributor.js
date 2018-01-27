@@ -1,5 +1,5 @@
 //分销招募
-const AV = require('../../../libs/leancloud-storage.js');
+const AV = require('../../libs/leancloud-storage.js');
 const { checkRols } = require('../../util/util.js');
 const { i_thumb,i_chooseAd } = require('../import/impedit');
 var app = getApp()

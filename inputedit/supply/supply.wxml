@@ -41,12 +41,12 @@
                 <view class="weui-cell__bd">{{pageData[item].cargoName}}</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access">订{{pageData[item].quantity}}</view>
               </view>
-              <view wx:if="{{{mChecked[item]}}">
-                <block wx:for="{{pageData[item].deliverArr}}"
+              <view wx:if="{{mChecked[item]}}">
+                <block wx:for="{{pageData[item].deliverArr}}">
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{item}}" bindtap="delDeliver">成品号{{dla.cargoPackId}},包装号{{dla.packingId}}</view>
                 </block>
                 <form bindsubmit="fDeliver">
-                  <inputclass="weui-search-bar__input" name="nowCargo" value="{{npId}}" />
+                  <input class="weui-search-bar__input" name="nowCargo" value="{{npId}}" />
                   <button class="weui-search-bar__cancel-btn" type="primary" size="mini" id="{{nowCargoScan}}">扫码</button>
                   <button class="weui-search-bar__cancel-btn" type="primary" size="mini" formType="submit" id="{{nowAdd}}">添加</button>
                 </form>
@@ -69,7 +69,7 @@
                 <view class="weui-cell__bd">{{pageData[item].cargoName}}</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access">订{{pageData[item].quantity}}</view>
               </view>
-              <view wx:if="{{{mChecked[item]}}">
+              <view wx:if="{{mChecked[item]}}">
                 <form bindsubmit="fReceipt">
                   <button class="weui-btn" type="primary" size="mini" formType="submit" id="{{ac}}">确认{{pageData[item].receiptTotal}}份</button>
                   <checkbox-group name="{{ac}}" bindchange="checkboxChange">

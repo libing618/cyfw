@@ -27,7 +27,7 @@ module.exports={
     },
   mData: {
     pAt:{
-      articles:[new Date(0),new Date(0)],            //缓存中已发布文章更新时间
+      "articles":[new Date(0),new Date(0)],            //缓存中已发布文章更新时间
       asset:{},                                //缓存中已发布固定资产更新时间
       product:{},                                //缓存中已发布产品更新时间
       service:{},                                //缓存中已发布服务更新时间

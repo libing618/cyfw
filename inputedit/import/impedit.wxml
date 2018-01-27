@@ -3,7 +3,7 @@
 <wxs src="apdc.wxs" module="apdclist" />
 <wxs src="assv.wxs" module="assv" />
 <wxs src="assc.wxs" module="assclist" />
-<wxs src="../../libs/weimport.wxs" module="wewxs" />
+<wxs src="impedit.wxs" module="wewxs" />
 
 <template name="i_p">
   <view class="weui-cells__title">{{p}}</view>
@@ -114,7 +114,11 @@
       <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
+<<<<<<< HEAD
+      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="{{csc}}" bindblur="f_{{func ? func : csc}}"/>
+=======
       <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="{{csc}}" bindblur="f_{{func: func : csc}}"/>
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
     </view>
   </view>
 </template>
@@ -142,11 +146,17 @@
   <view class="weui-cell weui-cell_input">
     <navigator url="/import/addressedit/addressedit?reqName={{gname}}">
       <view class="weui-cell__hd">
-        <view class="weui-label">{{p}}(点此选择)</view>
+        <view class="weui-label">{{p}}:</view>
       </view>
+<<<<<<< HEAD
+      <view class="weui-cell__bd">{{c.sName}}</view>
+    </navigator>
+    <input hidden="true" name="{{gname}}" value="{{c}}"/>
+=======
       <input hidden="true" name="{{gname}}" value="{{c.sName}}""/>
     </navigator>
     <view class="weui-cell__bd">{{c.sName}}</view>
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
   </view>
 </template>
 
@@ -240,11 +250,18 @@
 
 <template name="i_producttype">
   <view class="weui-picker">
+<<<<<<< HEAD
+    <view class="weui-picker__hd weui-cell">
+      <view class="weui-cell__hd">{{p}}:</view>
+      <view class="weui-cell__bd" id="ac-{{n}}" data-ca="{{wewxs.glist(indlist,aVl,2)}}" data-sa="{{apdv['s'+wewxs.glist(indlist,aVl,2)]}}" bindtap="f_arrsel">{{inclose ? c.sName : apdv['s'+wewxs.glist(indlist,aVl,2)] }}</view>
+      <view hideen="{{inclose}}" class="weui-cell__ft"><image src="{{item}}"/></view>
+=======
     <view class="weui-picker__hd">
     <view class="weui-cell">
       <view class="weui-cell__hd">{{p}}:</view>
       <view class="weui-cell__bd" id="ac-{{n}}" data-ca="{{wewxs.glist(indlist,aVl,2))]}}" data-sa="{{apdv['s'+wewxs.glist(indlist,aVl,2))]}}" bindtap="f_arrsel">{{inclose ? c.sName : apdv['s'+wewxs.glist(indlist,aVl,2))] }}</view>
       <view wx:if="{{! inclose}}" class="weui-cell__ft"><image src="{{item}}"></image>
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
     </view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
     <view hidden="{{inclose}}" class="weui-picker__bd">
@@ -290,11 +307,24 @@
     <view class="weui-cell__hd">{{p}}:</view>
     <view class="weui-cell__bd">{{ inclose ? c.sName : objects[sId].surface[aVl[0]]+objects[sId].size[aVl[1]]+objects[sId].weight[aVl[2]] }}</view>
     <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
+<<<<<<< HEAD
+    <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{aVl[0]+''+aVl[1]+aVl[2]}}" data-sa="{{objects[sId].surface[aVl[0]]+objects[sId].size[aVl[1]]+objects[sId].weight[aVl[2]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
+=======
     <icon class="weui-cell__ft" id="ac-{{n}}" data-ca="{{''+aVl[0]]+aVl[1]+aVl[2]}}" data-sa="{{objects[sId].surface[aVl[0]]+objects[sId].size[aVl[1]]+objects[sId].weight[aVl[2]]}}" bindtap="f_arrsel" type="{{inclose ? 'download' : 'success'}}" size="32"/>
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
   </view>
   <view hidden="{{inclose}}">
     <picker-view id="pa-{{n}}" indicator-style="height: 40rpx;" style="width: 100%; height: 300rpx;" value="{{aVl}}" bindchange="f_arrsel">
         <picker-view-column>
+<<<<<<< HEAD
+          <view wx:for="{{objects[sId].surface}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{objects[sId].size}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{objects[sId].weight}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+=======
             <view wx:for="{{objects[sId].surface}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
         </picker-view-column>
         <picker-view-column>
@@ -302,6 +332,7 @@
         </picker-view-column>
         <picker-view-column>
             <view wx:for="{{objects[sId].weight}}" wx:key="{{index}}" style="line-height: 36rpx">{{item}}</view>
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
         </picker-view-column>
     </picker-view>
   </view>

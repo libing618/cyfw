@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+const {iMenu,pName} = require('../../util/util');
+const { updateData, appDataExist } = require('../../model/initupdate');
+=======
 const {iMenu,pName} = require('../../util/util.js');
 const { updateData } = require('../../model/initupdate.js');
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
 var app = getApp();
 Page({
   data:{
@@ -12,17 +17,21 @@ Page({
   onLoad:function(options){    // 生命周期函数--监听页面加载
     var that = this;
     let pageSetData = pName(6);
-    pageSetData.pandect = [app.mData.goods[app.uUnit.id].length,app.mData.specs[app.uUnit.id].length];
+    pageSetData.pandect = [app.mData.goods[app.uUnit.objectId] ? app.mData.goods[app.uUnit.objectId].length : 0, app.mData.specs[app.uUnit.objectId] ? app.mData.specs[app.uUnit.objectId].length : 0];
     pageSetData.grids = iMenu('plan');          //更新数据
+    if (appDataExist('goods',app.uUnit.objectId)){
+      pageSetData.mPage = app.mData.goods[app.uUnit.objectId];
+      pageSetData.pageData= app.goods[app.uUnit.objectId];
+    }
     that.setData( pageSetData )
   },
 
   setPage: function(iu){
     if (iu){
       this.setData({
-        mPage:app.mData.goods[app.uUnit.id],
-        pageData:app.aData.goods[app.uUnit.id],
-        pandect:[app.mData.goods[app.uUnit.id].length,app.mData.specs[app.uUnit.id].length]
+        mPage:app.mData.goods[app.uUnit.objectId],
+        pageData:app.aData.goods[app.uUnit.objectId],
+        pandect:[app.mData.goods[app.uUnit.objectId].length,app.mData.specs[app.uUnit.objectId].length]
       })
     }
   },
@@ -37,9 +46,11 @@ Page({
   onPullDownRefresh:function(){
     updateData(true,6).then(isupdated=>{ this.setPage(isupdated) });
   },
+
   onReachBottom:function(){
     updateData(false,6).then(isupdated=>{ this.setPage(isupdated) });
   },
+
   onShareAppMessage: function() {    // 用户点击右上角分享
     return {
       title: '侠客岛创业服务平台', // 分享标题

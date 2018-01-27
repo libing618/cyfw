@@ -1,4 +1,4 @@
-var tapdv=require("./apdv.wxs");
+var tapdv=require("apdv.wxs");
 var glist = function(clist,svale,sn){
   var apdb1 = [];
   var k = clist[svale[0]];
@@ -22,7 +22,7 @@ var glist = function(clist,svale,sn){
     } else { return apdb2[svale[2]] }
   } else {
     return apdb1;
-  }  
+  }
 };
 var mDot = function(i,cArray){
   return i==cArray.length-1 ? '' : '、'

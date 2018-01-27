@@ -42,7 +42,7 @@ Page ({
     supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
     const setReqData = this.setReqData.bind(this);
-    return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then([reqData,subscription])=> {
+    return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then( ([reqData,subscription])=> {
       this.subscription = subscription;
       if (this.unbind) this.unbind();
       this.unbind = binddata(subscription, arp, setReqData);
@@ -104,16 +104,16 @@ Page ({
     this.unbind();
   },
 
-  i_inScan: require()'../import/impedit.js').i_inScan,
+  i_inScan: require('../import/impedit.js').i_inScan,
 
   fSupplies: function(e){
     var that = this;
     let specId = e.currentTarget.id;
     let confimate = that.data.quantity[specId];
     let setSingle = [];
-    that.cargoPlans[specId].set('cargoStock':that.cargoPlans[specId].cargoStock-confimate);
-    that.cargoPlans[specId].set('payment':that.cargoPlans[specId].payment-confimate);
-    that.cargoPlans[specId].set('delivering':that.cargoPlans[specId].delivering+confimate);
+    that.cargoPlans[specId].set('cargoStock',that.cargoPlans[specId].cargoStock-confimate);
+    that.cargoPlans[specId].set('payment',that.cargoPlans[specId].payment-confimate);
+    that.cargoPlans[specId].set('delivering',that.cargoPlans[specId].delivering+confimate);
     that.cargoPlans[specId].save().then(()=>{
       that.data.mPage[specId].forEach(cId=>{
         that.supplies[cId].set();

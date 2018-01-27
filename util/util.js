@@ -57,44 +57,38 @@ module.exports = {
   },
 
   fetchMenu: function(){
-    return new AV.Query('_User')
-      .notEqualTo('userRol.updatedAt',app.wmenu.updatedAt)
-      .include(['userRol'])
-      .select(['userRol'])
-      .get(app.globalData.user.objectId).then( fetchUser =>{
-        if (fetchUser) {                          //菜单在云端有变化
-          let mUserRole = = fetchUser.toJSON();
-          ['manage','plan','production','customer'].forEach(mname=>{
-            if (mrole) { app.wmenu[mname] = mUserRole.userRol.filter(rn=>{rn==0}) }
-          })
-          app.wmenu.updatedAt = mUserRole.updatedAt;
-          wx.setStorage({ key: 'menudata', data: app.wmenu });
-        }
-        return new Promise.resolve(fetchUser.updatedAt);
-    }).then( fuAt=>{
-      wx.getUserInfo({
+    app.wmenu = wx.getStorageSync('menudata') || app.wmenu;
+    return new AV.Query('userInit')
+      .notEqualTo('updatedAt',app.wmenu.updatedAt)
+      .select(['manage', 'plan', 'production', 'customer'])
+      .equalTo('objectId',app.globalData.user.userRol.objectId).find().then( fetchMenu =>{
+      if (fetchMenu) {                          //菜单在云端有变化
+        app.wmenu = fetchMenu[0].toJSON();
+        ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.wmenu[mname] = app.wmenu[mname].filter(rn=>{return rn!=0}) })
+        wx.setStorage({ key: 'menudata', data: app.wmenu });
+      };
+      return wx.getUserInfo({        //检查客户信息
         withCredentials: false,
-        success: function (wxuserinfo) {
-          if (wxuserinfo) {
-            if (fuAt != app.globalData.user.updatedAt) {             //客户信息有变化
+        success: function ({ userInfo }) {
+          if (userInfo) {
+            let updateInfo = false;
+            for (var iKey in userInfo){
+              if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
+                updateInfo = true;
+                app.globalData.user[iKey] = userInfo[iKey];
+              }
+            };
+            if (updateInfo){
               AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
-                app.globalData.user = rLoginUser.toJSON();
-                app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-                app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
-                resolve();
-              }).catch(uerr=> reject(uerr))
-            } else {
-              app.globalData.user.avatarUrl = wxuserinfo.userInfo.avatarUrl;
-              app.globalData.user.nickName = wxuserinfo.userInfo.nickName;
-              resolve();
+                rLoginUser.set(userInfo).save();
+              })
             }
           }
         }
-      })
-    }).then( ()=>{
+      });
+    }).then(()=>{
       getRols(app.globalData.user.unit);
       app.imLogin(app.globalData.user.username);
-      return
     }).catch( console.error );
   },
 
@@ -105,7 +99,7 @@ module.exports = {
     });
     if (index=='manage'){ mArr[0].mIcon=app.globalData.user.avatarUrl }      //把微信头像地址存入第一个菜单icon
     return mArr;
-  }
+  },
 
   checkRols: function(userRolName,ouRole,emailVerified){
     if (app.globalData.user.userRolName=='admin' && app.globalData.user.emailVerified){
@@ -141,33 +135,33 @@ module.exports = {
     }).catch( error=> {reject(error)} );
   },
 
-  binddata: function(subscription, initialStats, onChange) => {
-   let stats = [...initialStats]
-   const remove = value => {
-     stats = stats.filter(target => target.id !== value.id)
-     return onChange(stats)
-   }
-   const upsert = value => {
-     let existed = false;
-     stats = stats.map(target => (target.id === value.id ? ((existed = true), value) : target))
-     if (!existed) stats = [value, ...stats]
-     return onChange(stats)
-   }
-   subscription.on('create', upsert)
-   subscription.on('update', upsert)
-   subscription.on('enter', upsert)
-   subscription.on('leave', remove)
-   subscription.on('delete', remove)
-   return () => {
-     subscription.off('create', upsert)
-     subscription.off('update', upsert)
-     subscription.off('enter', upsert)
-     subscription.off('leave', remove)
-     subscription.off('delete', remove)
-   }
+  binddata: (subscription, initialStats, onChange) => {
+    let stats = [...initialStats]
+    const remove = value => {
+      stats = stats.filter(target => target.id !== value.id)
+      return onChange(stats)
+    }
+    const upsert = value => {
+      let existed = false;
+      stats = stats.map(target => (target.id === value.id ? ((existed = true), value) : target))
+      if (!existed) stats = [value, ...stats]
+      return onChange(stats)
+    }
+    subscription.on('create', upsert)
+    subscription.on('update', upsert)
+    subscription.on('enter', upsert)
+    subscription.on('leave', remove)
+    subscription.on('delete', remove)
+    return () => {
+    subscription.off('create', upsert)
+    subscription.off('update', upsert)
+    subscription.off('enter', upsert)
+    subscription.off('leave', remove)
+    subscription.off('delete', remove)
+    }
+  },
 
   pName: function(pNo){
-    let familyLength =;
     let psData = {};
     if (typeof procedureclass[pNo].afamily != 'undefined') {
       psData.fLength = procedureclass[pNo].afamily.length;
@@ -180,17 +174,20 @@ module.exports = {
   indexClick: function(e){                           //选择打开的索引数组本身id
     this.setData({ iClicked: e.currentTarget.id });
   },
+
   tabClick: function (e) {                                //点击tab
     app.mData['pCk'+that.data.pNo] = Number(e.currentTarget.id)
     this.setData({
       pageCk: app.mData['pCk'+that.data.pNo]               //点击序号切换
     });
   },
+
   mClick: function (e) {                      //点击mClick
     let pSet = {};
-    pSet['mChecked['+e.currentTarget.id+']'] = !this.data.mClicked[e.currentTarget.id].;
+    pSet['mChecked['+e.currentTarget.id+']'] = !this.data.mClicked[e.currentTarget.id];
     this.setData(pSet)
   },
+  
   formatTime: function(date,isDay) {
     var year = date.getFullYear()
     var month = date.getMonth() + 1

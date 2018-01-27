@@ -62,8 +62,13 @@ Page({
   i_address: function (e) {
     var that = this;
     let reqField = {};
+<<<<<<< HEAD:inputedit/import/addressedit.js
+    reqField[that.reqField] = { code: that.data.saddv, sName: e.detail.value.address1 + e.detail.value.address2 };
+    that.prevPage.setData( reqField, ()=>{wx.navigateBack({ delta: 1 })} );         //回退前 delta(默认为1) 页面
+=======
     reqField[that.reqField] = {code: that.data.saddv, sName:e.detail.value.address1 + e.detail.value.address2};
     that.prevPage.setData( reqField );
     wx.navigateBack({ delta: 1 })                // 回退前 delta(默认为1) 页面
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602:inputedit/import/addressedit.js
   }
 })

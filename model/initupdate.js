@@ -22,10 +22,63 @@ function cLocation(){
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
-        resolve(new AV.GeoPoint(res.latitude,res.longitude))
+        return new AV.GeoPoint(res.latitude,res.longitude)
       }
     })
   }).catch(console.error)
+<<<<<<< HEAD
+};
+const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下拉刷新
+  return new Promise((resolve, reject) => {
+    if (typeof pNo == 'string') {
+      procedureclass.forEach(pClass => { if (pClass.pModle == pNo) { pNo = pClass.pNo } });
+    }
+    var cName = procedureclass[pNo].pModle;
+    var unitId = uId ? uId : app.uUnit.objectId;
+    let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
+    var umdata = [];
+    var updAt = app.mData.pAt[cName];
+    return new AV.Query(cName);                                      //进行数据库初始化操作
+  }).then(readProcedure => {
+    if (pNo > 1) {
+      readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
+      updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [new Date(0), new Date(0)] : app.mData.pAt[cName][unitId];
+    };
+    if (isDown) {
+      readProcedure.greaterThan('updatedAt', updAt[1]);          //查询本地最新时间后修改的记录
+      readProcedure.ascending('updatedAt');           //按更新时间升序排列
+      readProcedure.limit(1000);                      //取最大数量
+    } else {
+      readProcedure.lessThan('updatedAt', updAt[0]);          //查询最后更新时间前修改的记录
+      readProcedure.descending('updatedAt');           //按更新时间降序排列
+    };
+    readProcedure.find().then((arp) => {
+      var lena = arp.length;
+      if (lena > 0) {
+        if (pNo == 1) {
+          umdata = app.mData[cName];
+        } else {
+          umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
+        }
+        let aPlace = -1;
+        if (isDown) {
+          updAt[1] = arp[lena - 1].updatedAt;                          //更新本地最新时间
+          updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
+        } else {
+          updAt[0] = arp[lena - 1].updatedAt;          //更新本地最后更新时间
+        };
+        arp.forEach(aProcedure => {
+          if (isDown) {
+            if (inFamily) {                         //存在afamily类别
+              aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.id);
+              if (aPlace >= 0) { umdata[aProcedure.afamily].splice(aPlace, 1) }           //删除本地的重复记录列表
+              umdata[aProcedure.afamily].unshift(aProcedure.id);
+            } else {
+              aPlace = umdata.indexOf(aProcedure.id);
+              if (aPlace >= 0) { umdata.splice(aPlace, 1) }           //删除本地的重复记录列表
+              umdata.unshift(aProcedure.id);
+            }
+=======
 }
 module.exports = {
   updateData: function(isDown,pNo,uId) {    //更新页面显示数据,isDown下拉刷新
@@ -89,16 +142,50 @@ module.exports = {
           if (pNo!=1){
             app.mData.pAt[cName][unitId] = updAt;
             app.mData[cName][unitId] = umdata;
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
           } else {
-            app.mData.pAt[cName] = updAt;
-            app.mData[cName] = umdata;
+            if (inFamily) {
+              umdata[aProcedure.afamily].push(aProcedure.id);
+            } else {
+              umdata.push(aProcedure.id);                   //分类ID数组增加对应ID
+            }
           };
-          resolve(true);               //数据有更新
-        } else {resolve(false);}               //数据无更新
-      }).catch( error=> {reject(error)} );
-    })
+          app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
+        });
+        if (pNo != 1) {
+          app.mData.pAt[cName][unitId] = updAt;
+          app.mData[cName][unitId] = umdata;
+        } else {
+          app.mData.pAt[cName] = updAt;
+          app.mData[cName] = umdata;
+        };
+        resolve(true);               //数据有更新
+      } else { resolve(false); }               //数据无更新
+    }).catch(error => {
+      wx.onNetworkStatusChange(res => {
+        if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
+      });
+      reject(error)
+    });
+  })
+};
+
+module.exports = {
+  appDataExist: function(dKey0,dKey1,dKey2){              //检查app.aData是否存在二三级的键值
+    let dExist = true;
+    if (typeof app.aData[dKey0] == 'undefined' ){ return false }
+    if (dKey1 in app.aData[dKey0]){
+      if (typeof dKey2 == 'string'){
+        if (!(dKey2 in app.aData[dKey0][dKey1])){
+          dExist = false;
+        }
+      }
+    } else { dExist = false };
+    return dExist;
   },
 
+  updateData: updateData,
+  
   className: function(pNo) {
     return procedureclass[pNo].pModle
   },
@@ -110,7 +197,11 @@ module.exports = {
   integration: function(pName,unitId) {           //整合选择数组
     switch (pName){
       case 'cargo':         //通过产品选择成品
+<<<<<<< HEAD
+        return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(()=>{
+=======
         return Promise.all([this.updateData(true,3,unitId),this.updateData(true,5,unitId)]).then(()=>{
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
           let drone = app.mData.product[unitId].map(proId=>{
             return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
           })
@@ -118,8 +209,13 @@ module.exports = {
         }).catch( console.error );
         break;
       case 'specs':
+<<<<<<< HEAD
+        updateData(true,6,unitId).then(()=>{           //通过商品选择规格
+          updateData(true,7,unitId).then(()=>{
+=======
         this.updateData(true,6,unitId).then(()=>{           //通过商品选择规格
           this.updateData(true,7,unitId).then(()=>{
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
             let drone = app.mData.goods[unitId].map( goodsId=>{
               return { masterId:goodsId,slaveId:app.mData.specs[unitId].filter( specId=> app.aData.specs[unitId][specId].goods==goodsId)}
             })
@@ -148,7 +244,11 @@ module.exports = {
             break;
           case 'sId' :
             promArr.push(
+<<<<<<< HEAD
+              updateData(true,req[i].gname,unitId).then(()=>{
+=======
               this.updateData(true,req[i].gname,unitId).then(()=>{
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
                 req[i].mData = app.mData[req[i].gname][unitId];
                 req[i].aData = app.aData[req[i].gname][unitId];
               })
@@ -163,8 +263,13 @@ module.exports = {
   },
 
   initData: function(req,vData){      //对数据录入或编辑的格式数组和数据对象进行初始化操作
+<<<<<<< HEAD
+    let vDataKeys = Object.keys(vData);            //数据对象是否为空
+    let vifData = (vDataKeys.length == 0);
+=======
     let vifData = typeof vData == 'undefined';
     if (vifData) { vData = {} };             //数据对象初始化
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
     var funcArr = [];
     let unitId = vData.unitId ? vData.unitId : app.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
     return new  Promise((resolve, reject) => {
@@ -186,7 +291,11 @@ module.exports = {
             req[i].indlist = app.uUnit.indType;
             break;
           case 'sId' :
+<<<<<<< HEAD
+            promArr.push( updateData(true,req[i].gname,unitId).then(()=>{
+=======
             promArr.push( this.updateData(true,req[i].gname,unitId).then(()=>{
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
               req[i].mData = app.mData[req[i].gname][unitId];
               req[i].aData = app.aData[req[i].gname][unitId];
             }) )
@@ -249,7 +358,13 @@ module.exports = {
       };
       resolve(promArr);
     }).then(pArr=>{
+<<<<<<< HEAD
+      console.log(vifData,pArr.length)
+      return Promise.all(pArr).then(()=>{ 
+        return { req: req, vData: vData, funcArr:funcArr} })
+=======
       return Promise.all(pArr).then(()=>{ return {req,vData,funcArr} })
+>>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
     }).catch(console.error);
   }
 

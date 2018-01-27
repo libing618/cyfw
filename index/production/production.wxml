@@ -1,38 +1,30 @@
+<import src="../../libs/weimport.wxml" />
 <view class="page">
-    <view class="page__hd">
-        <view class="page__title">生产进度</view>
-        <view class="page__desc">计划生产XX 库存XX</view>
-    </view>
-    <view class="page__bd">
-        <view class="weui-grids">
-            <block wx:for="{{grids}}" wx:key="{{index}}">
-                <navigator url="{{item.tourl}}" class="weui-grid" hover-class="weui-grid_active">
-                    <image class="weui-grid__icon" src="{{item.mIcon}}" />
-                    <view class="weui-grid__label">{{item.mName}}</view>
-                </navigator>
-            </block>
-        </view>
-    </view>
+  <view class="page__hd">
+    <view class="page__title">生产进度</view>
+    <view class="page__desc">计划生产XX 库存XX</view>
+  </view>
+  <view class="page__bd">
+    <template is="showgrids" data="{{grids}}"/>
+  </view>
     <view class="page__title">计划完成列表</view>
     <scroll-view class="article-scroll" scroll-y="true">
       <view class="weui-article">
-          <view class="weui-article__section">
-            <view class="weui-article__h3">原料采购</view>
-            <view class="weui-article__p">
-                本日计划XX笔, 完成XX笔，完成率XX%。
-            </view>
+        <view class="weui-article__section">
+          <view class="weui-article__h3">原料采购</view>
+          <view class="weui-article__p">
+              本日计划XX笔, 完成XX笔，完成率XX%。
           </view>
-          <view class="weui-article__section">
-            <view class="weui-article__h3">生产过程</view>
-            <view class="weui-article__p">
-                线下代理XX家, 线上商铺XX家，分销占比XX%。
-            </view>
+        </view>
+        <view class="weui-article__section">
+          <view class="weui-article__h3">生产过程</view>
+          <view class="weui-article__p">
+              线下代理XX家, 线上商铺XX家，分销占比XX%。
           </view>
-
-          <view class="class='weui-cell'">
+        </view>
+        <view class="class='weui-cell'">
           <view class='weui-cell_hd'>产品库存</view>
-
-          </view>
+        </view>
       </view>
     </scroll-view>
 </view>

@@ -1,6 +1,6 @@
 //调整当日成品生产计划
-const AV = require('../../../libs/leancloud-storage.js');
-const weutil = require('../../../util/util.js');
+const AV = require('../../libs/leancloud-storage.js');
+const weutil = require('../../util/util.js');
 var app = getApp();
 
 Page({

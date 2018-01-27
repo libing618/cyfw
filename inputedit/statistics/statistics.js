@@ -31,14 +31,19 @@ Page({
           }).catch(console.error);
         }
       }).catch(console.error);
+    }
   },
+
   onReady:function(){
     var that = this;
     that.data.vData.start_end = [formatTime(Date.now() - 864000000, true), formatTime(Date.now(), true)];
     that.sumOrders();
   },
+
   i_sedate: i_sedate,
+
   indexClick: indexClick,
+  
   sumOrders:function(){
     var that = this;
     new AV.Query(orders)
@@ -67,6 +72,7 @@ Page({
       }
     }).catch(console.error);
   },
+
   orderquery:function(e){
     this.sumOrders();
   }

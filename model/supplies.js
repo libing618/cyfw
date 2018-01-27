@@ -74,7 +74,7 @@ class supplies extends AV.Object {
   set receiptArr(value) { this.set('receiptArr', value); }
 
   get receiptTotal() { return this.get('receiptTotal'); }
-  set receiptTotal(value) { this.set('receiptTotal', value); }}
+  set receiptTotal(value) { this.set('receiptTotal', value); }
 }
 AV.Object.register(supplies);
 
