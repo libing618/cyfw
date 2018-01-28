@@ -23,7 +23,7 @@ Page({
         that.data.vData = app.aData.articles[options.artId];
       } else {
         that.data.uEV = app.globalData.user.emailVerified;
-        that.data.vData = app.aData[that.cName][app.uUnit.id][options.artId];
+        that.data.vData = app.aData[that.cName][app.uUnit.objectId][options.artId];
       }
       that.inFamily = typeof pClass.afamily != 'undefined';
       readShowFormat(pClass.pSuccess).then(req=>{
@@ -53,9 +53,9 @@ Page({
         } else {
           if (that.inFamily) {
             url += '&artId='+that.data.vData.afamily;
-            app.aData[that.cName][app.uUnit.id][that.cName+that.data.vData.afamily] = that.data.vData;
+            app.aData[that.cName][app.uUnit.objectId][that.cName+that.data.vData.afamily] = that.data.vData;
           } else {
-            app.aData[that.cName][app.uUnit.id][that.cName] = that.data.vData;
+            app.aData[that.cName][app.uUnit.objectId][that.cName] = that.data.vData;
           }
         };
         break;

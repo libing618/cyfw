@@ -7,18 +7,17 @@ Page ({
     dObjectId: 0,             //已建数据的ID作为修改标志，则为新建
     pageData: []
   },
-  pno: 2,
   artid: null,
   cName: '',
   inFamily: false,
 
   onLoad: function (ops) {        //传入参数为pNo,不得为空
     var that = this;
-    that.pno = Number(ops.pNo);
+    let pno = Number(ops.pNo);
     that.artid = Number(ops.artId);
-    if (! isNaN(that.pno)) {
+    if (! isNaN(pno)) {
       that.cName = className(pno);
-      that.inFamily = classInFamily(that.pno);
+      that.inFamily = classInFamily(pno);
       that.setData({
         pNo: pno,
         dObjectId: isNaN(that.artid) ? -1 : artid
@@ -32,15 +31,15 @@ Page ({
 
   setPage: function(iu){     //有更新则重新传输页面数据
     if (iu){
-      if (that.pno==1){
+      if (this.data.pNo==1){
         this.setData({
-          mPage: isNaN(that.artid) ? app.mData.articles : app.mData.articles[that.artid],
-          pageData: isNaN(that.artid) ? app.aData.articles : app.aData.articles[app.uUnit.id]
+          mPage: isNaN(that.artid) ? app.mData.articles : app.mData.articles[this.artid],
+          pageData: isNaN(that.artid) ? app.aData.articles : app.aData.articles[this.artid]
         })
       } else {
         this.setData({
-          mPage: this.inFamily ? app.mData[this.cName][app.uUnit.id][that.artid] : app.mData[this.cName][app.uUnit.id],
-          pageData: this.inFamily ? app.aData[this.cName][app.uUnit.id][that.artid] : app.aData[this.cName][app.uUnit.id]
+          mPage: this.inFamily ? app.mData[this.cName][app.uUnit.objectId][that.artid] : app.mData[this.cName][app.uUnit.objectId],
+          pageData: this.inFamily ? app.aData[this.cName][app.uUnit.objectId][that.artid] : app.aData[this.cName][app.uUnit.objectId]
         })
       }
     }

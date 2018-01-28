@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 const {iMenu,pName} = require('../../util/util');
 const { updateData, appDataExist } = require('../../model/initupdate');
-=======
-const {iMenu,pName} = require('../../util/util.js');
-const { updateData } = require('../../model/initupdate.js');
->>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
 var app = getApp();
 Page({
   data:{

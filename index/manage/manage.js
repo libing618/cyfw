@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData } = require('../../model/initupdate');
 const {openWxLogin,fetchMenu,iMenu} = require('../../util/util');
-=======
-const { updateData } = require('../../model/initupdate.js');
-const {openWxLogin,fetchMenu,iMenu} = require('../../util/util.js');
->>>>>>> 73d0481123a594e248fe4f76b0c8fb58f01e9602
 var app = getApp()
 Page({
   data: {
