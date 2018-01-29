@@ -1,6 +1,6 @@
 <import src="wedetail.wxml" />
 <wxs module="mDot">
-  module.exports = 
+  module.exports =
     function(i,cArray){ return i==cArray.length-1 ? '' : '、' }
  </wxs>
 
@@ -221,14 +221,14 @@
 <template name="tabPanel">
 <view class="weui-tab__panel">
   <block wx:for="{{tPage}}" wx:key="{{index}}">
-    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item.objectId}}">
+    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{pageData[item.objectId].thumbnail}}" background-size="cover"></image>
+          <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{pageData[item.objectId].uName}}</view>
-          <view class="weui-media-box__desc">{{pageData[item.objectId].title}}</view>
+          <view class="weui-media-box__title">{{pageData[item].uName}}</view>
+          <view class="weui-media-box__desc">{{pageData[item].title}}</view>
         </view>
       </view>
     </navigator>

@@ -140,7 +140,7 @@
 
 <template name="i_ed">
   <view class="weui-cell weui-cell_input">
-    <navigator url="/import/addressedit/addressedit?reqName={{gname}}">
+    <navigator url="/inputedit/import/addressedit/addressedit?reqName={{gname}}">
       <view class="weui-cell__hd">
         <view class="weui-label">{{p}}:</view>
       </view>

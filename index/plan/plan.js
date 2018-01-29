@@ -1,5 +1,5 @@
-const {iMenu,pName} = require('../../util/util');
-const { updateData, appDataExist } = require('../../model/initupdate');
+const {iMenu} = require('../../util/util');
+const { updateData, appDataExist, integration } = require('../../model/initupdate');
 var app = getApp();
 Page({
   data:{
@@ -11,12 +11,12 @@ Page({
   },
   onLoad:function(options){    // 生命周期函数--监听页面加载
     var that = this;
-    let pageSetData = pName(6);
+    let pageSetData = {};
     pageSetData.pandect = [app.mData.goods[app.uUnit.objectId] ? app.mData.goods[app.uUnit.objectId].length : 0, app.mData.specs[app.uUnit.objectId] ? app.mData.specs[app.uUnit.objectId].length : 0];
     pageSetData.grids = iMenu('plan');          //更新数据
     if (appDataExist('goods',app.uUnit.objectId)){
       pageSetData.mPage = app.mData.goods[app.uUnit.objectId];
-      pageSetData.pageData= app.goods[app.uUnit.objectId];
+      pageSetData.pageData= app.aData.goods[app.uUnit.objectId];
     }
     that.setData( pageSetData )
   },
@@ -32,9 +32,9 @@ Page({
   },
 
   onReady: function(){
-    updateData(true,6).then(isupdated=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
+    integration('specs',app.uUnit.objectId).then(()=>{ this.setPage(appDataExist('goods',app.uUnit.objectId)) });              //更新缓存以后有变化的数据
     wx.setNavigationBarTitle({
-      title: app.globalData.user.emailVerified ? app.uUnit.uName+'的产品' : '用户体验产品服务',
+      title: app.globalData.user.emailVerified ? app.uUnit.uName+'的商品' : '用户体验产品服务',
     })
   },
 

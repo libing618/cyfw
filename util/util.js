@@ -1,5 +1,4 @@
 const AV = require('../libs/leancloud-storage.js');
-const procedureclass = require('../model/procedureclass.js');
 var app = getApp();
 function formatNumber(n) {
   n = n.toString()
@@ -115,6 +114,20 @@ module.exports = {
     }
   },
 
+  rSum: function(pName,fields){
+    let sLength = fields.length;
+    let fieldSum = new Array(sLength);
+    fieldSum.fill(0);         //定义汇总数组长度且填充为0
+    if (app.mData[pName][app.uUnit.objectId]){
+      app.mData[pName][app.uUnit.objectId].forEach(mId=>{
+        for (let i=0;i<sLength;i++){
+          fieldSum[i] += app.aData[pName][app.uUnit.objectId][mId][fields[i]]
+        }
+      })
+    }
+    return fieldSum;
+  },
+
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
       let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
@@ -161,16 +174,6 @@ module.exports = {
     }
   },
 
-  pName: function(pNo){
-    let psData = {};
-    if (typeof procedureclass[pNo].afamily != 'undefined') {
-      psData.fLength = procedureclass[pNo].afamily.length;
-      psData.pageCk = app.mData['pCk'+pNo];
-      psData.tabs = procedureclass[pNo].afamily;
-    };
-    return psData;
-  },
-
   indexClick: function(e){                           //选择打开的索引数组本身id
     this.setData({ iClicked: e.currentTarget.id });
   },
@@ -187,7 +190,7 @@ module.exports = {
     pSet['mChecked['+e.currentTarget.id+']'] = !this.data.mClicked[e.currentTarget.id];
     this.setData(pSet)
   },
-  
+
   formatTime: function(date,isDay) {
     var year = date.getFullYear()
     var month = date.getMonth() + 1

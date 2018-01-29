@@ -2,10 +2,10 @@ const AV = require('../libs/leancloud-storage.js');
 
 class cargoPlan extends AV.Object {
   get unitId() { return this.get('unitId'); }
-  set unitId(value) { this.set('done', unitId); }
+//  set unitId(value) { this.set('done', unitId); }
 
   get cargo() { return this.get('cargo'); }
-  set cargo(value) { this.set('cargo', value); }
+//  set cargo(value) { this.set('cargo', value); }
 
   get canSupply() { return this.get('canSupply'); }    //可供应量
   set canSupply(value) { this.set('canSupply', value); }

@@ -1,33 +1,49 @@
-const {iMenu} = require('../../util/util.js');
+const { updateData, appDataExist, integration } = require('../../model/initupdate.js');
+const {iMenu,rSum} = require('../../util/util.js');
+
 var app = getApp()
 Page({
-  data: {
-    grids:[],
-    approvPending: [],
-    text : '沟通开始：'
+  data:{
+    mPage: [],
+    pNo: 5,                       //流程的序号5为成品信息
+    pageData: {},
+    grids:[]
+  },
+  onLoad:function(options){
+    var that = this ;
+    let pageSetData = {};
+    pageSetData.pandect = rSum('cargo', ['canSupply', 'reserve', 'payment', 'delivering', 'delivered']);
+    pageSetData.grids = iMenu('customer');          //更新数据
+    if (appDataExist('cargo',app.uUnit.objectId)){
+      pageSetData.mPage = app.mData.cargo[app.uUnit.objectId];
+      pageSetData.pageData= app.aData.cargo[app.uUnit.objectId];
+    }
+    that.setData( pageSetData );
   },
 
-  onLoad:function(options){    // 生命周期函数--监听页面加载
-    this.setData({ grids: iMenu('customer') })          //更新菜单
+  setPage: function(iu){
+    if (iu){
+      this.setData({
+        mPage:app.mData.cargo[app.uUnit.objectId],
+        pageData:app.aData.cargo[app.uUnit.objectId],
+        pandect:rSum('cargo',['canSupply','reserve','payment','delivering','delivered'])
+      })
+    }
   },
 
-  onReady:function(){    // 生命周期函数--监听页面初次渲染完成
-    this.updatepending(true);
-  },
-  onShow:function(){    // 生命周期函数--监听页面显示
-    if (this.data.approvPending.length==0){ this.updatepending(true); }
+  onReady:function(){
+    updateData(true,5).then(isupdated=>{ this.setPage(isupdated) });
+    wx.setNavigationBarTitle({
+      title: app.globalData.user.emailVerified ? app.uUnit.uName+'的销售管理' : '用户体验产品销售',
+    })
   },
 
   onPullDownRefresh: function() {
-    this.updatepending(true)
+    updateData(true,5).then(isupdated=>{ this.setPage(isupdated) });
   },
   onReachBottom: function() {
-    this.updatepending(false);
+    updateData(false,5).then(isupdated=>{ this.setPage(isupdated) });
   },
-  updatepending: function(upOrDown) {
-    if(upOrDown){this.setData({text: '上拉刷新'})};
-  },
-
   onShareAppMessage: function() {
     // 用户点击右上角分享
     return {

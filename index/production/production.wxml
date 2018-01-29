@@ -1,30 +1,25 @@
 <import src="../../libs/weimport.wxml" />
 <view class="page">
   <view class="page__hd">
-    <view class="page__title">生产进度</view>
-    <view class="page__desc">计划生产XX 库存XX</view>
+    <view class="page__title">产量库存总览</view>
+    <view class="page__desc">总产量{{pandect[0]}}件，现库存{{pandect[1]}}件。</view>
   </view>
   <view class="page__bd">
     <template is="showgrids" data="{{grids}}"/>
   </view>
-    <view class="page__title">计划完成列表</view>
-    <scroll-view class="article-scroll" scroll-y="true">
-      <view class="weui-article">
-        <view class="weui-article__section">
-          <view class="weui-article__h3">原料采购</view>
-          <view class="weui-article__p">
-              本日计划XX笔, 完成XX笔，完成率XX%。
-          </view>
+  <view class="weui-tab">
+  <block wx:for="{{mPage}}" wx:key="{{index}}">
+    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
         </view>
-        <view class="weui-article__section">
-          <view class="weui-article__h3">生产过程</view>
-          <view class="weui-article__p">
-              线下代理XX家, 线上商铺XX家，分销占比XX%。
-          </view>
-        </view>
-        <view class="class='weui-cell'">
-          <view class='weui-cell_hd'>产品库存</view>
+        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">{{pageData[item].uName}}</view>
+          <view class="weui-media-box__desc">产量{{pageData[item].yield}},库存{{pageData[item].cargoStock}}</view>
         </view>
       </view>
-    </scroll-view>
+    </navigator>
+  </block>
+  </view>
 </view>

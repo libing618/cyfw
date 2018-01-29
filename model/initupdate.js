@@ -24,7 +24,6 @@ function cLocation(){
         type: 'wgs84',
         success: function (res) {
           resolve( { latitude: res.latitude, longitude: res.longitude } )
-      //    return new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude })
         },
         fail() { reject()}
       })
@@ -124,35 +123,45 @@ module.exports = {
 
   updateData: updateData,
 
-  className: function(pNo) {
+  className: function(pNo) {              //返回数据表名
     return procedureclass[pNo].pModle
   },
 
-  classInFamily: function(pNo) {
+  classInFamily: function(pNo) {              //判断数据表是否有分类控制
     return (typeof procedureclass[pNo].afamily != 'undefined');
   },
 
+  familySel: function(pNo){              //数据表有分类控制的返回分类长度和选择记录
+    let psData = {};
+    if (typeof procedureclass[pNo].afamily != 'undefined') {
+      psData.fLength = procedureclass[pNo].afamily.length;
+      psData.pageCk = app.mData['pCk'+pNo];
+      psData.tabs = procedureclass[pNo].afamily;
+    };
+    return psData;
+  },
+
   integration: function(pName,unitId) {           //整合选择数组
-    switch (pName){
-      case 'cargo':         //通过产品选择成品
-        return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(()=>{
-          let drone = app.mData.product[unitId].map(proId=>{
-            return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
-          })
-          return {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]};
-        }).catch( console.error );
-        break;
-      case 'specs':
-        updateData(true,6,unitId).then(()=>{           //通过商品选择规格
-          updateData(true,7,unitId).then(()=>{
+    return new Promise((resolve, reject) => {
+      switch (pName){
+        case 'cargo':         //通过产品选择成品
+          return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(()=>{
+            let drone = app.mData.product[unitId].map(proId=>{
+              return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
+            })
+            resolve( {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]} );
+          }).catch( console.error );
+          break;
+        case 'specs':
+          return Promise.all([updateData(true, 6, unitId), updateData(true, 7, unitId), updateData(true, 5, unitId)]).then(() => {           //通过规格选择成品
             let drone = app.mData.goods[unitId].map( goodsId=>{
               return { masterId:goodsId,slaveId:app.mData.specs[unitId].filter( specId=> app.aData.specs[unitId][specId].goods==goodsId)}
             })
-            return {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]};
-          })
-        }).catch( console.error );
-        break;
-    }
+            resolve({ droneId: drone, master: app.aData.goods[unitId], slave: app.aData.specs[unitId], cargo: app.aData.cargo[unitId]});
+          }).catch( console.error );
+          break;
+      }
+    }).catch(console.error);
   },
 
   readShowFormat: function(req,uId){

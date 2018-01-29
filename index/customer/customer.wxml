@@ -1,28 +1,25 @@
 <import src="../../libs/weimport.wxml" />
 <view class="page">
   <view class="page__hd">
-    <view class="page__title">近期任务</view>
-      <view class="page__title">需要回覆客户提问 X 笔</view>
-      <view class="page__desc">需要录制X篇产品介绍 X篇营销解读 X月X日直播已预约</view>
+    <view class="page__title">销售情况总览</view>
+    <view class="page__desc">可供应量{{pandect[0]}}，预定未付款{{pandect[1]}}件，付款未发货{{pandect[2]}}件，发货未收到{{pandect[3]}}件，交货且签收{{pandect[4]}}件。</view>
   </view>
   <view class="page__bd">
     <template is="showgrids" data="{{grids}}"/>
   </view>
-  <scroll-view scroll-y="true" class="article-scroll">
-    <view class="weui-article">
-        <view class="weui-article__section">
-          <view class="weui-article__h3">服务总结</view>
-          <view class="weui-article__p">
-              回答问题XX笔, 促成销售XX元，退换货 0 次。
-          </view>
+  <view class="weui-tab">
+  <block wx:for="{{mPage}}" wx:key="{{index}}">
+    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
         </view>
-        <view class="weui-article__section">
-          <view class="weui-article__h3">客户分析</view>
-          <view class="weui-article__p">
-              成交客户以中年人为主, 正面评价男性居多，负面评价无。
-          </view>
+        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">{{pageData[item].uName}}:可供应量{{pageData[item].canSupply}}</view>
+          <view class="weui-media-box__desc">付款未发货{{pageData[item].payment}},交货且签收{{pageData[item].delivered}}</view>
         </view>
-    </view>
-  </scroll-view>
-
+      </view>
+    </navigator>
+  </block>
+  </view>
 </view>

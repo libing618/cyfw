@@ -8,6 +8,6 @@
     <template is="showgrids" data="{{grids}}"/>
   </view>
   <view class="weui-tab">
-    <template is="tabPanel" data="{{ tPage: fLength ? mPage[pageCk] : mPage , pageData , pNo }}"/>
+    <template is="tabPanel" data="{{ tPage: mPage , pageData , pNo }}"/>
   </view>
 </view>
