@@ -152,11 +152,14 @@ module.exports = {
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
     var id = e.currentTarget.id.substring(0, 2);
     switch (id) {
+      case 'se':
+        that.setData(rdSet(n, 'inclose', !that.data.reqData[n].inclose));
+        break;
       case 'ac':
         if (!that.data.reqData[n].inclose) {
           that.setData(vdSet(that.data.reqData[n].gname, { code: Number(e.currentTarget.dataset.ca), sName: e.currentTarget.dataset.sa }))
         }
-        that.setData(rdSet(n, 'inclose', !that.data.reqData[n].inclose));
+        that.setData(rdSet(n, 'inclose', true));
         break;
       case 'pa':
         let aval = e.detail.value;
