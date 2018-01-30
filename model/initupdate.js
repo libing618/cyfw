@@ -39,10 +39,9 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
     var unitId = uId ? uId : app.uUnit.objectId;
     let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
     var umdata = [];
-    var updAt = app.mData.pAt[cName];
-    return new AV.Query(cName);                                      //进行数据库初始化操作
-  }).then(readProcedure => {
-    if (pNo > 1) {
+    let updAt = app.mData.pAt[cName];
+    var readProcedure = new AV.Query(cName);                                      //进行数据库初始化操作
+    if (pNo != 1) {
       readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
       updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [new Date(0), new Date(0)] : app.mData.pAt[cName][unitId];
     };
@@ -54,57 +53,57 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
       readProcedure.lessThan('updatedAt', updAt[0]);          //查询最后更新时间前修改的记录
       readProcedure.descending('updatedAt');           //按更新时间降序排列
     };
-    readProcedure.find().then((arp) => {
-      var lena = arp.length;
-      if (lena > 0) {
-        if (pNo == 1) {
-          umdata = app.mData[cName];
-        } else {
-          umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
-        }
-        let aPlace = -1;
+    return readProcedure.find()
+  }).then((arp) => {
+    var lena = arp.length;
+    if (lena > 0) {
+      if (pNo == 1) {
+        umdata = app.mData[cName];
+      } else {
+        umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
+      }
+      let aPlace = -1;
+      if (isDown) {
+        updAt[1] = arp[lena - 1].updatedAt;                          //更新本地最新时间
+        updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
+      } else {
+        updAt[0] = arp[lena - 1].updatedAt;          //更新本地最后更新时间
+      };
+      arp.forEach(aProcedure => {
         if (isDown) {
-          updAt[1] = arp[lena - 1].updatedAt;                          //更新本地最新时间
-          updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
-        } else {
-          updAt[0] = arp[lena - 1].updatedAt;          //更新本地最后更新时间
-        };
-        arp.forEach(aProcedure => {
-          if (isDown) {
-            if (inFamily) {                         //存在afamily类别
-              aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.id);
-              if (aPlace >= 0) { umdata[aProcedure.afamily].splice(aPlace, 1) }           //删除本地的重复记录列表
-              umdata[aProcedure.afamily].unshift(aProcedure.id);
-            } else {
-              aPlace = umdata.indexOf(aProcedure.id);
-              if (aPlace >= 0) { umdata.splice(aPlace, 1) }           //删除本地的重复记录列表
-              umdata.unshift(aProcedure.id);
-            }
+          if (inFamily) {                         //存在afamily类别
+            aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.id);
+            if (aPlace >= 0) { umdata[aProcedure.afamily].splice(aPlace, 1) }           //删除本地的重复记录列表
+            umdata[aProcedure.afamily].unshift(aProcedure.id);
           } else {
-            if (inFamily) {
-              umdata[aProcedure.afamily].push(aProcedure.id);
-            } else {
-              umdata.push(aProcedure.id);                   //分类ID数组增加对应ID
-            }
-          };
-          app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
-        });
-        if (pNo != 1) {
-          app.mData.pAt[cName][unitId] = updAt;
-          app.mData[cName][unitId] = umdata;
+            aPlace = umdata.indexOf(aProcedure.id);
+            if (aPlace >= 0) { umdata.splice(aPlace, 1) }           //删除本地的重复记录列表
+            umdata.unshift(aProcedure.id);
+          }
         } else {
-          app.mData.pAt[cName] = updAt;
-          app.mData[cName] = umdata;
+          if (inFamily) {
+            umdata[aProcedure.afamily].push(aProcedure.id);
+          } else {
+            umdata.push(aProcedure.id);                   //分类ID数组增加对应ID
+          }
         };
-        resolve(true);               //数据有更新
-      } else { resolve(false); }               //数据无更新
-    }).catch(error => {
-      wx.onNetworkStatusChange(res => {
-        if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
+        app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
       });
-      reject(error)
+      if (pNo != 1) {
+        app.mData.pAt[cName][unitId] = updAt;
+        app.mData[cName][unitId] = umdata;
+      } else {
+        app.mData.pAt[cName] = updAt;
+        app.mData[cName] = umdata;
+      };
+      resolve(true);               //数据有更新
+    } else { resolve(false); }               //数据无更新
+  }).catch(error => {
+    wx.onNetworkStatusChange(res => {
+      if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
     });
-  })
+    reject(error)
+  });
 };
 
 module.exports = {
@@ -141,7 +140,7 @@ module.exports = {
     return psData;
   },
 
-  integration: function(pName,unitId) {           //整合选择数组
+  integration: function(pName,unitId,searchId) {           //整合选择数组
     return new Promise((resolve, reject) => {
       switch (pName){
         case 'cargo':         //通过产品选择成品
@@ -153,11 +152,12 @@ module.exports = {
           }).catch( console.error );
           break;
         case 'specs':
-          return Promise.all([updateData(true, 6, unitId), updateData(true, 7, unitId), updateData(true, 5, unitId)]).then(() => {           //通过规格选择成品
-            let drone = app.mData.goods[unitId].map( goodsId=>{
-              return { masterId:goodsId,slaveId:app.mData.specs[unitId].filter( specId=> app.aData.specs[unitId][specId].goods==goodsId)}
+          return Promise.all([updateData(true, 7, unitId), updateData(true, 5, unitId)]).then(() => {           //通过规格选择成品
+            let mIdArr = app.mData.spics[unitId].filter(specId => app.aData.specs[unitId][specId].goods == searchId)
+            let drone = mIdArr.map( specsId=>{
+              return { masterId: specsId, slaveId: app.mData.cargo[unitId].filter(cargoId => app.aData.cargo[unitId][cargoId].specId == specsId)}
             })
-            resolve({ droneId: drone, master: app.aData.goods[unitId], slave: app.aData.specs[unitId], cargo: app.aData.cargo[unitId]});
+            resolve({ droneId: drone, maste: app.aData.specs[unitId], rslave: app.aData.cargo[unitId]});
           }).catch( console.error );
           break;
       }
@@ -262,7 +262,7 @@ module.exports = {
             case 'assettype':
               vData[req[i].gname] = { code:0,sName:'点此处进行选择'};
               break;
-            case 'producttype' :
+            case 'producttype':
               vData[req[i].gname] = { code: 0, sName:'点此处进行选择'} ;
               break;
             case 'industrytype':
@@ -270,6 +270,9 @@ module.exports = {
               break;
             case 'arrplus':
               vData[req[i].gname] = { code: 0, sName:'点此处进行选择'} ;
+              break;
+            case 'ed':
+              vData[req[i].gname] = { code: 0, sName: '点此处进入编辑' };
               break;
             case 'listsel':
               vData[req[i].gname] = 0 ;

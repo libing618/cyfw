@@ -30,7 +30,7 @@ Page({
               openWxLogin(that.data.userAuthorize).then( mstate=> {
                 app.logData.push([Date.now(), '系统初始化设备' + JSON.stringify(app.globalData.sysinfo)]);                      //本机初始化时间记入日志
                 fetchMenu().then(()=>{
-                  that.setData({ userAuthorize: mstate, grids: iMenu('manage')[0] })
+                  that.setData({ userAuthorize: mstate, grids: iMenu('manage') })
                 }).catch((menuErr) => {
                   app.logData.push([Date.now(), '菜单更新失败' + menuErr]);
                 });

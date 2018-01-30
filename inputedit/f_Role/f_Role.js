@@ -19,7 +19,7 @@ Page({
       reqDatas = require('../../../model/procedureclass.js')[0].pSuccess;
       let aList = require('../../../model/procedureclass.js')[0].afamily;
       reqDatas.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist: aList })
-      wx.setNavigationBarTitle({ title: app.uUnit.nick + '的信息', })
+      wx.setNavigationBarTitle({ title: app.uUnit.uName + '的信息', })
       new AV.Query('sengpi')
         .equalTo('unitId', app.uUnit.objectId)
         .equalTo('dProcedure', 0)

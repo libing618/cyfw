@@ -16,12 +16,6 @@
   </view>
 </template>
 
-<template name="i_ap">
-  <view class="weui-article__p">
-    <textarea class="weui-textarea" name="{{gname}}" value="{{c}}" placeholder="请输入{{p}}" />
-  </view>
-</template>
-
 <template name="i_pics">
   <view id="ac-{{n}}" bindtap="i_pics">
     <view class="swtext">{{p}}:</view>
@@ -75,15 +69,25 @@
 </template>
 
 <template name="i_h1">
-  <view class="weui-article__h1">
+<view class="weui-cell weui-cell_input">
+  <view class="weui-cell__hd">
+      <view class="weui-label">{{p}}:</view>
+  </view>
+  <view class="weui-cell__bd">
     <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入{{p}}" />
   </view>
+</view>
 </template>
 
 <template name="i_h2">
-  <view class="weui-article__h2">
-    <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入大标题" />
+<view class="weui-cell weui-cell_input">
+  <view class="weui-cell__hd">
+      <view class="weui-label">{{p}}:</view>
   </view>
+  <view class="weui-cell__bd">
+    <input name="{{gname}}" value="{{c}}" class="weui-input" placeholder="请输入{{p}}" />
+  </view>
+</view>
 </template>
 
 <template name="i_h3">
@@ -139,11 +143,9 @@
 </template>
 
 <template name="i_ed">
-  <view class="weui-cell weui-cell_input">
-    <navigator url="/inputedit/import/addressedit/addressedit?reqName={{gname}}">
-      <view class="weui-cell__hd">
-        <view class="weui-label">{{p}}:</view>
-      </view>
+  <view class="weui-cell">
+    <navigator url="/inputedit/import/addressedit?reqName={{gname}}">
+      <view class="weui-cell__hd">{{p}}:</view>
       <view class="weui-cell__bd">{{c.sName}}</view>
     </navigator>
     <input hidden="true" name="{{gname}}" value="{{c}}"/>

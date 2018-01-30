@@ -11,8 +11,8 @@ module.exports = [
   "afamily": ['产品制造人','物流服务人','电商服务站','生产厂家','电子商务企业'],
   "pSuccess": [
     {inclose:true, gname:"indType", p:'主营业务', t:"industrytype", csc:"aslist" },
-    {gname:"nick", p:'单位简称',t:"h3" },
-    {gname: "title", p:'单位简介', t:"h2"},
+    {gname:"nick", p:'单位简称',t:"h2" },
+    {gname: "title", p:'单位简介', t:"h3"},
     {gname: "desc", p: '单位描述', t: "p"},
     {gname: "thumbnail", p: '图片简介', t: "thumb" },
     {gname: "aGeoPoint", p: '选择地理位置', t: "chooseAd" },
@@ -37,8 +37,8 @@ module.exports = [
   "pSuccess": [
     {gname:"uName", t:"h1", p:"名称" },
     {gname:"title",t:"h2", p:"标题" },
-    {gname:"desc", t:"ap", p:"摘要" },
     {gname:"thumbnail", p: '上传用于缩略图的图片',t: "thumb" },
+    {gname:"desc", t:"p", p:"摘要" },
     {gname:"details", p:'详情',t:"eDetail" }
   ],
   "puRoles": [
@@ -56,9 +56,9 @@ module.exports = [
   "pNo": 2,
   "pName": "固定资产登记",
   "pSuccess": [
-    {gname:"uName", p:'固定资产名称', t:"h3" },
+    {gname:"uName", p:'固定资产名称', t:"h2" },
     {inclose:true, gname:"assetType", p:'固定资产类别',t:"assettype", csc:"arrsel"},
-    {gname:"title", p:'固定资产简介',t:"p" },
+    {gname:"title", p:'固定资产简介',t:"h3" },
     {gname:"desc", p:'固定资产描述',t:"p" },
     {gname:"aGeoPoint", p:'地理位置',t:"chooseAd" },
     {gname:"address", p: '详细地址', t: "ed"},
@@ -77,7 +77,7 @@ module.exports = [
   "pNo": 3,
   "pName": "产品",
   "pSuccess": [
-    {gname: "uName", p:'名称', t:"h3" },
+    {gname: "uName", p:'名称', t:"h2" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype",  csc:"arrsel" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
@@ -105,7 +105,7 @@ module.exports = [
   "pNo": 4,
   "pName": "服务",
   "pSuccess": [
-    {gname:"uName", p:'名称', t:"h3" },
+    {gname:"uName", p:'名称', t:"h2" },
     {gname:"serFamily", p:'服务类型', inclose:false,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费']},
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
@@ -128,7 +128,7 @@ module.exports = [
   "pName": "成品",
   "pSuccess": [
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
-    {gname:"uName", p:'成品名称', t:"h3" },
+    {gname:"uName", p:'成品名称', t:"h2" },
     {gname:"title", p:'成品简介',t:"p" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
@@ -147,9 +147,9 @@ module.exports = [
   "pNo": 6,
   "pName": "商品",
   "pSuccess": [
-    {gname: "uName", p:'名称', t:"h3" },
+    {gname: "uName", p:'名称', t:"h2" },
     {inclose: true, gname:"goodstype", p:'商品类别',t:"sObject",  csc:"objsel" },
-    {gname:"title", p:'简介',t:"h4" },
+    {gname:"title", p:'简介',t:"h3" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"goodsfamily", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
     {gname:"thumbnail", p:'图片简介',t:"thumb" },

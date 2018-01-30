@@ -59,17 +59,7 @@
   </view>
 </template>
 
-
 <template name="s_p">
-  <view class="weui-cells__title">{{p}}:</view>
-  <view class="weui-cells weui-cells_after-title">
-    <view class="weui-cell">
-      <text>{{c}}</text>
-    </view>
-  </view>
-</template>
-
-<template name="s_ap">
   <view class="weui-article__p">
     <text>{{c}}</text>
   </view>
@@ -79,8 +69,8 @@
   <swiper class="swiper_box" indicator-dots="{{false}}" autoplay="{{true}}">
     <block wx:for="{{c}}" wx:key="{{index}}">
       <swiper-item>
-          <image src="{{item}}" class="swimage"></image>
-        </swiper-item>
+        <image src="{{item}}" class="swimage"></image>
+      </swiper-item>
     </block>
   </swiper>
 </template>
@@ -145,7 +135,6 @@
 </template>
 
 <template name="s_thumb">
-  <view class="weui-article__-2">{{p}}:</view>
   <image src="{{c}}" style="width: 100%;" mode="aspectFit"></image>
 </template>
 

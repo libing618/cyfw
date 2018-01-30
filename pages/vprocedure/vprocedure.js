@@ -26,7 +26,24 @@ Page({
         that.data.vData = app.aData[that.cName][app.uUnit.objectId][options.artId];
       }
       that.inFamily = typeof pClass.afamily != 'undefined';
-      readShowFormat(pClass.pSuccess).then(req=>{
+      let showFormat = [];
+      switch (pno) {
+        case 6:
+          showFormat = [
+            {gname:"pics", p:'图片集',t:"pics"},
+            {gname: "uName", p:'名称', t:"h1" },
+            {gname:"title", p:'简介',t:"h2" },
+            {gname:"tvidio", p:'视频简介',t: "vidio" },
+            {gname:"desc", p:'描述',t:"p" },
+            {gname:"goodsfamily", p:'规格', inclose:false,t:"listsel", aList:['单品','套餐']},
+            {gname:"thumbnail", p:'图片简介',t:"thumb" },
+            {gname:"details", p:'详情',t:"eDetail" }]
+          break;
+        default:
+          showFormat = pClass.pSuccess;
+          break;
+      };
+      readShowFormat(showFormat).then(req=>{
         that.data.reqData=req;
         that.setData(that.data);
       });
