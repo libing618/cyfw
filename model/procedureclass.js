@@ -1,7 +1,7 @@
 //gname为字段名称，p为显示的没字名，t为编辑类型，css为存储和显示类型
 //csc对应关系：aslist行业数组选择，存储{code：代码数组，sName:代码对应值的数组}
 //csc对应关系：arrsel数组选择，存储{code：选择值，sName:选择对应的值}
-//csc对应关系：objsel对象选择，存储{code：gname对应数据表选择的ID值，uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
+//csc对应关系：objsel对象选择，存储gname对应数据表选择的ID值，显示slave对应uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
 //csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname][unitId].uName
 //csc对应关系：t:"dg"为数据型,csc的float代表2位小数点浮点数，number则为整数型
 module.exports = [
@@ -151,7 +151,7 @@ module.exports = [
     {inclose: true, gname:"goodstype", p:'商品类别',t:"sObject",  csc:"objsel" },
     {gname:"title", p:'简介',t:"h3" },
     {gname:"desc", p:'描述',t:"p" },
-    {gname:"goodsfamily", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
+    {gname:"specstype", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
@@ -174,7 +174,6 @@ module.exports = [
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"serFamily", p:'服务类型', inclose:false,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
-    {gname:"desc", p:'描述',t:"p" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"package", p:'含成品数量', t:"dg",csc:"number" },
     {gname:"price", p:'零售价', t:"dg",csc:"float" }

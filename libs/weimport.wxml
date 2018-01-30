@@ -30,9 +30,9 @@
 <template name="c_objsel">
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cell">
-    <view class="weui-cell__hd"><image src="{{objarr.slave[c].thumbnail}}"/></view>
-    <view class="weui-cell__bd">objarr.slave[c].uName</view>
-    <view class="weui-cell__bd">objarr.slave[c].title</view>
+    <view class="weui-cell__hd"><image src="{{slave[c].thumbnail}}"/></view>
+    <view class="weui-cell__bd">slave[c].uName</view>
+    <view class="weui-cell__bd">slave[c].title</view>
   </view>
 </template>
 
@@ -42,6 +42,27 @@
     <view class="weui-cell__hd"><image src="{{aData[c].thumbnail}}"/></view>
     <view class="weui-cell__bd">aData[c].uName</view>
     <view class="weui-cell__bd">aData[c].title</view>
+  </view>
+</template>
+
+<template name="c_specsel">
+  <view class="weui-cell">{{p}}:</view>
+  <view class="weui-cells">
+    <view class="weui-cell" wx:for="{{objarr.droneId}}" wx:key="{{index}}" wx:for-item="drone">
+      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <image class="weui-media-box__thumb" src="{{objarr.maste[drone.masterId].thumbnail}}" background-size="cover"></image>
+        </view>
+        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+          <view class="weui-media-box__title">{{pageData[item].uName}}</view>
+          <view class="weui-media-box__desc">产量{{pageData[item].yield}},库存{{pageData[item].cargoStock}}</view>
+        </view>
+      </view>
+
+    </view>
+    <view class="weui-cell__hd"><image src="{{objarr.slave[c].thumbnail}}"/></view>
+    <view class="weui-cell__bd">objarr.slave[c].uName</view>
+    <view class="weui-cell__bd">objarr.slave[c].title</view>
   </view>
 </template>
 

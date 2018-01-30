@@ -140,24 +140,23 @@ module.exports = {
     return psData;
   },
 
-  integration: function(pName,unitId,searchId) {           //整合选择数组
+  integration: function(pName,unitId) {           //整合选择数组
     return new Promise((resolve, reject) => {
       switch (pName){
         case 'cargo':         //通过产品选择成品
           return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(()=>{
-            let drone = app.mData.product[unitId].map(proId=>{
-              return {masterId:proId,slaveId:app.mData.cargo[unitId].filter( cargoId=> app.aData.cargo[unitId][cargoId].product==proId)}
+            app.mData.product[unitId].forEach(proId=>{
+              app.aData.product[unitId][proId].cargo=app.mData.cargo[unitId].filter( cargoId=> { app.aData.cargo[unitId][cargoId].product==proId } )
             })
-            resolve( {droneId:drone, master:app.aData.product[unitId], slave:app.aData.cargo[unitId]} );
+            resolve( true );
           }).catch( console.error );
           break;
         case 'specs':
-          return Promise.all([updateData(true, 7, unitId), updateData(true, 5, unitId)]).then(() => {           //通过规格选择成品
-            let mIdArr = app.mData.spics[unitId].filter(specId => app.aData.specs[unitId][specId].goods == searchId)
-            let drone = mIdArr.map( specsId=>{
-              return { masterId: specsId, slaveId: app.mData.cargo[unitId].filter(cargoId => app.aData.cargo[unitId][cargoId].specId == specsId)}
+          return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(() => {           //通过规格选择成品
+            app.mData.goods[unitId].forEach( goodsId=>{
+              app.aData.goods[unitId][goodsId].specs = app.mData.specs[unitId].filter(specsId => { app.aData.specs[unitId][specId].goods == goodsId })
             })
-            resolve({ droneId: drone, maste: app.aData.specs[unitId], rslave: app.aData.cargo[unitId]});
+            resolve( true );
           }).catch( console.error );
           break;
       }
@@ -175,15 +174,16 @@ module.exports = {
             break;
           case 'sObject' :                    //对象选择字段
             if (req[i].gname=='goodstype'){
-              req[i].objarr = require('../libs/goodstype');
+              req[i].slave = require('../libs/goodstype').slave;
             } else {
-              promArr.push( this.integration(req[i].gname,unitId).then(drone=>{ req[i].objarr = drone}) );
+              promArr.push(
+                updateData(true,'cargo',unitId).then(()=>{req[i].slave = app.aData.cargo[unitId]})
+              );
             };
             break;
           case 'sId' :
             promArr.push(
               updateData(true,req[i].gname,unitId).then(()=>{
-                req[i].mData = app.mData[req[i].gname][unitId];
                 req[i].aData = app.aData[req[i].gname][unitId];
               })
             )
@@ -211,9 +211,17 @@ module.exports = {
           case 'sObject' :                    //对象选择字段
             req[i].osv = [0,0];
             if (req[i].gname=='goodstype'){
-              req[i].objarr = require('../libs/goodstype');
+              req[i].objarr = require('../libs/goodstype').droneId;
+              req[i].master = require('../libs/goodstype').master;
+              req[i].slave = require('../libs/goodstype').slave;
             } else {
-              promArr.push( this.integration(req[i].gname,unitId).then(drone=>{ req[i].objarr = drone}) );
+              promArr.push(
+                updateData(true,'cargo',unitId).then(()=>{
+                  req[i].objarr = app.mData.product[unitId].map(proId=>{ return {masterId:proId,slaveId:app.aData.product[unitId].cargo} })
+                  req[i].master = app.aData.product[unitId]
+                  req[i].slave = app.aData.cargo[unitId]
+                })
+              );
             };
             break;
           case 'producttype' :
