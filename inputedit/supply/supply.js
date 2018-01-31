@@ -17,7 +17,6 @@ Page ({
     nowPacking: '',
     specCount: {}
   },
-  cargoPlans: {},               //定义成品查询对象
   suppliesArr: {},
   indexField:'',      //定义索引字段
   sumField:'',          //定义汇总字段
@@ -71,7 +70,7 @@ Page ({
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
-    if (checkRols(app.globalData.user.userRolName,oClass.ouRoles[ops.oState])){  //检查用户操作权限
+    if (checkRols(oClass.ouRoles[ops.oState])){  //检查用户操作权限
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       new AV.Query(cargoPlan)
@@ -93,9 +92,6 @@ Page ({
       wx.setNavigationBarTitle({
         title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
-    } else {
-      wx.showToast({ title: '权限不足请检查', duration: 2500 });
-      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     };
   },
 
@@ -108,13 +104,15 @@ Page ({
 
   fSupplies: function(e){
     var that = this;
-    let specId = e.currentTarget.id;
+    let cargoId = e.currentTarget.id;
     let confimate = that.data.quantity[specId];
-    let setSingle = [];
-    that.cargoPlans[specId].set('cargoStock',that.cargoPlans[specId].cargoStock-confimate);
-    that.cargoPlans[specId].set('payment',that.cargoPlans[specId].payment-confimate);
-    that.cargoPlans[specId].set('delivering',that.cargoPlans[specId].delivering+confimate);
-    that.cargoPlans[specId].save().then(()=>{
+    let setSingle = [];               //定义成品对象的库存数据
+    return AV.Object.createWithouData('cargo',cargoId)
+    .set(
+      'cargoStock':that.cargoPlans[specId].cargoStock-confimate,
+      'payment':that.cargoPlans[specId].payment-confimate,
+      'delivering':that.cargoPlans[specId].delivering+confimate)
+    .save().then(()=>{
       that.data.mPage[specId].forEach(cId=>{
         that.supplies[cId].set();
 

@@ -46,23 +46,27 @@
 </template>
 
 <template name="c_specsel">
+<wxs module="sstock">
+  module.exports = {
+  scale: function(spec,pkn){ return ((spec.payment+spec.delivering+spec.delivered)/pkn).toFixed(0) },
+  csupply: function(spec,pkn){ return (spec.canSupply/pkn-0.5).toFixed(0) }
+  }
+</wxs>
+ </wxs>
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cells">
-    <view class="weui-cell" wx:for="{{objarr.droneId}}" wx:key="{{index}}" wx:for-item="drone">
+    <block wx:for="{{c}}" wx:key="{{index}}" wx:for-item="specsId">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{objarr.maste[drone.masterId].thumbnail}}" background-size="cover"></image>
+          <image class="weui-media-box__thumb" src="{{maste[specsId].thumbnail}}" background-size="cover"></image>
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{pageData[item].uName}}</view>
-          <view class="weui-media-box__desc">产量{{pageData[item].yield}},库存{{pageData[item].cargoStock}}</view>
+          <view class="weui-media-box__title">{{slave[specsId].uName}}/{{maste[specsId].package}}份装/{{maste[specsId].price}}元</view>
+          <view class="weui-media-box__desc">{{maste[specsId].title}}</view>
+          <view class="weui-media-box__desc">已售{{sstock.scale(slave[specsId],maste[specsId].package)}},库存{{sstock.csupply(slave[specsId],maste[specsId].package)}}</view>
         </view>
       </view>
-
-    </view>
-    <view class="weui-cell__hd"><image src="{{objarr.slave[c].thumbnail}}"/></view>
-    <view class="weui-cell__bd">objarr.slave[c].uName</view>
-    <view class="weui-cell__bd">objarr.slave[c].title</view>
+    </block>
   </view>
 </template>
 

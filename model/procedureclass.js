@@ -2,6 +2,7 @@
 //csc对应关系：aslist行业数组选择，存储{code：代码数组，sName:代码对应值的数组}
 //csc对应关系：arrsel数组选择，存储{code：选择值，sName:选择对应的值}
 //csc对应关系：objsel对象选择，存储gname对应数据表选择的ID值，显示slave对应uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
+//csc对应关系：specsel对象选择，存储gname对应数据表选择的ID值，显示slave对应要素及carga要素
 //csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname][unitId].uName
 //csc对应关系：t:"dg"为数据型,csc的float代表2位小数点浮点数，number则为整数型
 module.exports = [

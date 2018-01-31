@@ -177,8 +177,19 @@ module.exports = {
               req[i].slave = require('../libs/goodstype').slave;
             } else {
               promArr.push(
-                updateData(true,'cargo',unitId).then(()=>{req[i].slave = app.aData.cargo[unitId]})
+                updateData(true,[req[i].gname],unitId).then(()=>{req[i].slave = app.aData[req[i].gname][unitId]})
               );
+            };
+            break;
+          case 'specsel' :                    //规格选择字段
+            promArr.push(
+              updateData(true,'cargo',unitId).then(()=>{
+                req[i].master = app.aData.specs[unitId];
+                req[i].slave = {};
+                app.mData.specs[unitId].forEach(specsId=>{
+                  req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+                });
+              })
             };
             break;
           case 'sId' :
@@ -217,13 +228,27 @@ module.exports = {
             } else {
               promArr.push(
                 updateData(true,'cargo',unitId).then(()=>{
-                  req[i].objarr = app.mData.product[unitId].map(proId=>{ return {masterId:proId,slaveId:app.aData.product[unitId].cargo} })
-                  req[i].master = app.aData.product[unitId]
-                  req[i].slave = app.aData.cargo[unitId]
+                  req[i].master = app.aData.product[unitId];
+                  req[i].slave = app.aData.cargo[unitId];
+                  req[i].objarr = app.mData.product[unitId].map(proId=>{
+                    return {masterId:proId,slaveId:app.aData.product[unitId][proId].cargo}
+                  })
                 })
               );
             };
             break;
+          case 'specsel' :                    //规格选择字段
+            promArr.push(
+              updateData(true,'cargo',unitId).then(()=>{
+                req[i].objarr = app.aData.goods[unitId][vData.objectId].specs;
+                req[i].master = {};
+                req[i].slave = {};
+                req[i].objarr.forEach(specsId=>{
+                  req[i].master[specsId] = app.aData.specs[unitId][specsId];
+                  req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+                })
+              })
+            };
           case 'producttype' :
             req[i].indlist = app.uUnit.indType;
             break;

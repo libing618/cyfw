@@ -37,7 +37,7 @@ Page({
               {gname:"tvidio", p:'视频简介',t: "vidio" },
               {gname:"desc", p:'描述',t:"p" },
               {gname:"specstype", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
-              {gname:"specs", p:'规格',t:"sObject",csc:"specsel" },
+              {gname:"specs", p:'规格',t:"specsel",csc:"specsel" },
               {gname:"details", p:'详情',t:"eDetail" }]
             break;
         };
