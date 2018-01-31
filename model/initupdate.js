@@ -144,19 +144,19 @@ module.exports = {
     return new Promise((resolve, reject) => {
       switch (pName){
         case 'cargo':         //通过产品选择成品
-          return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(()=>{
+          return Promise.all([updateData(true,3,unitId),updateData(true,5,unitId)]).then(([p3,p5])=>{
             app.mData.product[unitId].forEach(proId=>{
               app.aData.product[unitId][proId].cargo=app.mData.cargo[unitId].filter( cargoId=> { app.aData.cargo[unitId][cargoId].product==proId } )
             })
-            resolve( true );
+            resolve( p3 || p5 );
           }).catch( console.error );
           break;
         case 'specs':
-          return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(() => {           //通过规格选择成品
+          return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(([p7,p6]) => {           //通过规格选择成品
             app.mData.goods[unitId].forEach( goodsId=>{
               app.aData.goods[unitId][goodsId].specs = app.mData.specs[unitId].filter(specsId => { app.aData.specs[unitId][specId].goods == goodsId })
             })
-            resolve( true );
+            resolve( p7 || p6 );
           }).catch( console.error );
           break;
       }
@@ -190,7 +190,7 @@ module.exports = {
                   req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
                 });
               })
-            };
+            );
             break;
           case 'sId' :
             promArr.push(
@@ -248,7 +248,8 @@ module.exports = {
                   req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
                 })
               })
-            };
+            );
+            break;
           case 'producttype' :
             req[i].indlist = app.uUnit.indType;
             break;

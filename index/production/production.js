@@ -1,5 +1,5 @@
 const { updateData, appDataExist, integration } = require('../../model/initupdate.js');
-const {iMenu,rSum} = require('../../util/util.js');
+const {iMenu, rSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()
 Page({
@@ -7,36 +7,57 @@ Page({
     mPage: [],
     pNo: 5,                       //流程的序号5为成品信息
     pageData: {},
+    iClicked: '0',
     grids:[]
   },
   onLoad:function(options){
     var that = this ;
     let pageSetData = {};
-    pageSetData.pandect = rSum('cargo', ['yield', 'cargoStock']);
+    cargoSum(['yield', 'cargoStock']).then(cSum=>{
+      pageSetData.pandect = cSum.rSum;
+      pageSetData.mSum = cSum.mSum;
+    });
     pageSetData.grids = iMenu('production');          //更新数据
     if (appDataExist('cargo',app.uUnit.objectId)){
-      pageSetData.mPage = app.mData.cargo[app.uUnit.objectId];
-      pageSetData.pageData= app.aData.cargo[app.uUnit.objectId];
+      pageSetData.mPage = app.mData.product[app.uUnit.objectId];
+      pageSetData.pageData = app.aData.product[app.uUnit.objectId];
+      pageSetData.cargo = app.aData.cargo[app.uUnit.objectId];
     }
     that.setData( pageSetData );
   },
 
   setPage: function(iu){
     if (iu){
-      this.setData({
-        mPage:app.mData.cargo[app.uUnit.objectId],
-        pageData:app.aData.cargo[app.uUnit.objectId],
-        pandect:rSum('cargo',['yield','cargoStock'])
+      cargoSum(['yield', 'cargoStock']).then(cSum=>{
+        this.setData({
+          cargo:app.aData.cargo[app.uUnit.objectId],
+          pandect:cSum.rSum,
+          mSum: cSum.mSum
+        })
       })
     }
   },
 
   onReady:function(){
-    updateData(true,5).then(isupdated=>{ this.setPage(isupdated) });
+    integration('cargo',app.uUnit.objectId).then(isupdated=>{
+      if (isupdated) {
+        cargoSum(['yield', 'cargoStock']).then(cSum=>{
+          this.setData({
+            mPage:app.mData.product[app.uUnit.objectId],
+            pageData:app.aData.product[app.uUnit.objectId],
+            cargo:app.aData.cargo[app.uUnit.objectId],
+            pandect:cSum.rSum,
+            mSum: cSum.mSum
+          })
+        })
+      }
+    });
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.uUnit.uName+'的生产管理' : '用户体验产品生产',
     })
   },
+
+  indexClick:indexClick,
 
   onPullDownRefresh: function() {
     updateData(true,5).then(isupdated=>{ this.setPage(isupdated) });

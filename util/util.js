@@ -114,18 +114,27 @@ module.exports = {
     }
   },
 
-  rSum: function(pName,fields){
-    let sLength = fields.length;
-    let fieldSum = new Array(sLength);
-    fieldSum.fill(0);         //定义汇总数组长度且填充为0
-    if (app.mData[pName][app.uUnit.objectId]){
-      app.mData[pName][app.uUnit.objectId].forEach(mId=>{
-        for (let i=0;i<sLength;i++){
-          fieldSum[i] += app.aData[pName][app.uUnit.objectId][mId][fields[i]]
-        }
-      })
-    }
-    return fieldSum;
+  cargoSum: function(fields){
+    return new Promise((resolve, reject) => {
+      let sLength = fields.length;
+      let fieldSum = new Array(sLength);
+      let masteSum = new Array(sLength);
+      let mSum = {};
+      fieldSum.fill(0);         //定义汇总数组长度且填充为0
+      if (app.mData.product[app.uUnit.objectId]){
+        app.mData.product[app.uUnit.objectId].forEach(mId=>{
+          masteSum.fill(0);
+          app.aData.product[app.uUnit.objectId][mId].cargo.forEach(aId=>{
+            for (let i=0;i<sLength;i++){
+              fieldSum[i] += app.aData.cargo[app.uUnit.objectId][aId][fields[i]];
+              masteSum[i] += app.aData.cargo[app.uUnit.objectId][aId][fields[i]];
+            }
+          })
+          mSum[mId] = masteSum;
+        })
+      }
+      resolve({rSum:fieldSum,mSum:mSum});
+    }).catch( error=> {reject(error)} );
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

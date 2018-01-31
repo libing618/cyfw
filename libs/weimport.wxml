@@ -48,11 +48,16 @@
 <template name="c_specsel">
 <wxs module="sstock">
   module.exports = {
-  scale: function(spec,pkn){ return ((spec.payment+spec.delivering+spec.delivered)/pkn).toFixed(0) },
-  csupply: function(spec,pkn){ return (spec.canSupply/pkn-0.5).toFixed(0) }
+    scale: function(spec,pkn){
+      var sc = (spec.payment+spec.delivering+spec.delivered)/pkn;
+      return sc.toFixed(0)
+    },
+    csupply: function(spec,pkn){
+      var cs = spec.canSupply/pkn-0.5;
+      return cs.toFixed(0)
+    }
   }
 </wxs>
- </wxs>
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cells">
     <block wx:for="{{c}}" wx:key="{{index}}" wx:for-item="specsId">

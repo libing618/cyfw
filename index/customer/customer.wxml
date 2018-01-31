@@ -8,18 +8,27 @@
     <template is="showgrids" data="{{grids}}"/>
   </view>
   <view class="weui-tab">
-  <block wx:for="{{mPage}}" wx:key="{{index}}">
-    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
-      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
-        </view>
-        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{pageData[item].uName}}:可供应量{{pageData[item].canSupply}}</view>
-          <view class="weui-media-box__desc">付款未发货{{pageData[item].payment}},交货且签收{{pageData[item].delivered}}</view>
+    <block wx:for="{{mPage}}" wx:key="{{index}}" wx:for-item="ac">
+      <view class="weui-cells">
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="indexClick">
+          <template is="{{ iClicked==ac ? 'selecticon1' : 'selecticon2'}}" />
+          <view class="weui-cell">{{pageData[ac].uName}}</view>
+          <view class="weui-cell">可供应量{{mSum[ac][0]}}份,付款未发货{{mSum[ac][2]}}份,交货且签收{{mSum[ac][4]}}份</view>
         </view>
       </view>
-    </navigator>
-  </block>
+      <view hidden="{{iClicked!=ac}}" wx:for="{{pageData[ac].cargo}}" wx:key="{{index}}">
+        <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+          <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+            <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+              <image class="weui-media-box__thumb" src="{{cargo[item].thumbnail}}" background-size="cover"></image>
+            </view>
+            <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+              <view class="weui-media-box__title">{{cargo[item].uName}}:可供应量{{cargo[item].canSupply}}</view>
+              <view class="weui-media-box__desc">付款未发货{{cargo[item].payment}},交货且签收{{cargo[item].delivered}}</view>
+            </view>
+          </view>
+        </navigator>
+      </view>
+    </block>
   </view>
 </view>

@@ -108,10 +108,11 @@ Page ({
     let confimate = that.data.quantity[specId];
     let setSingle = [];               //定义成品对象的库存数据
     return AV.Object.createWithouData('cargo',cargoId)
-    .set(
+    .set({
       'cargoStock':that.cargoPlans[specId].cargoStock-confimate,
       'payment':that.cargoPlans[specId].payment-confimate,
-      'delivering':that.cargoPlans[specId].delivering+confimate)
+      'delivering': that.cargoPlans[specId].delivering + confimate
+    })
     .save().then(()=>{
       that.data.mPage[specId].forEach(cId=>{
         that.supplies[cId].set();
