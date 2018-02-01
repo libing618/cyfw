@@ -17,7 +17,7 @@ Page ({
     nowPacking: '',
     specCount: {}
   },
-  suppliesArr: {},
+  subscription: {},
   indexField:'',      //定义索引字段
   sumField:'',          //定义汇总字段
 
@@ -105,6 +105,8 @@ Page ({
   fSupplies: function(e){
     var that = this;
     let cargoId = e.currentTarget.id;
+    let subIds = Object.keys(e.detail.value);
+    let subSuppli = subIds.map(subKey=>{return that.data.pageData[subKey.substring(8)]})
     let confimate = that.data.quantity[specId];
     let setSingle = [];               //定义成品对象的库存数据
     return AV.Object.createWithouData('cargo',cargoId)
@@ -113,13 +115,12 @@ Page ({
       'payment':that.cargoPlans[specId].payment-confimate,
       'delivering': that.cargoPlans[specId].delivering + confimate
     })
-    .save().then(()=>{
-      that.data.mPage[specId].forEach(cId=>{
-        that.supplies[cId].set();
+    .save().then(savecargo=>{
+      that.setData({})
+      return AV.Object.saveAll(subSuppli)
+    }).then(saveSuppli=>{
 
-      })
-      e.detail.value['chSpec-'+specId].forEach(chSpec=>{})
-    })
+    }).catch(console.error);
   },
 
   onShareAppMessage: function () {    // 用户点击右上角分享
