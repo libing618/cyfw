@@ -94,6 +94,10 @@ icon {
   -webkit-flex: 1;
           flex: 1;
 }
+.weui-cell__flex {
+  display:flex;
+  flex-flow: row wrap;
+}
 .weui-cell__ft {
   text-align: right;
   color: #999999;

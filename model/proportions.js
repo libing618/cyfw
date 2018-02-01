@@ -5,14 +5,9 @@ class proportions extends AV.Object {
     return this.get('unitId');
   }
   set unitId(value) {
-    this.set('unitId', app.uUnit.objectId);
+    this.set('unitId', app.roleData.uUnit.objectId);
   }
-  get goods() {
-    return this.get('goods');
-  }
-  set goods(value) {
-    this.set('goods', value);
-  }
+
   get channel() {     //渠道分成
     return this.get('channel');
   }
@@ -35,5 +30,5 @@ class proportions extends AV.Object {
   }
 }
 
-AV.Object.register(proportions, 'proportions');
+AV.Object.register(proportions, 'goods');
 module.exports = proportions;

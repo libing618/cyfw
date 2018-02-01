@@ -13,12 +13,12 @@ Page({
       {gname:"pics", p:'图片集',t:"pics"},
       {gname:"tvidio", p:'视频简介',t: "vidio" }
     ],
-    shops: app.uUnit.shops
+    shops: app.roleData.uUnit.shops
   },
   onLoad:function(options){
     var that = this;
-    if (app.globalData.user.userRolName=='admin' && app.uUnit.seriaNumber>=0) {
-      new AV.Query('goods').equalTo('seriaNumber',app.uUnit.seriaNumber).find(goods=>{
+    if (app.globalData.user.userRolName=='admin' && app.roleData.uUnit.seriaNumber>=0) {
+      new AV.Query('goods').equalTo('seriaNumber',app.roleData.uUnit.seriaNumber).find(goods=>{
         if (shops.length>0){
           that.setData({pageDate:goods});
           return weutil.arrClose('unitId',goods);

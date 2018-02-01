@@ -9,7 +9,7 @@ Page({
   },
   onLoad:function(options){          //参数oState为0客户评价1评价统计
     var that = this;
-    if (checkRols(app.globalData.user.userRolName,3,app.globalData.user.emailVerified)){  //检查用户操作权限
+    if (checkRols(3)){  //检查用户操作权限
       // that.setData({
       //   req: oClass.oSuccess[options.oState],
       //   oArray: arrClose(options.oState ? 'evaluate' : 'ordObjectId',app.mData.oped1),     //确定数组分类字段
@@ -17,7 +17,7 @@ Page({
       //   mPage: app.mData.oped1
       // });
       wx.setNavigationBarTitle({
-        title: app.uUnit.nick+'的'+ options.oState ? '评价统计' : '客户评价'
+        title: app.roleData.uUnit.nick+'的'+ options.oState ? '评价统计' : '客户评价'
       })
     }
   },

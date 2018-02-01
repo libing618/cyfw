@@ -13,8 +13,8 @@ Page({
       {gname: "mCost", p:'销售管理总占比', t: "fg"}
     ],
     vData:{"channel":7, "extension":10,"mCost":70},
-    mPage: app.mData.goods[app.uUnit.objectId] ? app.mData.goods[app.uUnit.objectId] : [],
-    pageData: app.mData.goods[app.uUnit.objectId] ? app.aData.goods[app.uUnit.objectId] : {},
+    mPage: app.mData.goods[app.roleData.uUnit.objectId] ? app.mData.goods[app.roleData.uUnit.objectId] : [],
+    pageData: app.mData.goods[app.roleData.uUnit.objectId] ? app.aData.goods[app.roleData.uUnit.objectId] : {},
     iClicked: ''
   },
   onLoad:function(options){
@@ -23,10 +23,10 @@ Page({
       updateData(true,6).then((reNew)=>{
         let sproportions=[],mproportions=[],pData={};
         if (reNew) {                     //商品数据有更新
-          pData.pageData = app.aData.goods[app.uUnit.objectId];
-          pData.mPage = app.mData.goods[app.uUnit.objectId];
+          pData.pageData = app.aData.goods[app.roleData.uUnit.objectId];
+          pData.mPage = app.mData.goods[app.roleData.uUnit.objectId];
         }
-        new AV.Query(proportions).equalTo('unitId', app.uUnit.objectId).find().then(manufactor=>{
+        new AV.Query(proportions).equalTo('unitId', app.roleData.uUnit.objectId).find().then(manufactor=>{
           if (manufactor) {                    //已设置过商品分销策略的数据
             manufactor.forEach(prodata=>{
               pData.sData[prodata.objectId] = prodata;
@@ -62,9 +62,9 @@ Page({
 
   fSave:function(e){
     var that = this;
-    new proportions.set({
+    that.data.sData[that.data.sproduct].set({                  //选择商品的ID
       unitId:'0',
-      goods:that.data.sproduct,                   //选择商品的ID
+      goods:,
       channel:e.detail.value.channel,
       extension:e.detail.value.extension,
       mCost:e.detail.value.mCost

@@ -14,14 +14,14 @@ Page({
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
     let oClass = require('../../../model/operationclass.js')[1];
-    if (weutil.checkRols(app.globalData.user.userRolName, oClass.ouRoles[ops.oState])) {  //检查用户操作权限
+    if (weutil.checkRols(oClass.ouRoles[ops.oState])) {  //检查用户操作权限
       that.setData({
         oArray: weutil.arrClose(oClass.oSuccess[ops.oNo].gname, app.nData[1]),     //确定数组分类字段
         pageData: app.oData[1],
         mPage: app.nData[1]
       });
       wx.setNavigationBarTitle({
-        title: app.uUnit.nick + '的' + oClass.oprocess[ops.oState]
+        title: app.roleData.uUnit.nick + '的' + oClass.oprocess[ops.oState]
       })
     } else {
       wx.showToast({ title: '权限不足，请检查！', duration: 2500 });
@@ -43,7 +43,7 @@ Page({
     return {
       title: '侠客岛创业服务平台', // 分享标题
       desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/index/index' // 分享路径
+      path: '/index/manage/manage' // 分享路径
     }
   }
 })

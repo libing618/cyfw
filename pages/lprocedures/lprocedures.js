@@ -38,8 +38,8 @@ Page ({
         })
       } else {
         this.setData({
-          mPage: this.inFamily ? app.mData[this.cName][app.uUnit.objectId][that.artid] : app.mData[this.cName][app.uUnit.objectId],
-          pageData: this.inFamily ? app.aData[this.cName][app.uUnit.objectId][that.artid] : app.aData[this.cName][app.uUnit.objectId]
+          mPage: this.inFamily ? app.mData[this.cName][app.roleData.uUnit.objectId][that.artid] : app.mData[this.cName][app.roleData.uUnit.objectId],
+          pageData: this.inFamily ? app.aData[this.cName][app.roleData.uUnit.objectId][that.artid] : app.aData[this.cName][app.roleData.uUnit.objectId]
         })
       }
     }

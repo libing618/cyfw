@@ -1,5 +1,4 @@
 const AV = require('../../libs/leancloud-storage.js');
-const { integration } = require('../../util/util')
 var app = getApp();
 const nt = ['-1', '-6'];
 const vdSet = function (sname, sVal) {
@@ -187,8 +186,9 @@ module.exports = {
         that.setData(rdSet(n, 'iValue', e.detail.value));
         break;
       case 'se':
-        that.data.vData[fName].push(e.currentTarget.dataset.iValue);
+        that.data.vData[fName].push(e.currentTarget.dataset.add);
         that.setData(vdSet(fName, that.data.vData[fName]));
+        that.setData(rdSet(n, 'iValue', ''));
         break;
       case 'lj':                                   //按显示类型名称进行删除
         let i = Number(e.currentTarget.dataset.id);
@@ -250,7 +250,7 @@ module.exports = {
     wx.chooseLocation({
       success: function (res) {
         that.setData({ 'vData.aGeoPoint': new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude }) });
-        if (!that.data.vData[that.data.reqData[n + 1].gname]) { that.setData(vdSet(that.data.reqData[n + 1].gname, {code:0,sName:res.address})) }
+        if (!that.data.vData.address.sName) { that.setData(vdSet('address', {code:res.name,sName:res.address})) }
       }
     })
   },
@@ -382,7 +382,7 @@ module.exports = {
   fSubmit: function (e) {
     var that = this;
     let approvalID = parseInt(that.data.pNo);        //流程序号
-    var approvalClass = require('../model/procedureclass.js')[approvalID];       //流程定义和数据结构
+    var approvalClass = require('../../model/procedureclass.js')[approvalID];       //流程定义和数据结构
     var subData = e.detail.value;
     if (Array.isArray(that.data.vData.details)) {
       for (let i = 0; i < that.data.vData.details.length; i++) {
@@ -498,13 +498,13 @@ module.exports = {
         break;
       case 'fSave':
         if (emptyField) {
-          wx.showToast({ title: emptyField + '等项目未输入，请检查。', duration: 7000 })
+          wx.showToast({ title: emptyField + '等项目未输入，请检查。', icon:'none',duration: 7000 })
         } else {
           sFilePath.then(sFileLists => {
             let sFileArr = sFileLists.filter(sFile => { return sFile.fType < 2 });
-            wx.showLoading({ title: '文件提交中' });
             return new Promise((resolve, reject) => {
               if (sFileArr.length > 0) {
+                wx.showLoading({ title: '文件提交中' });
                 sFileArr.map(sFileStr => () => new AV.File('filename', { blob: { uri: sFileStr.fPath, }, }).save().then(sfile => {
                   if (sFileStr.fType == 1) { wx.removeSavedFile({ filePath: sFileStr.fPath }) };      //删除本机保存的文件
                   switch (sFileStr.fn) {
@@ -524,7 +524,10 @@ module.exports = {
                 ).reduce(
                   (m, p) => m.then(v => Promise.all([...v, p()])),
                   Promise.resolve([])
-                  ).then(files => { resolve(files) }).catch(console.error)
+                ).then(files => {
+                  wx.hideLoading();
+                  resolve(files);
+                }).catch(console.error)
               } else { resolve('no files save') };
             })
           }).then((sFiles) => {
@@ -533,20 +536,20 @@ module.exports = {
               var fcApproval = new nApproval();
               fcApproval.set('dProcedure', approvalID);                //流程类型
               fcApproval.set('dResult', 0);                //流程处理结果0为提交
-              fcApproval.set("unitName", app.uUnit.uName);                 //申请单位
+              fcApproval.set("unitName", app.roleData.uUnit.uName);                 //申请单位
               fcApproval.set("sponsorName", app.globalData.user.uName);         //申请人
-              fcApproval.set("unitId", app.uUnit.objectId);        //申请单位的ID
+              fcApproval.set("unitId", app.roleData.uUnit.objectId);        //申请单位的ID
               fcApproval.set('dIdear', [{ un: app.globalData.user.uName, dt: new Date(), di: '提交流程', dIdear: '发起审批流程' }]);       //流程处理意见
               let cUserName = {};
               let cManagers = [[app.globalData.user.objectId]];
               cUserName[app.globalData.user.objectId] = app.globalData.user.uName;
               let puRoles = approvalClass.puRoles;
               let suRoles = approvalClass.suRoles;
-              if (app.uUnit.unitType > 1 && puRoles) {          //单位类型为企业且有本单位审批设置
+              if (app.roleData.uUnit.afamily > 2 && puRoles) {          //单位类型为企业且有本单位审批设置
                 let pRolesNum = 0, pRoleUser;
                 for (let i = 0; i < puRoles.length; i++) {
                   pRoleUser = [];
-                  app.uUnit.unitUsers.forEach((pUser) => {
+                  app.roleData.uUnit.unitUsers.forEach((pUser) => {
                     if (pUser.userRolName == puRoles[i]) {
                       pRoleUser.push(pUser.objectId);
                       cUserName[pUser.objectId] = pUser.uName;
@@ -558,7 +561,7 @@ module.exports = {
                   }
                 };
                 if (pRolesNum == 0 && app.globalData.user.userRolName != 'admin') {
-                  app.uUnit.unitUsers.forEach((pUser) => {
+                  app.roleData.uUnit.unitUsers.forEach((pUser) => {
                     if (pUser.userRolName == 'admin') {
                       cManagers.push([pUser.objectId]);
                       cUserName[pUser.objectId] = pUser.uName;
@@ -568,10 +571,10 @@ module.exports = {
               }
               if (suRoles) {                 //上级单位类型有审批设置
                 let sRolesNum = 0, sRoleUser;
-                if (!app.sUnit.unitType) {     //单位类型为企业
+                if (app.roleData.sUnit.afamily>2) {     //单位类型为企业
                   for (let i = 0; i < suRoles.length; i++) {
                     sRoleUser = [];
-                    app.sUnit.unitUsers.forEach((sUser) => {
+                    app.roleData.sUnit.unitUsers.forEach((sUser) => {
                       if (sUser.userRolName == suRoles[i]) {
                         sRoleUser.push(sUser.objectId);
                         cUserName[sUser.objectId] = sUser.uName;
@@ -584,7 +587,7 @@ module.exports = {
                   }
                 }
                 if (sRolesNum == 0) {
-                  app.sUnit.unitUsers.forEach((sUser) => {
+                  app.roleData.sUnit.unitUsers.forEach((sUser) => {
                     if (sUser.userRolName == 'admin') {
                       cManagers.push([sUser.objectId]);;
                       cUserName[sUser.objectId] = sUser.uName;
@@ -601,8 +604,8 @@ module.exports = {
               fcApproval.set('cFlowStep', cManagers[1]);              //下一流程审批人
               fcApproval.set('dObject', that.data.vData);            //流程审批内容
               var acl = new AV.ACL();      // 新建一个 ACL 实例
-              acl.setRoleReadAccess(app.uUnit.objectId, true);
-              acl.setRoleReadAccess(app.sUnit.objectId, true);
+              acl.setRoleReadAccess(app.roleData.uUnit.objectId, true);
+              acl.setRoleReadAccess(app.roleData.sUnit.objectId, true);
               managers.forEach((mUser) => {
                 acl.setWriteAccess(mUser, true);
                 acl.setReadAccess(mUser, true);
@@ -614,11 +617,12 @@ module.exports = {
                 setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
               }).catch(wx.showToast({ title: '提交保存失败,请重试。', duration: 2000 })) // 保存失败
             } else {
-              app.aData[that.data.targetId][app.uUnit.objectId].dObject = that.data.vData;
+              app.aData[that.data.targetId][app.roleData.uUnit.objectId].dObject = that.data.vData;
               wx.navigateBack({ delta: 1 });
             }
-            wx.hideLoading();
-          }).catch(console.error);
+            }).catch(error => {
+              app.logData.push([Date.now(), '编辑提交发生错误:' + error.toString()]);
+            });
         }
         break;
     };

@@ -18,13 +18,17 @@ module.exports={
       "objectId": "0"},
     sysinfo: null
   },
-  wmenu: {
-    manage:[100,114],                         //用户未注册时的基础菜单
-    plan:[],
-    production:[],
-    customer:[],
-    updatedAt: '0'
+  roleData:{
+    wmenu: {
+      manage:[100,114],                         //用户未注册时的基础菜单
+      plan:[],
+      production:[],
+      customer:[],
+      updatedAt: 0
     },
+    uUnit:{updatedAt: 0},                           //用户单位信息（若有）
+    sUnit:{updatedAt: 0}                           //上级单位信息（若有）
+  },
   mData: {
     pAt:{
       "articles":[new Date(0),new Date(0)],            //缓存中已发布文章更新时间

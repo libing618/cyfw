@@ -1,20 +1,8 @@
-const AV = require('../libs/leancloud-storage.js');
+roleDataconst AV = require('../libs/leancloud-storage.js');
 var app = getApp();
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
-};
-function getRols(rId){
-  if (rId != '0') {
-    AV.Object.createWithoutData('_Role', rId).fetch().then((uRole) => {
-      app.uUnit = uRole.toJSON();
-      if (app.uUnit.sUnit != '0'){
-        AV.Object.createWithoutData('_Role', this.uUnit.sUnit).fetch().then((sRole) => {
-          app.sUnit = sRole.toJSON();
-        }).catch(console.error())
-      }
-    }).catch(console.error())
-  } else { return {} }
 };
 function exitPage(){
   wx.showToast({ title: '权限不足请检查', duration: 2500 });
@@ -56,15 +44,15 @@ module.exports = {
   },
 
   fetchMenu: function(){
-    app.wmenu = wx.getStorageSync('menudata') || app.wmenu;
+    app.roleData = wx.getStorageSync('roleData') || app.roleData;
     return new AV.Query('userInit')
-      .notEqualTo('updatedAt',app.wmenu.updatedAt)
+      .notEqualTo('updatedAt',app.roleData.wmenu.updatedAt)
       .select(['manage', 'plan', 'production', 'customer'])
       .equalTo('objectId',app.globalData.user.userRol.objectId).find().then( fetchMenu =>{
       if (fetchMenu) {                          //菜单在云端有变化
-        app.wmenu = fetchMenu[0].toJSON();
-        ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.wmenu[mname] = app.wmenu[mname].filter(rn=>{return rn!=0}) })
-        wx.setStorage({ key: 'menudata', data: app.wmenu });
+        app.roleData.wmenu = fetchMenu[0].toJSON();
+        ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0}) })
+        wx.setStorage({ key: 'roleData', data: app.roleData.wmenu });
       };
       return wx.getUserInfo({        //检查客户信息
         withCredentials: false,
@@ -86,21 +74,36 @@ module.exports = {
         }
       });
     }).then(()=>{
-      getRols(app.globalData.user.unit);
+      if (app.globalData.user.unit != '0') {
+        return new AV.Query('_Role')
+        .notEqualTo('updatedAt',app.roleData.uUnit.updatedAt)
+        .equalTo('objectId',app.globalData.user.unit).first().then( uRole =>{
+          if (uRole) {                          //本单位信息在云端有变化
+            app.roleData.uUnit = uRole.toJSON();
+            if (app.roleData.uUnit.sUnit != '0'){
+              return new AV.Query('_Role')
+              .notEqualTo('updatedAt',app.roleData.sUnit.updatedAt)
+              .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
+                if (sRole) {app.roleData.sUnit = sRole.toJSON()};
+              }).catch(console.error)
+            }
+          }
+        }).catch(console.error)
+      }
       app.imLogin(app.globalData.user.username);
     }).catch( console.error );
   },
 
   iMenu: function(index){
     let mValue = require('../libs/allmenu.js')[index];
-    let mArr = app.wmenu[index].map(rNumber=>{
+    let mArr = app.roleData.wmenu[index].map(rNumber=>{
       return {tourl:mValue['N'+rNumber].tourl, mIcon:mValue['m'+rNumber],mName:mValue['N'+rNumber].mName}
     });
     if (index=='manage'){ mArr[0].mIcon=app.globalData.user.avatarUrl }      //把微信头像地址存入第一个菜单icon
     return mArr;
   },
 
-  checkRols: function(userRolName,ouRole,emailVerified){
+  checkRols: function(ouRole){
     if (app.globalData.user.userRolName=='admin' && app.globalData.user.emailVerified){
       return true;
     } else {
@@ -121,13 +124,13 @@ module.exports = {
       let masteSum = new Array(sLength);
       let mSum = {};
       fieldSum.fill(0);         //定义汇总数组长度且填充为0
-      if (app.mData.product[app.uUnit.objectId]){
-        app.mData.product[app.uUnit.objectId].forEach(mId=>{
+      if (app.mData.product[app.roleData.uUnit.objectId]){
+        app.mData.product[app.roleData.uUnit.objectId].forEach(mId=>{
           masteSum.fill(0);
-          app.aData.product[app.uUnit.objectId][mId].cargo.forEach(aId=>{
+          app.aData.product[app.roleData.uUnit.objectId][mId].cargo.forEach(aId=>{
             for (let i=0;i<sLength;i++){
-              fieldSum[i] += app.aData.cargo[app.uUnit.objectId][aId][fields[i]];
-              masteSum[i] += app.aData.cargo[app.uUnit.objectId][aId][fields[i]];
+              fieldSum[i] += app.aData.cargo[app.roleData.uUnit.objectId][aId][fields[i]];
+              masteSum[i] += app.aData.cargo[app.roleData.uUnit.objectId][aId][fields[i]];
             }
           })
           mSum[mId] = masteSum;
@@ -188,9 +191,9 @@ module.exports = {
   },
 
   tabClick: function (e) {                                //点击tab
-    app.mData['pCk'+that.data.pNo] = Number(e.currentTarget.id)
+    app.mData['pCk'+ThisType.data.pNo] = Number(e.currentTarget.id)
     this.setData({
-      pageCk: app.mData['pCk'+that.data.pNo]               //点击序号切换
+      pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
     });
   },
 

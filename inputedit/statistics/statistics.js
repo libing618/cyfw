@@ -43,11 +43,11 @@ Page({
   i_sedate: i_sedate,
 
   indexClick: indexClick,
-  
+
   sumOrders:function(){
     var that = this;
     new AV.Query(orders)
-    .equalTo('unitId', app.uUnit.objectId)
+    .equalTo('unitId', app.roleData.uUnit.objectId)
     .greaterThan('updatedAt', new Date(that.data.vData.seDate[0]))
     .lessThan('updatedAt', new Date(that.data.vData.seDate[1])+86400000)
     .limit(1000)
