@@ -1,4 +1,4 @@
-roleDataconst AV = require('../libs/leancloud-storage.js');
+const AV = require('../libs/leancloud-storage.js');
 var app = getApp();
 function formatNumber(n) {
   n = n.toString()

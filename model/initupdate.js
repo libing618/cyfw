@@ -102,7 +102,7 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
     wx.onNetworkStatusChange(res => {
       if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
     });
-    reject(error)
+    return error;
   });
 };
 

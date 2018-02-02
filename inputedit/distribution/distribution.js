@@ -64,7 +64,19 @@ Page({
     var that = this;
     that.data.sData[that.data.sproduct].set({                  //选择商品的ID
       unitId:'0',
-      goods:,
+
+
+
+
+
+
+
+
+
+
+
+
+        
       channel:e.detail.value.channel,
       extension:e.detail.value.extension,
       mCost:e.detail.value.mCost

@@ -105,24 +105,6 @@ Page ({
   fSupplies: function(e){
     var that = this;
     let cargoId = e.currentTarget.id;
-<<<<<<< HEAD
-    let subIds = Object.keys(e.detail.value);
-    let subSuppli = subIds.map(subKey=>{return that.data.pageData[subKey.substring(8)]})
-    let confimate = that.data.quantity[specId];
-    let setSingle = [];               //定义成品对象的库存数据
-    return AV.Object.createWithouData('cargo',cargoId)
-    .set({
-      'cargoStock':that.cargoPlans[specId].cargoStock-confimate,
-      'payment':that.cargoPlans[specId].payment-confimate,
-      'delivering': that.cargoPlans[specId].delivering + confimate
-    })
-    .save().then(savecargo=>{
-      that.setData({})
-      return AV.Object.saveAll(subSuppli)
-    }).then(saveSuppli=>{
-
-    }).catch(console.error);
-=======
     let confimate = that.data.quantity[cargoId];
     let subIds = Object.keys(e.detail.value);
     let subSuppli = subIds.map(subKey=>{return that.data.pageData[subKey.substring(7)]})
@@ -133,12 +115,13 @@ Page ({
       'payment':that.cargoPlans[cargoId].payment-confimate,
       'delivering': that.cargoPlans[cargoId].delivering + confimate })
     .save().then(savecargo=>{
-      that.setData({'cargoCount.'+cargoId : that.cargoPlans[cargoId].cargoStock})
+      let sd = {};
+      sd.cargoCount[cargoId] = that.cargoPlans[cargoId].cargoStock;
+      that.setData(sd);
       return AV.Object.saveAll(subSuppli)
     }).then(saveSuppli=>{
 
     })
->>>>>>> refs/remotes/origin/fw1
   },
 
   onShareAppMessage: function () {    // 用户点击右上角分享
