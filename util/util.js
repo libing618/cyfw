@@ -52,7 +52,6 @@ module.exports = {
       if (fetchMenu) {                          //菜单在云端有变化
         app.roleData.wmenu = fetchMenu[0].toJSON();
         ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0}) })
-        wx.setStorage({ key: 'roleData', data: app.roleData.wmenu });
       };
       return wx.getUserInfo({        //检查客户信息
         withCredentials: false,
@@ -89,7 +88,8 @@ module.exports = {
             }
           }
         }).catch(console.error)
-      }
+      };
+      wx.setStorage({ key: 'roleData', data: app.roleData });
       app.imLogin(app.globalData.user.username);
     }).catch( console.error );
   },
@@ -191,7 +191,7 @@ module.exports = {
   },
 
   tabClick: function (e) {                                //点击tab
-    app.mData['pCk'+ThisType.data.pNo] = Number(e.currentTarget.id)
+    app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
     this.setData({
       pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
     });
