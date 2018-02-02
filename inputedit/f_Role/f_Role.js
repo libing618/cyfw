@@ -15,13 +15,13 @@ Page({
 
   onLoad: function (options) {
     var that = this;
-    if (app.uUnit.name == app.globalData.user.objectId) {       //单位名等于用户ID则为创始人
+    if (app.roleData.uUnit.name == app.globalData.user.objectId) {       //单位名等于用户ID则为创始人
       reqDatas = require('../../../model/procedureclass.js')[0].pSuccess;
       let aList = require('../../../model/procedureclass.js')[0].afamily;
       reqDatas.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist: aList })
-      wx.setNavigationBarTitle({ title: app.uUnit.uName + '的信息', })
+      wx.setNavigationBarTitle({ title: app.roleData.uUnit.uName + '的信息', })
       new AV.Query('sengpi')
-        .equalTo('unitId', app.uUnit.objectId)
+        .equalTo('unitId', app.roleData.uUnit.objectId)
         .equalTo('dProcedure', 0)
         .select(['dObject', 'cInstance', 'dObjectId', 'cManagers'])
         .descending('createdAt')

@@ -20,20 +20,20 @@ Page({
 
   onLoad: function () {
     var that = this;
-    if (app.globalData.user.mobilePhoneNumber && app.uUnit.length>0) {			// 当前用户已注册且已有单位
-      if (app.uUnit.unitType) {
+    if (app.globalData.user.mobilePhoneNumber && app.roleData.uUnit.length>0) {			// 当前用户已注册且已有单位
+      if (app.roleData.uUnit.afamily>2) {
         wx.showToast({ title: '非机构类单位,没有下级员工设置。', duration: 7500 })
         wx.navigateBack({ delta: 1 })                // 回退前1 页面
       } else {
-        if (app.uUnit.name == app.globalData.user.objectId) {                //创建人读取单位员工信息
+        if (app.roleData.uUnit.name == app.globalData.user.objectId) {                //创建人读取单位员工信息
           new AV.Query('reqUnit').equalTo('rUnit', app.globalData.user.unit).find().then((applyUser) => {
             that.setData({ applyUser: applyUser });
           }).catch(console.error);
           let crole = {};
-          app.uUnit.unitUsers.map((cuser) => { return crole[cuser.objectId] = true });
+          app.roleData.uUnit.unitUsers.map((cuser) => { return crole[cuser.objectId] = true });
           that.setData({
             crole: crole,
-            uUnitUsers: app.uUnit.unitUsers
+            uUnitUsers: app.roleData.uUnit.unitUsers
           })
         } else {
           new AV.Query('reqUnit').equalTo('userId', app.globalData.user.objectId).find().then((resus) => {
@@ -52,7 +52,7 @@ Page({
           }).catch(console.error())
         }
         wx.setNavigationBarTitle({
-          title: app.uUnit.uName+'的组织架构'     //将页面标题设置成单位名称
+          title: app.roleData.uUnit.nick+'的组织架构'     //将页面标题设置成单位名称
         })
       };
     } else {
@@ -70,46 +70,46 @@ Page({
 
 	fManageRole: function(e) {                         //点击解职、调岗操作
     var that = this;
-		let unitRole = new AV.Role(app.uUnit.name);
+		let unitRole = new AV.Role(app.roleData.uUnit.name);
 		let rN = Number(e.currentTarget.dataset.id), muRole = 'sessionuser';
 		return new Promise((resolve, reject) => {
-			var uId = app.uUnit.unitUsers[rn].objectId;
+			var uId = app.roleData.uUnit.unitUsers[rn].objectId;
       if (e.currentTarget.id=='mr_0') {               //解职
         unitRole.getUsers().remove(uId);
-				app.uUnit.unitUsers.splice(rN,1);
+				app.roleData.uUnit.unitUsers.splice(rN,1);
       } else {                                     //调岗
 				that.data.crole[uId] = true;
 	    	that.setData({ crole: that.data.crole });
-				app.uUnit.unitUsers[rN].userRolName = that.data.cmRole[0].toString()+ that.data.cmRole[1].toString() ;
-				muRole = app.uUnit.unitUsers[rN].userRolName;
+				app.roleData.uUnit.unitUsers[rN].userRolName = that.data.cmRole[0].toString()+ that.data.cmRole[1].toString() ;
+				muRole = app.roleData.uUnit.unitUsers[rN].userRolName;
 			};
-			unitRole.set('unitUsers',app.uUnit.unitUsers);
+			unitRole.set('unitUsers',app.roleData.uUnit.unitUsers);
 			unitRole.save().then((muser) => { resolve(muRole); })
 		}).then((uSetRole)=>{
-			AV.Cloud.run( 'gRole',{ rHandle: app.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , operation:uId , sRole: uSetRole } ).then( (cUser)=>{
-				that.setData({ uUnitUsers: app.uUnit.unitUsers });
+			AV.Cloud.run( 'gRole',{ rHandle: app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , operation:uId , sRole: uSetRole } ).then( (cUser)=>{
+				that.setData({ uUnitUsers: app.roleData.uUnit.unitUsers });
 			})
     }).catch(console.error())
 	},
 
 	fManageApply: function(rn){
 		var that = this;
-		let unitRole = new AV.Role(app.uUnit.name);
+		let unitRole = new AV.Role(app.roleData.uUnit.name);
 		let rN = Number(e.currentTarget.dataset.id);
 		return new Promise((resolve, reject) => {
 			var uId = that.data.applyUser[rN].userId;
       if (e.currentTarget.id=='mr_2') {                          //同意
 					let auRole = that.data.applyUser[rN].rRolArray[0].toString()+that.data.applyUser[rn].rRolArray[1].toString()
-					app.uUnit.unitUsers.push({"objectId":uId, "userRolName":rR, 'uName':that.data.applyUser[rn].uName, 'avatarUrl':that.data.applyUser[rn].avatarUrl,'nickName':that.data.applyUser[rn].nickName})
-					that.setData({ uUnitUsers: app.uUnit.unitUsers });
+					app.roleData.uUnit.unitUsers.push({"objectId":uId, "userRolName":rR, 'uName':that.data.applyUser[rn].uName, 'avatarUrl':that.data.applyUser[rn].avatarUrl,'nickName':that.data.applyUser[rn].nickName})
+					that.setData({ uUnitUsers: app.roleData.uUnit.unitUsers });
 					unitRole.getUsers().add(uId);
-					unitRole.set('unitUsers',app.uUnit.unitUsers);
+					unitRole.set('unitUsers',app.roleData.uUnit.unitUsers);
           unitRole.save().then((adduser) => { resolve(auRole) })
       } else {             //拒绝
 				resolve('sessionuser');
 			};
 		}).then((uSetRole)=>{
-			AV.Cloud.run( 'gRole',{ rHandle: app.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , operation:uId , sRole: uSetRole } ).then( (cUser)=>{
+			AV.Cloud.run( 'gRole',{ rHandle: app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , operation:uId , sRole: uSetRole } ).then( (cUser)=>{
 				AV.Object.createWithoutData('reqUnit',that.data.applyUser[rN].objectId).destroy().then(()=>{
 					that.data.applyUser[rn].splice(rN,1);
 					that.setData({applyUser:that.data.applyUser});
@@ -136,7 +136,7 @@ Page({
 			wx.showToast({title: '岗位申请等待审批。',duration: 3500});
 		} else {
 			this.aUser.set('rRolArray',this.data.reqrole );
-			let mReqUnit = new AV.Role(app.uUnit.name);
+			let mReqUnit = new AV.Role(app.roleData.uUnit.name);
 			let mReqACL = new AV.ACL();
 			mReqACL.setPublicReadAccess(false);
 			mReqACL.setPublicWriteAccess(false);

@@ -38,7 +38,7 @@ Page ({
         supplieQuery.greaterThan('serFamily',1);
         break;
     }
-    supplieQuery.equalTo('unitId',app.uUnit.objectId);                //只能查本单位数据
+    supplieQuery.equalTo('unitId',app.roleData.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
     const setReqData = this.setReqData.bind(this);
     return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then( ([reqData,subscription])=> {
@@ -74,13 +74,13 @@ Page ({
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       new AV.Query(cargoPlan)
-      .equalTo('unitId',app.uUnit.objectId)
+      .equalTo('unitId',app.roleData.uUnit.objectId)
       .select(['unitId','cargo','cargoStock','payment','delivering'])
       .find().then(cargoPlans=>{
         if (cargoPlans){
           cargoPlans.forEach(cPlan=>{
-            that.cargoPlans[cPlan.cargo] = cPlan;
-            that.data.cargoCount[cPlan.cargo] = cPlan.cargoStock;
+            that.cargoPlans[cPlan.id] = cPlan;
+            that.data.cargoCount[cPlan.id] = cPlan.cargoStock;
           });
           that.setData({cargoCount:that.data.cargoCount,oState:ops.oState});
           that.indexClick = indexClick ;
@@ -90,7 +90,7 @@ Page ({
         }
       }).catch(console.error);
       wx.setNavigationBarTitle({
-        title: app.uUnit.nick+'的'+oClass.oprocess[ops.oState]
+        title: app.roleData.uUnit.nick+'的'+oClass.oprocess[ops.oState]
       });
     };
   },
@@ -105,6 +105,7 @@ Page ({
   fSupplies: function(e){
     var that = this;
     let cargoId = e.currentTarget.id;
+<<<<<<< HEAD
     let subIds = Object.keys(e.detail.value);
     let subSuppli = subIds.map(subKey=>{return that.data.pageData[subKey.substring(8)]})
     let confimate = that.data.quantity[specId];
@@ -121,13 +122,30 @@ Page ({
     }).then(saveSuppli=>{
 
     }).catch(console.error);
+=======
+    let confimate = that.data.quantity[cargoId];
+    let subIds = Object.keys(e.detail.value);
+    let subSuppli = subIds.map(subKey=>{return that.data.pageData[subKey.substring(7)]})
+    let setSingle = [];               //定义成品对象的库存数据
+//    return AV.Object.createWithouData('cargo',cargoId)
+    that.cargoPlans[cargoId].set({
+      'cargoStock':that.cargoPlans[cargoId].cargoStock-confimate,
+      'payment':that.cargoPlans[cargoId].payment-confimate,
+      'delivering': that.cargoPlans[cargoId].delivering + confimate })
+    .save().then(savecargo=>{
+      that.setData({'cargoCount.'+cargoId : that.cargoPlans[cargoId].cargoStock})
+      return AV.Object.saveAll(subSuppli)
+    }).then(saveSuppli=>{
+
+    })
+>>>>>>> refs/remotes/origin/fw1
   },
 
   onShareAppMessage: function () {    // 用户点击右上角分享
     return {
       title: '侠客岛创业服务平台', // 分享标题
       desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/index/index' // 分享路径
+      path: '/index/manage/manage' // 分享路径
     }
   }
 })

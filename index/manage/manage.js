@@ -28,14 +28,14 @@ Page({
           success(res) {
             if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
               openWxLogin(that.data.userAuthorize).then( mstate=> {
-                app.logData.push([Date.now(), '系统初始化设备' + JSON.stringify(app.globalData.sysinfo)]);                      //本机初始化时间记入日志
+                app.logData.push([Date.now(), '系统初始化设备' + app.globalData.sysinfo.toString()]);                      //本机初始化时间记入日志
                 fetchMenu().then(()=>{
                   that.setData({ userAuthorize: mstate, grids: iMenu('manage') })
                 }).catch((menuErr) => {
-                  app.logData.push([Date.now(), '菜单更新失败' + menuErr]);
+                  app.logData.push([Date.now(), '菜单更新失败' + menuErr.toString()]);
                 });
               }).catch((loginErr) => {
-                app.logData.push([Date.now(), '系统登录失败' + loginErr]);
+                app.logData.push([Date.now(), '系统登录失败' + loginErr.toString()]);
               });
             } else {
               that.setData({ userAuthorize:-1 });
@@ -45,7 +45,7 @@ Page({
         })
       }
     }).catch((lcuErr) => {
-      app.logData.push([Date.now(), '注册用户状态错误失败' + lcuErr]);
+      app.logData.push([Date.now(), '注册用户状态错误失败' + lcuErr.toString()]);
     })
   },
 
@@ -64,7 +64,7 @@ Page({
   userInfoHandler: function (e) {
     var that = this;
     openWxLogin(that.data.userAuthorize).then( (mstate)=> {
-      app.logData.push([Date.now(), '用户授权' + app.globalData.sysinfo]);                      //用户授权时间记入日志
+      app.logData.push([Date.now(), '用户授权' + app.globalData.sysinfo.toString()]);                      //用户授权时间记入日志
       that.setData({ userAuthorize: 0, grids: iMenu('manage') })
     }).catch( console.error );
   },

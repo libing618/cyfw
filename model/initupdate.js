@@ -36,7 +36,7 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
       procedureclass.forEach(pClass => { if (pClass.pModle == pNo) { pNo = pClass.pNo } });
     }
     var cName = procedureclass[pNo].pModle;
-    var unitId = uId ? uId : app.uUnit.objectId;
+    var unitId = uId ? uId : app.roleData.uUnit.objectId;
     let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
     var umdata = [];
     let updAt = app.mData.pAt[cName];
@@ -164,13 +164,13 @@ module.exports = {
   },
 
   readShowFormat: function(req,uId){
-    var unitId = uId ? uId : app.uUnit.objectId;
+    var unitId = uId ? uId : app.roleData.uUnit.objectId;
     return new  Promise((resolve, reject) => {
       let promArr = [];               //定义一个Promise数组
       for (let i=0;i<req.length;i++){
         switch (req[i].t){
           case 'MS':
-            req[i].e = app.sUnit.uName ;
+            req[i].e = app.roleData.sUnit.uName ;
             break;
           case 'sObject' :                    //对象选择字段
             if (req[i].gname=='goodstype'){
@@ -211,13 +211,13 @@ module.exports = {
     let vDataKeys = Object.keys(vData);            //数据对象是否为空
     let vifData = (vDataKeys.length == 0);
     var funcArr = [];
-    let unitId = vData.unitId ? vData.unitId : app.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
+    let unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
     return new  Promise((resolve, reject) => {
       let promArr = [];               //定义一个Promise数组
       for (let i=0;i<req.length;i++){
         switch (req[i].t){
           case 'MS':
-            req[i].e = vifData ? '点击选择服务单位' : app.sUnit.uName ;
+            req[i].e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName ;
             break;
           case 'sObject' :                    //对象选择字段
             req[i].osv = [0,0];
@@ -251,7 +251,7 @@ module.exports = {
             );
             break;
           case 'producttype' :
-            req[i].indlist = app.uUnit.indType;
+            req[i].indlist = app.roleData.uUnit.indType;
             break;
           case 'sId' :
             promArr.push( updateData(true,req[i].gname,unitId).then(()=>{
@@ -310,6 +310,9 @@ module.exports = {
               break;
             case 'listsel':
               vData[req[i].gname] = 0 ;
+              break;
+            case 'arrList':
+              vData[req[i].gname] = [] ;
               break;
             case 'sedate' :
               vData[req[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)] ;

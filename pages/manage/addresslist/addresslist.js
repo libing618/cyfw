@@ -6,7 +6,7 @@ Page({
     iClicked: '0'
   },
   onLoad:function(options){
-    this.setData({vData:[app.uUnit,app.sUnit]});
+    this.setData({vData:[app.roleData.uUnit,app.roleData.sUnit]});
     this.indexClick = require('../../../util/util.js').indexClick;
   },
   onReady:function(){

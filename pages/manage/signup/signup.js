@@ -46,7 +46,7 @@ Page({
   onLoad: function () {
     var that = this;
     if (app.globalData.user.unit!='0') {
-      if (app.uUnit.name == app.globalData.user.objectId) {
+      if (app.roleData.uUnit.name == app.globalData.user.objectId) {
         that.data.cUnitInfo = '您创建的单位' + (app.globalData.user.emailVerified ? '' : '正在审批中')
       } else {
         that.data.cUnitInfo = '您工作的单位' + (app.globalData.user.emailVerified ? '' : '正在审批中')
@@ -55,9 +55,8 @@ Page({
     that.setData({		    		// 获得当前用户
       user: app.globalData.user,
       activeIndex: app.globalData.user.mobilePhoneVerified ? "1" : "0",
-      crUnitData: that.data.crUnitData,
       cUnitInfo: that.data.cUnitInfo,
-      vc: app.uUnit
+      vc: app.roleData.uUnit
     })
   },
 
@@ -174,7 +173,7 @@ Page({
           unitRole.set('uName',reqUnitName)
           unitRole.set('unitUsers',[{"objectId":app.globalData.user.objectId, "userRolName":'admin', 'uName':app.globalData.user.uName, 'avatarUrl':app.globalData.user.avatarUrl,'nickName':app.globalData.user.nickName}] );
           unitRole.save().then((res)=>{
-            app.uUnit = res.toJSON();
+            app.roleData.uUnit = res.toJSON();
             let rQuery = AV.Object.createWithoutData('userInit', '598353adfe88c200571b8636')  //设定菜单为applyAdmin
             AV.User.current()
               .set({ "unit": res.objectId, "userRolName": 'admin', "userRol": rQuery })  // 设置并保存单位ID
@@ -198,14 +197,13 @@ Page({
                   .set({ "unit": resUnit.objectId, "userRolName": 'sessionuser', "userRol": rQuery } )  // 设置并保存单位ID
                   .save()
                   .then(function(user) {
-                    app.uUnit = resUnit;
+                    app.roleData.uUnit = resUnit;
                     app.globalData.user.unit = resUnit.objectId;
                     that.setData({user : app.globalData.user});
                     wx.navigateTo({ url: '/pages/manage/structure/structure' });
                   })
               } else if (res.cancel) {        //用户点击取消
-                that.data.crUnitData.c = '';
-                that.setData({crUnitData: that.data.crUnitData});
+                that.setData({uName: ''});
               }
             }
           })

@@ -143,13 +143,10 @@
 </template>
 
 <template name="i_ed">
-  <view class="weui-cell">
-    <navigator url="/inputedit/import/addressedit?reqName={{gname}}">
-      <view class="weui-cell__hd">{{p}}:</view>
-      <view class="weui-cell__bd">{{c.sName}}</view>
-    </navigator>
-    <input hidden="true" name="{{gname}}" value="{{c}}"/>
-  </view>
+  <navigator url="/inputedit/import/addressedit?reqName={{gname}}">
+    <view class="weui-cell">{{p}}:{{c.sName}}</view>
+  </navigator>
+  <input hidden="true" name="{{gname}}" value="{{c}}"/>
 </template>
 
 <template name="i_eDetail">
@@ -198,16 +195,16 @@
 <template name="i_arrList">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd">
+    <view class="weui-cell__bd weui-cell__flex">
       <view wx:for="{{c}}" wx:key="{{index}}">
-        <view class="weui-cell_link" style='display: inline-block;' id="lj-{{n}}" data-id="{{index}}" bindtap="i_arrList">{{ item }}{{wewxs.mDot(index,c)}}</view>
+        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="i_arrList">{{ item }}{{wewxs.mDot(index,c)}}</view>
       </view>
     </view>
-    <view class="weui-cell__ft"><icon id="su-{{n}}" bindtap="i_arrList" type="{{inclose ? 'info' : 'success_no_circle'}}" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="su-{{n}}" bindtap="i_arrList" type="{{inclose ? 'info' : 'success_no_circle'}}" size="20"/></view>
   </view>
   <view hidden="{{inclose}}" class="weui-cell weui-cell_access">
     <view class="weui-cell__hd">输入增加的内容：</view>
-    <input class="weui-cell__bd" id="ai-{{n}}" bindblur="i_arrList"/>
+    <input class="weui-cell__bd" name="iValue" id="ai-{{n}}" bindinput="i_arrList"/>
     <view class="weui-cell__ft"><button id="se-{{n}}" data-add="{{iValue}}" size="mini" bindtap="i_arrList">确定</button></view>
   </view>
 </template>
@@ -215,12 +212,12 @@
 <template name="i_industrytype">
   <view class="weui-cell">
     <view class="weui-cell__hd">{{p}}:</view>
-    <view class="weui-cell__bd">
+    <view class="weui-cell__bd weui-cell__flex">
       <view wx:for="{{c.sName}}" wx:key="{{index}}">
-        <view class="weui-cell_link" style='display: inline-block;' id="lj-{{n}}" data-id="{{index}}" bindtap="f_aslist">{{item}}{{wewxs.mDot(index,c.sName)}}</view>
+        <view class="weui-cell_link" id="lj-{{n}}" data-id="{{index}}" bindtap="f_aslist">{{item}}{{wewxs.mDot(index,c.sName)}}</view>
       </view>
     </view>
-    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="f_aslist" type="{{inclose ? 'info' : 'success_no_circle'}}" size="32"/></view>
+    <view class="weui-cell__ft"><icon id="se-{{n}}" bindtap="f_aslist" type="{{inclose ? 'info' : 'success_no_circle'}}" size="20"/></view>
   </view>
   <view hidden="{{inclose}}">
   <view class="weui-cell">
@@ -228,7 +225,7 @@
     <view class="weui-cell__bd">{{apdv['s'+apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]] }}</view>
     <view class="weui-cell__ft"><button id="su-{{n}}" data-ca="{{apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]}}" data-sa="{{apdv['s'+apdclist[aVl[0]].st[aVl[1]].ct[aVl[2]]]}}" bindtap="f_aslist" size="mini">确定</button></view>
   </view>
-    <picker-view id="pa-{{n}}" indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{aVl}}" bindchange="f_aslist">
+    <picker-view id="pa-{{n}}" indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{aVl}}" bindtap="f_aslist">
         <picker-view-column>
             <view wx:for="{{apdclist}}" wx:key="{{index}}" style="line-height: 36rpx">{{item.n}}</view>
         </picker-view-column>

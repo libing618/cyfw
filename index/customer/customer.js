@@ -18,10 +18,10 @@ Page({
       pageSetData.mSum = cSum.mSum;
     });
     pageSetData.grids = iMenu('customer');          //更新数据
-    if (appDataExist('cargo',app.uUnit.objectId)){
-      pageSetData.mPage = app.mData.product[app.uUnit.objectId];
-      pageSetData.pageData = app.aData.product[app.uUnit.objectId];
-      pageSetData.cargo = app.aData.cargo[app.uUnit.objectId];
+    if (appDataExist('cargo',app.roleData.uUnit.objectId)){
+      pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
+      pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
+      pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
     }
     that.setData( pageSetData );
   },
@@ -30,7 +30,7 @@ Page({
     if (iu){
       cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
         this.setData({
-          cargo:app.aData.cargo[app.uUnit.objectId],
+          cargo:app.aData.cargo[app.roleData.uUnit.objectId],
           pandect:cSum.rSum,
           mSum: cSum.mSum
         })
@@ -39,13 +39,13 @@ Page({
   },
 
   onReady:function(){
-    integration('cargo',app.uUnit.objectId).then(isupdated=>{
+    integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
       if (isupdated) {
         cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
           this.setData({
-            mPage:app.mData.product[app.uUnit.objectId],
-            pageData:app.aData.product[app.uUnit.objectId],
-            cargo:app.aData.cargo[app.uUnit.objectId],
+            mPage:app.mData.product[app.roleData.uUnit.objectId],
+            pageData:app.aData.product[app.roleData.uUnit.objectId],
+            cargo:app.aData.cargo[app.roleData.uUnit.objectId],
             pandect:cSum.rSum,
             mSum: cSum.mSum
           })
@@ -53,7 +53,7 @@ Page({
       }
     });
     wx.setNavigationBarTitle({
-      title: app.globalData.user.emailVerified ? app.uUnit.uName+'的销售管理' : '用户体验产品销售',
+      title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的销售管理' : '用户体验产品销售',
     })
   },
 

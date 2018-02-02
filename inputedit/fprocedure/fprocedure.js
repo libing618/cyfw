@@ -39,20 +39,20 @@ Page({
       switch (typeof ops.pId){
         case 'number':           //传入参数为一位数字的代表该类型新建数据或读缓存数据
           that.data.dObjectId = pClass.pModle + ops.pId;      //根据类型建缓存KEY
-          aaData = appDataExist(pClass.pModle, app.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.uUnit.objectId][pClass.pModle + ops.pId] : {};
+          aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][pClass.pModle + ops.pId] : {};
           titleName += pClass.afamily[ops.pId]
           break;
         case 'string':                   //传入参数为已发布ID，重新编辑已发布的数据
           that.data.dObjectId = ops.pId;
-          if (typeof aaData == 'undefined') { aaData = appDataExist(pClass.pModle, app.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.uUnit.objectId][that.data.dObjectId] : {};}
+          if (typeof aaData == 'undefined') { aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][that.data.dObjectId] : {};}
           titleName += pClass.pName;
           break;
         case 'undefined':               //未提交或新建的数据KEY为审批流程pModle的值
           that.data.dObjectId = pClass.pModle;
-          aaData = appDataExist(pClass.pModle, app.uUnit.objectId, pClass.pModle) ? app.aData[pClass.pModle][app.uUnit.objectId][pClass.pModle] : {} ;
+          aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, pClass.pModle) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][pClass.pModle] : require('../../test/cp.js');//{}
           titleName += pClass.pName;
           break;
-      }//require('../../test/cp.js')
+      }
       initData(pClass.pSuccess, aaData).then(dInit=>{
         dInit.funcArr.forEach(functionName => {
           that[functionName] = wImpEdit[functionName];
@@ -65,7 +65,7 @@ Page({
         that.data.reqData = dInit.req;
         that.data.vData = dInit.vData;
         that.setData(that.data);
-        titleName = (typeof options.tgId == 'string') ? app.procedures[that.data.targetId].unitName : (app.globalData.user.emailVerified ? app.uUnit.nick : '体验用户') + titleName;
+        titleName = (typeof options.tgId == 'string') ? app.procedures[that.data.targetId].unitName : (app.globalData.user.emailVerified ? app.roleData.uUnit.nick : '体验用户') + titleName;
         wx.setNavigationBarTitle({ title: titleName });
       })
     }).catch((error)=>{

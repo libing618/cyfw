@@ -12,7 +12,7 @@ Page({
   cName:'',
   onLoad: function(options) {
     var that = this ;
-    let cUnitName = app.globalData.user.emailVerified ? app.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
+    let cUnitName = app.globalData.user.emailVerified ? app.roleData.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
     that.pno = Number(options.pNo);
     let artid = Number(options.artId);
     if (!isNaN(that.pno) && isNaN(artid)) {             //检查参数
@@ -20,13 +20,13 @@ Page({
       that.cName = pClass.pModle;
       that.inFamily = typeof pClass.afamily != 'undefined';
       if ( that.pno==1 ){                             //已发布的文章信息只有发布单位能修改
-        that.data.uEV = app.globalData.user.emailVerified && app.uUnit.objectId==app.aData.articles[options.artId].unitId;
+        that.data.uEV = app.globalData.user.emailVerified && app.roleData.uUnit.objectId==app.aData.articles[options.artId].unitId;
         that.data.vData = app.aData.articles[options.artId];
         that.data.reqData = pClass.pSuccess;
         that.setData(that.data);
       } else {
         that.data.uEV = app.globalData.user.emailVerified;
-        that.data.vData = app.aData[that.cName][app.uUnit.objectId][options.artId];
+        that.data.vData = app.aData[that.cName][app.roleData.uUnit.objectId][options.artId];
         let showFormat = pClass.pSuccess;
         switch (that.pno) {
           case 6:
@@ -69,9 +69,9 @@ Page({
         } else {
           if (that.inFamily) {
             url += '&artId='+that.data.vData.afamily;
-            app.aData[that.cName][app.uUnit.objectId][that.cName+that.data.vData.afamily] = that.data.vData;
+            app.aData[that.cName][app.roleData.uUnit.objectId][that.cName+that.data.vData.afamily] = that.data.vData;
           } else {
-            app.aData[that.cName][app.uUnit.objectId][that.cName] = that.data.vData;
+            app.aData[that.cName][app.roleData.uUnit.objectId][that.cName] = that.data.vData;
           }
         };
         break;

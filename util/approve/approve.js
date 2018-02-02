@@ -26,7 +26,7 @@ Page({
         pBewrite: procedureClass.pBewrite,     //流程说明
         pModle: procedureClass.pModle,         //流程写入的数据表名
         aValue: app.procedures[options.approveId],        //流程缓存
-        enEdit: app.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
+        enEdit: app.roleData.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
         enApprove: app.procedures[options.approveId].cFlowStep.indexOf(app.globalData.user.objectId) >= 0,     //当前用户为流程处理人
         afamilys: procedureClass.afamily,                              //流程内容分组
         cmLength: app.procedures[options.approveId].cManagers.length    //流程审批节点长度

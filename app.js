@@ -23,7 +23,7 @@ const realtime = new Realtime({
 });
 App({
   globalData: require('globaldata.js').globalData,
-  wmenu: require('globaldata.js').wmenu,
+  roleData: require('globaldata.js').roleData,
   mData: require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: {},
   iData: {},
@@ -32,8 +32,7 @@ App({
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
   urM: [],                           //未读信息
-  uUnit:{id:'u0'},                           //用户单位信息（若有）
-  sUnit:{},                           //上级单位信息（若有）
+
 
   imLogin: function(username){                               //实时通信客户端登录
     realtime.createIMClient(username+wxappNumber).then( (im)=> {

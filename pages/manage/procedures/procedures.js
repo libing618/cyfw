@@ -43,7 +43,7 @@ Page({
 
   onReady: function(){
     wx.setNavigationBarTitle({
-      title: app.uUnit.uName+'的审批流程' ,
+      title: app.roleData.uUnit.nick+'的审批流程' ,
     })
   },
 
