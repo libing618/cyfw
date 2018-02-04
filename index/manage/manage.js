@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData } = require('../../model/initupdate');
-const {openWxLogin,fetchMenu,iMenu} = require('../../util/util');
+const {openWxLogin,fetchMenu,iMenu,tabClick} = require('../../util/util');
 var app = getApp()
 Page({
   data: {
@@ -69,12 +69,7 @@ Page({
     }).catch( console.error );
   },
 
-  tabClick: function (e) {                                //点击tab
-    app.mData.pCk1 = Number(e.currentTarget.id)
-    this.setData({
-      pageCk: app.mData.pCk1                  //点击序号切换
-    });
-  },
+  tabClick: tabClick,
 
   onPullDownRefresh:function(){
     updateData(true,1).then(isupdated=>{ this.setPage(isupdated) });

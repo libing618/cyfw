@@ -24,7 +24,7 @@ Page({
       that.setData({
         bsType: req,      //流程内容格式
         pBewrite: procedureClass.pBewrite,     //流程说明
-        pModle: procedureClass.pModle,         //流程写入的数据表名
+        pModel: procedureClass.pModel,         //流程写入的数据表名
         aValue: app.procedures[options.approveId],        //流程缓存
         enEdit: app.roleData.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
         enApprove: app.procedures[options.approveId].cFlowStep.indexOf(app.globalData.user.objectId) >= 0,     //当前用户为流程处理人
@@ -64,7 +64,6 @@ Page({
     var nInstace = Number(that.data.aValue.cInstance);        //下一流程节点
     if (nInstace>=0) {
       var rResultId = Number(e.detail.value.dResult)+1;
-      var cApproval = AV.Object.createWithoutData('sengpi', that.data.aValue.objectId);
       return new Promise((resolve, reject) => {
         if ( nInstace==that.data.cmLength ){   //最后一个节点
           let sData = that.data.aValue.dObject;
@@ -81,10 +80,10 @@ Page({
           } else if (rResultId === 1){
             let sObject;
             if (that.data.aValue.dObjectId=='0'){
-              let dObject = AV.Object.extend(that.data.pModle);
+              let dObject = AV.Object.extend(that.data.pModel);
               sObject = new dObject();
             } else {
-              sObject = AV.Object.createWithoutData(that.data.pModle,that.data.aValue.dObjectId)
+              sObject = AV.Object.createWithoutData(that.data.pModel,that.data.aValue.dObjectId)
             }
             sData.unitId = that.data.aValue.unitId;
             sData.unitName = that.data.aValue.unitName;
@@ -98,6 +97,7 @@ Page({
           } else { resolve(0) };
         } else { resolve(0) }
       }).then((sObjectId)=>{
+        let cApproval = AV.Object.createWithoutData('sengpi', that.data.aValue.objectId);
         if (sObjectId) {cApproval.set('dObjectId',sObjectId);}
         cApproval.set('dResult', rResultId);                //流程处理结果
         let uIdear = that.data.aValue.dIdear;
@@ -111,7 +111,7 @@ Page({
         })
       }).catch(console.error);
     } else {
-      wx.showToast({title: '请进行审批处理！', duration: 2500, icon: 'loading'})
+      wx.showToast({title: '请进行审批处理', duration: 2500, icon: 'loading'})
     }
   },
 

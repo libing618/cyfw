@@ -1,6 +1,6 @@
 module.exports = {
   uName: '枣夹核桃',
-  protype: { code: 10104, sName: '谷子' },
+  protype: { code: 116019902, sName: '枣' },
 title: '枣夹核桃,尽享休闲美味',
 aGeoPoint: { __type: 'GeoPoint', latitude: 36.654792087616244, longitude: 111.55227762725832 },
 address: { code: 141034, sName: '山西省临汾市汾西县东大街商贸城' },
@@ -12,7 +12,9 @@ PARM_period: 300,
 standard_code: 'GB 10164-1988',
 license_no: '大',
 license_no: '大',
-surface: ['透明食用罐装', '无纺布袋装'],
+  surface: ['透明食用罐装', '食用袋装'],
 size: ['10*10*15', '20*30*5'],
-weight: ['380克', '5000克']
+  weight: ["1500克",
+    "2500克",
+    "5000克"]
 }

@@ -16,9 +16,9 @@ Page({
   onLoad: function (options) {
     var that = this;
     if (app.roleData.uUnit.name == app.globalData.user.objectId) {       //单位名等于用户ID则为创始人
-      reqDatas = require('../../../model/procedureclass.js')[0].pSuccess;
-      let aList = require('../../../model/procedureclass.js')[0].afamily;
-      reqDatas.unshift({ gname: "afamily", p: '单位类型', t: "arrsel", alist: aList })
+      let reqDatas = require('../../model/procedureclass.js')[0].pSuccess;
+      let aList = require('../../model/procedureclass.js')[0].afamily;
+      reqDatas.unshift({ gname: "afamily", p: '单位类型', t: "listsel", aList: aList })
       wx.setNavigationBarTitle({ title: app.roleData.uUnit.uName + '的信息', })
       new AV.Query('sengpi')
         .equalTo('unitId', app.roleData.uUnit.objectId)
@@ -28,13 +28,15 @@ Page({
         .first().then((rdata) => {
           if (rdata) {
             var spdata = rdata.toJSON();
-            that.data.dObjectId = spdata.dObjectId
             that.data.vData = spdata.dObject;
             that.data.unEdit = spdata.cInstance > 0 && spdata.cInstance < spdata.cManagers.length;        //流程起点或已结束才能提交
           };
-          initData(reqDatas, that.data.vData).then((reqData, vData, funcArr)=>{
+          that.data.dObjectId = app.globalData.user.unit;
+          initData(reqDatas, that.data.vData).then(({reqData, vData, funcArr})=>{
             funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] });
-            that.setData({ reqData,vData });
+            that.data.reqData = reqData;
+            that.data.vData = vData;
+            that.setData( that.data );
           });
       }).catch(console.error )
     } else {

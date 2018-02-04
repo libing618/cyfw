@@ -20,7 +20,7 @@ Page ({
       that.inFamily = classInFamily(pno);
       that.setData({
         pNo: pno,
-        dObjectId: isNaN(that.artid) ? -1 : artid
+        dObjectId: isNaN(that.artid) ? -1 : that.artid
       });
       that.setPage(true);
     } else {

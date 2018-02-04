@@ -20,19 +20,65 @@ function getdate(idate) {
   var day = rdate.getDate();
   return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
 };
+function setRole(puRoles,suRoles){
+  let cUserName = {};
+  let cManagers = [[app.globalData.user.objectId]];
+  cUserName[app.globalData.user.objectId] = app.globalData.user.uName;
+  if (app.roleData.uUnit.afamily > 2 && puRoles) {          //单位类型为企业且有本单位审批设置
+    let pRolesNum = 0, pRoleUser;
+    for (let i = 0; i < puRoles.length; i++) {
+      pRoleUser = [];
+      app.roleData.uUnit.unitUsers.forEach((pUser) => {
+        if (pUser.userRolName == puRoles[i]) {
+          pRoleUser.push(pUser.objectId);
+          cUserName[pUser.objectId] = pUser.uName;
+        }
+      })
+      if (pRoleUser.length != 0) {
+        pRolesNum = pRolesNum + 1;
+        cManagers.push(pRoleUser);
+      }
+    };
+    if (pRolesNum == 0 && app.globalData.user.userRolName != 'admin') {
+      app.roleData.uUnit.unitUsers.forEach((pUser) => {
+        if (pUser.userRolName == 'admin') {
+          cManagers.push([pUser.objectId]);
+          cUserName[pUser.objectId] = pUser.uName;
+        }
+      })
+    }
+  }
+  if (suRoles) {                 //上级单位类型有审批设置
+    let sRolesNum = 0, sRoleUser;
+    if (app.roleData.sUnit.afamily>2) {     //单位类型为企业
+      for (let i = 0; i < suRoles.length; i++) {
+        sRoleUser = [];
+        app.roleData.sUnit.unitUsers.forEach((sUser) => {
+          if (sUser.userRolName == suRoles[i]) {
+            sRoleUser.push(sUser.objectId);
+            cUserName[sUser.objectId] = sUser.uName;
+          }
+        });
+        if (sRoleUser.length != 0) {
+          sRolesNum = sRolesNum + 1;
+          cManagers.push(sRoleUser);
+        }
+      }
+    }
+    if (sRolesNum == 0) {
+      app.roleData.sUnit.unitUsers.forEach((sUser) => {
+        if (sUser.userRolName == 'admin') {
+          cManagers.push([sUser.objectId]);;
+          cUserName[sUser.objectId] = sUser.uName;
+        }
+      })
+    }
+  }
+  let managers = [];
+  cManagers.forEach((manger) => { manger.forEach((mUser) => { managers.push(mUser) }) });
+  return { cManagers,cUserName,managers}
+};
 module.exports = {
-  tabClick: function (e) {                                //点击tab
-    app.mData['pCk' + this.data.pNo] = Number(e.currentTarget.id)
-    this.setData({
-      pageCk: app.mData['pCk' + this.data.pNo]                //点击序号切换
-    });
-  },
-
-  i_listsel: function (e) {                         //选择类型
-    let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
-    this.setData(vdSet(this.data.reqData[n].gname, Number(e.detail.value)))
-  },
-
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     this.setData(vdSet(this.data.reqData[n].gname, this.data.mData[Number(e.detail.value)]))
@@ -55,8 +101,8 @@ module.exports = {
         that.setData(rdSet(n, 'inclose', !that.data.reqData[n].inclose));
         break;
       case 'su':                                   //按确定ICON确认选择
-        that.data.vData[fName].code.push(Number(e.currentTarget.dataset.capdv));
-        that.data.vData[fName].sName.push(e.currentTarget.dataset.sapdv);
+        that.data.vData[fName].code.push(Number(e.currentTarget.dataset.ca));
+        that.data.vData[fName].sName.push(e.currentTarget.dataset.sa);
         that.setData(vdSet(fName, that.data.vData[fName]))
         break;
       case 'pa':
@@ -75,25 +121,6 @@ module.exports = {
     }
   },
 
-  i_inScan: function (e) {                         //扫描及输入
-    var that = this;
-    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
-    var id = e.currentTarget.id.substring(0, 2);
-    let fName = that.data.reqData[n].gname;
-    switch (id) {
-      case 'sc':
-        wx.scanCode({
-          success: (res) => {
-            that.setData(vdSet(fName, res.result));
-          }
-        })
-        break;
-      case 'su':
-        that.setData(vdSet(fName, e.detail.value[fName]));
-        break;
-    }
-  },
-
   f_number: function (e) {
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
     let vdSet = {};
@@ -106,25 +133,6 @@ module.exports = {
     let vdSet = {};
     vdSet['vData.' + this.data.reqData[n].gname] = isNaN(Number(e.detail.value)) ? '0.00' : parseFloat(Number(e.detail.value).toFixed(2));      //不能输入非数字,转换为浮点数保留两位小数
     this.setData(vdSet);
-  },
-
-  i_sedate: function (e) {                         //选择开始和结束日期
-    var that = this;
-    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
-    var id = e.currentTarget.id.substring(0, 2);
-    let rSet = {};
-    switch (id) {
-      case 'ac':
-        rSet = vdSet(that.data.reqData[n].gname, e.currentTarget.dataset.ei ? [that.data.vData[that.data.reqData[n].gname][0], e.detail.value] : [e.detail.value, that.data.vData[that.data.reqData[n].gname][1]]);
-        break;
-      case 'ds':                             //选择开始日期
-        rSet['reqData[' + n + '].endif'] = false;
-        break;
-      case 'de':                           //选择结束日期
-        rSet['reqData[' + n + '].endif'] = true;
-        break;
-    }
-    that.setData(rSet);
   },
 
   f_objsel: function (e) {                         //对象选择类型
@@ -169,6 +177,49 @@ module.exports = {
           if (that.data.reqData[n].aVl[1] != aval[1]) { aval[2] = 0; }
         } else { aval[1] = 0; aval[2] = 0; }
         that.setData(rdSet(n, 'aVl', aval));
+        break;
+    }
+  },
+
+  i_listsel: function (e) {                         //选择类型
+    let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
+    this.setData(vdSet(this.data.reqData[n].gname, Number(e.detail.value)))
+  },
+
+  i_sedate: function (e) {                         //选择开始和结束日期
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0, 2);
+    let rSet = {};
+    switch (id) {
+      case 'ac':
+        rSet = vdSet(that.data.reqData[n].gname, e.currentTarget.dataset.ei ? [that.data.vData[that.data.reqData[n].gname][0], e.detail.value] : [e.detail.value, that.data.vData[that.data.reqData[n].gname][1]]);
+        break;
+      case 'ds':                             //选择开始日期
+        rSet['reqData[' + n + '].endif'] = false;
+        break;
+      case 'de':                           //选择结束日期
+        rSet['reqData[' + n + '].endif'] = true;
+        break;
+    }
+    that.setData(rSet);
+  },
+
+  i_inScan: function (e) {                         //扫描及输入
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0, 2);
+    let fName = that.data.reqData[n].gname;
+    switch (id) {
+      case 'sc':
+        wx.scanCode({
+          success: (res) => {
+            that.setData(vdSet(fName, res.result));
+          }
+        })
+        break;
+      case 'su':
+        that.setData(vdSet(fName, e.detail.value[fName]));
         break;
     }
   },
@@ -463,8 +514,8 @@ module.exports = {
         that.setData({ enMenu: 'none' })
         that.farrData(that.data.vData.details[that.data.selectd].t, 1);      //选择多媒体项目内容;
         break;
-      case 'fStorage':
-        if (that.data.targetId == '0') {           //编辑内容不提交流程审批,在本机保存
+      case 'fStorage':           //编辑内容不提交流程审批,在本机保存
+        if (that.data.targetId == '0') {
           sFilePath.then(fileArr => {
             let tFileArr = fileArr.filter(function (tFile) { return tFile.fType == 0 });
             if (tFileArr.length > 0) {
@@ -498,7 +549,7 @@ module.exports = {
         break;
       case 'fSave':
         if (emptyField) {
-          wx.showToast({ title: emptyField + '等项目未输入，请检查。', icon:'none',duration: 7000 })
+          wx.showToast({ title: '请检查下列未输入项目:'+emptyField , icon:'none',duration: 5000 })
         } else {
           sFilePath.then(sFileLists => {
             let sFileArr = sFileLists.filter(sFile => { return sFile.fType < 2 });
@@ -531,98 +582,55 @@ module.exports = {
               } else { resolve('no files save') };
             })
           }).then((sFiles) => {
-            if (that.data.targetId == '0') {
-              let nApproval = AV.Object.extend('sengpi');        //创建审批流程
-              var fcApproval = new nApproval();
-              fcApproval.set('dProcedure', approvalID);                //流程类型
-              fcApproval.set('dResult', 0);                //流程处理结果0为提交
-              fcApproval.set("unitName", app.roleData.uUnit.uName);                 //申请单位
-              fcApproval.set("sponsorName", app.globalData.user.uName);         //申请人
-              fcApproval.set("unitId", app.roleData.uUnit.objectId);        //申请单位的ID
-              fcApproval.set('dIdear', [{ un: app.globalData.user.uName, dt: new Date(), di: '提交流程', dIdear: '发起审批流程' }]);       //流程处理意见
-              let cUserName = {};
-              let cManagers = [[app.globalData.user.objectId]];
-              cUserName[app.globalData.user.objectId] = app.globalData.user.uName;
-              let puRoles = approvalClass.puRoles;
-              let suRoles = approvalClass.suRoles;
-              if (app.roleData.uUnit.afamily > 2 && puRoles) {          //单位类型为企业且有本单位审批设置
-                let pRolesNum = 0, pRoleUser;
-                for (let i = 0; i < puRoles.length; i++) {
-                  pRoleUser = [];
-                  app.roleData.uUnit.unitUsers.forEach((pUser) => {
-                    if (pUser.userRolName == puRoles[i]) {
-                      pRoleUser.push(pUser.objectId);
-                      cUserName[pUser.objectId] = pUser.uName;
-                    }
-                  })
-                  if (pRoleUser.length != 0) {
-                    pRolesNum = pRolesNum + 1;
-                    cManagers.push(pRoleUser);
-                  }
-                };
-                if (pRolesNum == 0 && app.globalData.user.userRolName != 'admin') {
-                  app.roleData.uUnit.unitUsers.forEach((pUser) => {
-                    if (pUser.userRolName == 'admin') {
-                      cManagers.push([pUser.objectId]);
-                      cUserName[pUser.objectId] = pUser.uName;
-                    }
-                  })
-                }
-              }
-              if (suRoles) {                 //上级单位类型有审批设置
-                let sRolesNum = 0, sRoleUser;
-                if (app.roleData.sUnit.afamily>2) {     //单位类型为企业
-                  for (let i = 0; i < suRoles.length; i++) {
-                    sRoleUser = [];
-                    app.roleData.sUnit.unitUsers.forEach((sUser) => {
-                      if (sUser.userRolName == suRoles[i]) {
-                        sRoleUser.push(sUser.objectId);
-                        cUserName[sUser.objectId] = sUser.uName;
-                      }
-                    });
-                    if (sRoleUser.length != 0) {
-                      sRolesNum = sRolesNum + 1;
-                      cManagers.push(sRoleUser);
-                    }
-                  }
-                }
-                if (sRolesNum == 0) {
-                  app.roleData.sUnit.unitUsers.forEach((sUser) => {
-                    if (sUser.userRolName == 'admin') {
-                      cManagers.push([sUser.objectId]);;
-                      cUserName[sUser.objectId] = sUser.uName;
-                    }
-                  })
-                }
-              }
-              let managers = [];
-              cManagers.forEach((manger) => { manger.forEach((mUser) => { managers.push(mUser) }) });
-              fcApproval.set('cManagers', cManagers);             //处理人数组
-              fcApproval.set('cUserId', managers);             //处理人数组
-              fcApproval.set('cUserName', cUserName);             //处理人姓名JSON
-              fcApproval.set('cInstance', 1);             //下一处理节点
-              fcApproval.set('cFlowStep', cManagers[1]);              //下一流程审批人
-              fcApproval.set('dObject', that.data.vData);            //流程审批内容
+            if (that.data.targetId == '0') {                    //新建流程的提交
+              let approvalRole = setRole(approvalClass.puRoles,approvalClass.suRoles);
               var acl = new AV.ACL();      // 新建一个 ACL 实例
-              acl.setRoleReadAccess(app.roleData.uUnit.objectId, true);
-              acl.setRoleReadAccess(app.roleData.sUnit.objectId, true);
-              managers.forEach((mUser) => {
-                acl.setWriteAccess(mUser, true);
-                acl.setReadAccess(mUser, true);
-              })
-              fcApproval.setACL(acl);         // 将 ACL 实例赋予fcApproval对象
-              fcApproval.save().then((resTarget) => {
-                app.aData[resTarget.objectId] = fcApproval.toJSON();
-                wx.showToast({ title: '流程已提交,请查询审批结果。', duration: 2000 }) // 保存成功
-                setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-              }).catch(wx.showToast({ title: '提交保存失败,请重试。', duration: 2000 })) // 保存失败
+              if (approvalRole.cManagers.length==1){                  //流程无后续审批人
+                let dObject = AV.Object.extend(approvalClass.pModel);
+                let sObject = new dObject();
+                that.data.vData.unitId = app.roleData.uUnit.objectId;
+                that.data.vData.unitName = app.roleData.uUnit.uName;
+                acl.setWriteAccess(approvalRole.managers[0], true);
+                acl.setReadAccess(approvalRole.managers[0], true);
+                sObject.setACL(acl);
+                sObject.set(that.data.vData).save().then((sd)=>{
+                  wx.showToast({ title: '审批内容已发布', duration:2000 });
+                }).catch((error)=>{
+                  wx.showToast({ title: '审批内容发布出现错误'+error.error, icon:'none', duration: 2000 });
+                })
+              } else {
+                let nApproval = AV.Object.extend('sengpi');        //创建审批流程
+                var fcApproval = new nApproval();
+                fcApproval.set('dProcedure', approvalID);                //流程类型
+                fcApproval.set('dResult', 0);                //流程处理结果0为提交
+                fcApproval.set("unitName", app.roleData.uUnit.uName);                 //申请单位
+                fcApproval.set("sponsorName", app.globalData.user.uName);         //申请人
+                fcApproval.set("unitId", app.roleData.uUnit.objectId);        //申请单位的ID
+                fcApproval.set('dIdear', [{ un: app.globalData.user.uName, dt: new Date(), di: '提交流程', dIdear: '发起审批流程' }]);       //流程处理意见
+                fcApproval.set('cManagers', approvalRole.cManagers);             //处理人数组
+                fcApproval.set('cUserName', approvalRole.cUserName);             //处理人姓名JSON
+                fcApproval.set('cInstance', 1);             //下一处理节点
+                fcApproval.set('cFlowStep', approvalRole.cManagers[1]);              //下一流程审批人
+                fcApproval.set('dObject', that.data.vData);            //流程审批内容
+                acl.setRoleReadAccess(app.roleData.uUnit.objectId, true);
+                acl.setRoleReadAccess(app.roleData.sUnit.objectId, true);
+                approvalRole.managers.forEach(mUser => {
+                  acl.setWriteAccess(mUser, true);
+                  acl.setReadAccess(mUser, true);
+                })
+                fcApproval.setACL(acl);         // 将 ACL 实例赋予fcApproval对象
+                fcApproval.save().then((resTarget) => {
+                  wx.showToast({ title: '流程已提交,请查询审批结果。', icon:'none',duration: 2000 }) // 保存成功
+                }).catch(wx.showToast({ title: '提交保存失败!', icon:'loading',duration: 2000 })) // 保存失败
+              }
             } else {
-              app.aData[that.data.targetId][app.roleData.uUnit.objectId].dObject = that.data.vData;
-              wx.navigateBack({ delta: 1 });
+              app.procedures[that.data.targetId].dObject = that.data.vData;
+              app.logData.push([Date.now(),that.data.targetId+'修改内容：'+that.data.vData.toString()]);
             }
             }).catch(error => {
               app.logData.push([Date.now(), '编辑提交发生错误:' + error.toString()]);
             });
+          setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
         }
         break;
     };

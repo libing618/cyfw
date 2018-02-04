@@ -29,7 +29,7 @@ module.exports = [
     "32",
     "31"
   ],
-  "pModle": "_Role"
+  "pModel": "_Role"
 },
 {
   "pNo": 1,
@@ -51,7 +51,7 @@ module.exports = [
     "21",
     "20"
   ],
-  "pModle": "articles"
+  "pModel": "articles"
 },
 {
   "pNo": 2,
@@ -71,8 +71,8 @@ module.exports = [
     "32",
     "31"
   ],
-  "sFinallyRole": "32",
-  "pModle": "asset"
+  "suRoles": ["32"],
+  "pModel": "asset"
 },
 {
   "pNo": 3,
@@ -99,8 +99,7 @@ module.exports = [
     "12",
     "11"
   ],
-  "sFinallyRole": "12",
-  "pModle": "product"
+  "pModel": "product"
 },
 {
   "pNo": 4,
@@ -121,8 +120,7 @@ module.exports = [
     "12",
     "11"
   ],
-  "sFinallyRole": "12",
-  "pModle": "service"
+  "pModel": "service"
 },
 {
   "pNo": 5,
@@ -141,8 +139,7 @@ module.exports = [
     "12",
     "11"
   ],
-  "sFinallyRole": "12",
-  "pModle": "cargo"
+  "pModel": "cargo"
 },
 {
   "pNo": 6,
@@ -163,8 +160,8 @@ module.exports = [
     "12",
     "11"
   ],
-  "sFinallyRole": "12",
-  "pModle": "goods"
+  "suRoles": ["12"],
+  "pModel": "goods"
 },
 {
   "pNo": 7,
@@ -184,8 +181,7 @@ module.exports = [
     "12",
     "11"
   ],
-  "sFinallyRole": "12",
-  "pModle": "specs"
+  "pModel": "specs"
 },
 {
   "pNo": 8,
@@ -204,8 +200,7 @@ module.exports = [
     "12",
     "31"
   ],
-  "sFinallyRole": "32",
-  "pModle": "promotion"
+  "pModel": "promotion"
 },
 {
   "pNo": 9,
@@ -227,7 +222,6 @@ module.exports = [
     "11",
     "10"
   ],
-  "sFinallyRole": "11",
-  "pModle": "prodesign"
+  "pModel": "prodesign"
 }
 ]

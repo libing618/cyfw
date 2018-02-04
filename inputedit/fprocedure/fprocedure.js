@@ -13,7 +13,7 @@ Page({
     vData: {},
     reqData: []
   },
-  onLoad: function (options) {        //传入参数为tgId或artId,不得为空
+  onLoad: function (options) {        //传入参数为tgId或pNo/artId,不得为空
     var that = this;
     let aaData;
     that.data.uEV = app.globalData.user.emailVerified;            //用户已通过单位和职位审核
@@ -38,23 +38,23 @@ Page({
       let titleName = '的'               //申请项目名称
       switch (typeof ops.pId){
         case 'number':           //传入参数为一位数字的代表该类型新建数据或读缓存数据
-          that.data.dObjectId = pClass.pModle + ops.pId;      //根据类型建缓存KEY
-          aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][pClass.pModle + ops.pId] : {};
+          that.data.dObjectId = pClass.pModel + ops.pId;      //根据类型建缓存KEY
+          aaData = appDataExist(pClass.pModel, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModel][app.roleData.uUnit.objectId][pClass.pModel + ops.pId] : {};
           titleName += pClass.afamily[ops.pId]
           break;
         case 'string':                   //传入参数为已发布ID，重新编辑已发布的数据
           that.data.dObjectId = ops.pId;
-          if (typeof aaData == 'undefined') { aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][that.data.dObjectId] : {};}
+          if (typeof aaData == 'undefined') { aaData = appDataExist(pClass.pModel, app.roleData.uUnit.objectId, that.data.dObjectId) ? app.aData[pClass.pModel][app.roleData.uUnit.objectId][that.data.dObjectId] : {};}
           titleName += pClass.pName;
           break;
-        case 'undefined':               //未提交或新建的数据KEY为审批流程pModle的值
-          that.data.dObjectId = pClass.pModle;
-          aaData = appDataExist(pClass.pModle, app.roleData.uUnit.objectId, pClass.pModle) ? app.aData[pClass.pModle][app.roleData.uUnit.objectId][pClass.pModle] : require('../../test/cp.js');//{}
+        case 'undefined':               //未提交或新建的数据KEY为审批流程pModel的值
+          that.data.dObjectId = pClass.pModel;
+          aaData = appDataExist(pClass.pModel, app.roleData.uUnit.objectId, pClass.pModel) ? app.aData[pClass.pModel][app.roleData.uUnit.objectId][pClass.pModel] : {} ;
           titleName += pClass.pName;
           break;
       }
-      initData(pClass.pSuccess, aaData).then(dInit=>{
-        dInit.funcArr.forEach(functionName => {
+      initData(pClass.pSuccess, aaData).then(({ reqData, vData, funcArr })=>{
+        funcArr.forEach(functionName => {
           that[functionName] = wImpEdit[functionName];
           if (functionName == 'i_eDetail') {             //每个输入类型定义的字段长度大于2则存在对应处理过程
             that.farrData = wImpEdit.farrData;
@@ -62,8 +62,8 @@ Page({
           }
         });
         that.data.pNo = ops.pNo;
-        that.data.reqData = dInit.req;
-        that.data.vData = dInit.vData;
+        that.data.reqData = reqData;
+        that.data.vData = vData;
         that.setData(that.data);
         titleName = (typeof options.tgId == 'string') ? app.procedures[that.data.targetId].unitName : (app.globalData.user.emailVerified ? app.roleData.uUnit.nick : '体验用户') + titleName;
         wx.setNavigationBarTitle({ title: titleName });

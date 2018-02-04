@@ -36,23 +36,21 @@ module.exports = [
     "http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG"
   ],
   tvidio: 'http://ac-Trce3aqb.clouddn.com/d3a3bfb513239d50f6da.mp4',
-  details: [{ t: "h2", e: "黒小米" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/a126bb2e84a853ef9bef.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/4c188c66ee0cdd01b793.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/ac7da871e79c576d8f51.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/8dbbf427099bc69b7d68.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/067610f8be89808de22e.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/7aa3acf98b8470bcd8fa.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/7f07b0ec4c823777e3cc.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/c809ad822b33d5d699ff.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/dec2df56827d465a3d92.JPG', e: "" }
+  details: [{ t: "h2", e: "枣夹核桃" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/03dd01f5f0632549a33f.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/681c44ca067ba5e3faad.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/6311cec8c71d649438a6.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/40e7e6e98dfec6f7677a.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/7dfbdce67eb81eafa5b2.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/5c695ab65761e5dd5c56.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/80e0c7e87e0cefaf1551.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/6311cec8c71d649438a6.jpg', e: "" }
   ]
 },
 {
-  uName: '琥珀核桃（罐装）',
+  uName: '薄皮核桃',
   goodstype: 1002,
-  title: '琥珀核桃（罐装）',
+  title: '天然纯野生薄皮核桃',
   desc: '核桃性温味甘，有健胃补血、润肺止咳、安神助眠、润肤黑发等功效，尤其冬季食用还有镇咳平喘的作用，对慢性气管炎和哮喘病患者疗效极佳。',
   specstype: 0,
   thumbnail: 'http://ac-Trce3aqb.clouddn.com/6bda92284ba6c3e344ec.png',
@@ -61,17 +59,9 @@ module.exports = [
     "http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG"
   ],
   tvidio: 'http://ac-Trce3aqb.clouddn.com/d3a3bfb513239d50f6da.mp4',
-  details: [{ t: "h2", e: "黒小米" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/a126bb2e84a853ef9bef.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/4c188c66ee0cdd01b793.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/ac7da871e79c576d8f51.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/8dbbf427099bc69b7d68.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/067610f8be89808de22e.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/7aa3acf98b8470bcd8fa.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/7f07b0ec4c823777e3cc.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/c809ad822b33d5d699ff.JPG', e: "" },
-  { t: "-2", c: 'http://ac-AG9H6EpE.clouddn.com/dec2df56827d465a3d92.JPG', e: "" }
+  details: [{ t: "h2", e: "薄皮核桃" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/bcec334ca1e087f73be9.jpg', e: "" },
+  { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/5bfb63e4d0aca4cb5eb6.png', e: "" }
   ]
 }
 ]

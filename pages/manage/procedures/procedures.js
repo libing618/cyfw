@@ -1,41 +1,45 @@
 //审批流程列表
 const AV = require('../../../libs/leancloud-storage.js');
+const pClass = require('../../../model/procedureclass.js');
+const pLength = pClass.length;
 var app = getApp();
+function ats(){
+  let rats = [new Array(pLength), new Array(pLength), new Array(pLength)];
+  for (let j = 0; j < pLength; j++) {
+    if (app.mData.procedures[j]) {
+      app.mData.procedures[j].forEach(mpoId => {
+        if (typeof rats[app.procedures[mpoId].apState][j] == 'undefined') { rats[app.procedures[mpoId].apState][j] = [] };
+        rats[app.procedures[mpoId].apState][j].push(mpoId);
+      })
+    }
+  };
+  let atotal = [];
+  for (let i = 0; i < 3; i++) {
+    let total = new Array(pLength);
+    for (let j = 0;j<pLength; j++){
+      total[j] = typeof rats[i][j] == 'undefined' ? 0 : rats[i][j].length
+    }
+    atotal.push({ ats: rats[i], total: total})
+  };
+  return atotal;
+}
 Page({
   data:{
     pClassName: [],
     wWidth: app.globalData.sysinfo.windowWidth,
     fLength: 3,
     pageCk: 0,
-    atotal: [[],[],[]],
     pageData: {},
-    ats: [[],[],[]],
+    indexPage: [[],[],[]],
     tabs:['待我审','处理中','已结束'],
     anClicked: app.mData.proceduresCk
   },
 
   onLoad:function(options){
-    let pClass = require('../../../model/procedureclass.js');
     pClass.forEach( procedure=> { this.data.pClassName.push(procedure.pName)} )
-    var pLength = pClass.length;
-    var ats = [new Array(pLength), new Array(pLength), new Array(pLength)];
-    for (let j=0;j<pLength;j++){
-      if (app.mData.procedures[j]) {
-        app.mData.procedures[j].forEach( mpoId=>{
-          if (typeof ats[app.procedures[mpoId].apState][j] == 'undefined') { ats[app.procedures[mpoId].apState][j] = [] };
-          ats[app.procedures[mpoId].apState][j].push(mpoId);
-        })
-      }
-    };
-    for (let i=0;i<3;i++) {
-      for (let j=0;j<pLength;j++){
-        this.data.atotal[i][j] = ats[i][j] ? ats[i][j].length : 0 ;
-      }
-    };
     this.setData({
       pClassName: this.data.pClassName,
-      atotal: this.data.atotal,
-      ats: ats,
+      indexPage: ats(),
       anClicked: app.mData.proceduresCk,
       pageData: app.procedures
     });
@@ -56,15 +60,13 @@ Page({
 
   updatepending: function(isDown){                          //更新数据 ，0上拉刷新，1下拉刷新
     var that=this;
-    var pLength = that.data.pClassName.length;
     var readProcedure = new AV.Query('sengpi');                                      //进行数据库初始化操作
-    readProcedure.containsAll('cUserId',[app.globalData.user.objectId])
     if (isDown) {
-      readProcedure.greaterThan('updatedAt', app.mData.proceduresAt[1]);          //查询本地最新时间后修改的记录
+      readProcedure.greaterThan('updatedAt',new Date(app.mData.proceduresAt[1]));         //查询本地最新时间后修改的记录
       readProcedure.ascending('updatedAt');           //按更新时间升序排列
       readProcedure.limit(1000);                      //取最大数量新闻
     } else {
-      readProcedure.lessThan('updatedAt', app.mData.proceduresAt[0]);          //查询最后更新时间前修改的记录
+      readProcedure.lessThan('updatedAt',new Date(app.mData.proceduresAt[0]));          //查询最后更新时间前修改的记录
       readProcedure.descending('updatedAt');           //按更新时间降序排列
     };
     readProcedure.find().then((results) => {
@@ -96,22 +98,7 @@ Page({
           app.procedures[aprove.objectId] = aprove;            //pageData是ID为KEY的JSON格式的审批流程数据
           uSetData['pageData.'+aprove.objectId] = aprove;                  //增加页面中的新收到数据
         });
-        var ats = [new Array(pLength), new Array(pLength), new Array(pLength)];
-        for (let j = 0; j < pLength; j++) {
-          if (app.mData.procedures[j]) {
-            app.mData.procedures[j].forEach(mpoId => {
-              if (!ats[app.procedures[mpoId].apState][j]) { ats[app.procedures[mpoId].apState][j] = [] };
-              ats[app.procedures[mpoId].apState][j].push(mpoId);
-            })
-          }
-        };
-        for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < pLength; j++) {
-            that.data.atotal[i][j] = ats[i][j] ? ats[i][j].length : 0;
-          }
-        };
-        uSetData.ats = ats;
-        uSetData.atotal = that.data.atotal;
+        uSetData.indexPage = ats();
         that.setData( uSetData );
       }
      }).catch( console.error );

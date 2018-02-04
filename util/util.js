@@ -52,6 +52,7 @@ module.exports = {
       if (fetchMenu) {                          //菜单在云端有变化
         app.roleData.wmenu = fetchMenu[0].toJSON();
         ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0}) })
+        wx.setStorage({ key: 'roleData', data: app.roleData });
       };
       return wx.getUserInfo({        //检查客户信息
         withCredentials: false,
@@ -83,13 +84,16 @@ module.exports = {
               return new AV.Query('_Role')
               .notEqualTo('updatedAt',app.roleData.sUnit.updatedAt)
               .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
-                if (sRole) {app.roleData.sUnit = sRole.toJSON()};
+                if (sRole) {
+                  app.roleData.sUnit = sRole.toJSON();
+                  wx.setStorage({ key: 'roleData', data: app.roleData });
+                };
               }).catch(console.error)
             }
+            wx.setStorage({ key: 'roleData', data: app.roleData });
           }
         }).catch(console.error)
       };
-      wx.setStorage({ key: 'roleData', data: app.roleData });
       app.imLogin(app.globalData.user.username);
     }).catch( console.error );
   },

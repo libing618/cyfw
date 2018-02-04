@@ -33,9 +33,9 @@ function cLocation(){
 const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下拉刷新
   return new Promise((resolve, reject) => {
     if (typeof pNo == 'string') {
-      procedureclass.forEach(pClass => { if (pClass.pModle == pNo) { pNo = pClass.pNo } });
+      procedureclass.forEach(pClass => { if (pClass.pModel == pNo) { pNo = pClass.pNo } });
     }
-    var cName = procedureclass[pNo].pModle;
+    var cName = procedureclass[pNo].pModel;
     var unitId = uId ? uId : app.roleData.uUnit.objectId;
     let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
     var umdata = [];
@@ -46,11 +46,11 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
       updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [new Date(0), new Date(0)] : app.mData.pAt[cName][unitId];
     };
     if (isDown) {
-      readProcedure.greaterThan('updatedAt', updAt[1]);          //查询本地最新时间后修改的记录
+      readProcedure.greaterThan('updatedAt',new Date(updAt[1]));          //查询本地最新时间后修改的记录
       readProcedure.ascending('updatedAt');           //按更新时间升序排列
       readProcedure.limit(1000);                      //取最大数量
     } else {
-      readProcedure.lessThan('updatedAt', updAt[0]);          //查询最后更新时间前修改的记录
+      readProcedure.lessThan('updatedAt',new Date(updAt[0]));          //查询最后更新时间前修改的记录
       readProcedure.descending('updatedAt');           //按更新时间降序排列
     };
     return readProcedure.find()
@@ -123,7 +123,7 @@ module.exports = {
   updateData: updateData,
 
   className: function(pNo) {              //返回数据表名
-    return procedureclass[pNo].pModle
+    return procedureclass[pNo].pModel
   },
 
   classInFamily: function(pNo) {              //判断数据表是否有分类控制
@@ -215,6 +215,7 @@ module.exports = {
     return new  Promise((resolve, reject) => {
       let promArr = [];               //定义一个Promise数组
       for (let i=0;i<req.length;i++){
+        console.log(i, '---', req[i].t)
         switch (req[i].t){
           case 'MS':
             req[i].e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName ;
@@ -251,7 +252,7 @@ module.exports = {
             );
             break;
           case 'producttype' :
-            req[i].indlist = app.roleData.uUnit.indType;
+            req[i].indlist = app.roleData.uUnit.indType.code;
             break;
           case 'sId' :
             promArr.push( updateData(true,req[i].gname,unitId).then(()=>{
@@ -261,8 +262,10 @@ module.exports = {
             }) )
             break;
           case 'arrplus' :
-            req[i].sId = app.mData.product[unitId][0];
-            req[i].objects = app.aData.product[unitId];
+            promArr.push(updateData(true, 3, unitId).then(() => {
+              req[i].sId = app.mData.product[unitId][0];
+              req[i].objects = app.aData.product[unitId];
+            }) )
             break;
         }
         if (vifData) {
@@ -332,7 +335,7 @@ module.exports = {
       resolve(promArr);
     }).then(pArr=>{
       return Promise.all(pArr).then(()=>{
-        return { req, vData, funcArr} })
+        return { reqData:req, vData, funcArr} })
     }).catch(console.error);
   }
 

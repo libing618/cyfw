@@ -1,12 +1,38 @@
-module.exports={"afamily": 2,
-"indType":[10104,620406],
-"nick":'山西乐农汇',
-"title": '山西乐农汇',
-"desc":'山西乐农汇',
-"licenseNumber":'14012000000',
-aGeoPoint:{__type	: 'GeoPoint',latitude	: 37.79517436379926,longitude	: 112.56480059271237},
-thumbnail: 'http://ac-Trce3aqb.clouddn.com/00744c0c0a0cbdf59741.png',
-address: '山西省太原市小店区创意街N、P、Q座',
-sUnit	:	'599a5811a22b9df82fa82272',
-pPhoto	: 'http://ac-Trce3aqb.clouddn.com/eb9f18b66dcfe56c87a3.png',
-uPhoto: 'http://ac-Trce3aqb.clouddn.com/45fd5e83ee58aff0d65a.png'}
+module.exports = {
+  "address": { "code": 140105, "sName": "山西省太原市小店区创意街N、P、Q座" },
+  "nick": "山西乐农汇",
+  "desc": "山西乐农汇",
+  "indType": {
+    "code": [
+      10104,
+      620406,
+      10109,
+      20404,
+      11603,
+      131105,
+      131107,
+      11601
+    ],
+    "sName": [
+      "谷",
+      "电商服务",
+      "荞",
+      "非直接食用果类",
+      "食用坚果",
+      "果膏及类似制品",
+      "焙、炒加工坚果及果仁",
+      "水果（园林水果）"
+    ]
+  },
+  "uPhoto": "http://ac-Trce3aqb.clouddn.com/7dc26932e7c0900e5668.svg",
+  "aGeoPoint": {
+    "longitude": 112.5648006,
+    "latitude": 37.7951744
+  },
+  "title": "山西乐农汇",
+  "pPhoto": "http://ac-Trce3aqb.clouddn.com/061910f42ca869d14c5c.svg",
+  "thumbnail": "http://ac-Trce3aqb.clouddn.com/eb90b6ebd3ef72609afc.png",
+  "afamily": 3,
+  "sUnit": "599a5811a22b9df82fa82272",
+  "licenseNumber": "14012000000"
+}

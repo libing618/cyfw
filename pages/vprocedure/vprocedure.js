@@ -3,7 +3,8 @@ const {readShowFormat}=require('../../model/initupdate');
 var app=getApp()
 Page({
   data:{
-    uEV: false,
+    uEV: app.globalData.user.emailVerified,
+    enUpdate: false,
     vData: {},
     reqData: []
   },
@@ -17,15 +18,13 @@ Page({
     let artid = Number(options.artId);
     if (!isNaN(that.pno) && isNaN(artid)) {             //检查参数
       let pClass = require('../../model/procedureclass.js')[that.pno];
-      that.cName = pClass.pModle;
+      that.cName = pClass.pModel;
       that.inFamily = typeof pClass.afamily != 'undefined';
       if ( that.pno==1 ){                             //已发布的文章信息只有发布单位能修改
-        that.data.uEV = app.globalData.user.emailVerified && app.roleData.uUnit.objectId==app.aData.articles[options.artId].unitId;
         that.data.vData = app.aData.articles[options.artId];
         that.data.reqData = pClass.pSuccess;
         that.setData(that.data);
       } else {
-        that.data.uEV = app.globalData.user.emailVerified;
         that.data.vData = app.aData[that.cName][app.roleData.uUnit.objectId][options.artId];
         let showFormat = pClass.pSuccess;
         switch (that.pno) {
@@ -43,6 +42,7 @@ Page({
         };
         readShowFormat(showFormat,that.data.vData.unitId,that.data.vData.objectId).then(req=>{
           that.data.reqData=req;
+          that.data.enUpdate = app.roleData.uUnit.name==app.globalData.user.objectId && typeof pClass.suRoles!='undefined';  //创始人且流程有上级审批的才允许修改
           that.setData(that.data);
         });
         wx.setNavigationBarTitle({

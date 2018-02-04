@@ -1060,7 +1060,7 @@ icon {
 }
 .weui-picker__view{
   width:100%;
-  height:560rpx;
+  height:380rpx;
 }
 .weui-picker__mask{
   position:absolute;
