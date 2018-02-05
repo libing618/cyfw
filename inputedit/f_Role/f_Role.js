@@ -1,6 +1,6 @@
 //单位信息编辑
 const AV = require('../../libs/leancloud-storage.js');
-const { initData } = require('../../model/initupdate');
+const { initData } = require('../../model/initForm');
 const wImpEdit = require('../import/impedit');
 var app = getApp()
 Page({

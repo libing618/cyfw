@@ -1,5 +1,5 @@
 // 浏览pages
-const {readShowFormat}=require('../../model/initupdate');
+const { readShowFormat } = require('../../model/initForm.js');
 var app=getApp()
 Page({
   data:{

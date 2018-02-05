@@ -1,5 +1,6 @@
 const {iMenu} = require('../../util/util');
-const { updateData, appDataExist, integration } = require('../../model/initupdate');
+const { updateData, appDataExist } = require('../../model/initupdate');
+const { integration } = require('../../model/initForm.js');
 var app = getApp();
 Page({
   data:{

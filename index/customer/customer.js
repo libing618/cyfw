@@ -1,4 +1,5 @@
-const { updateData, appDataExist, integration } = require('../../model/initupdate.js');
+const { updateData, appDataExist } = require('../../model/initupdate.js');
+const { integration } = require('../../model/initForm.js');
 const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()

@@ -1,0 +1,261 @@
+const AV = require('../libs/leancloud-storage.js');
+const { updateData } = require('initupdate');
+var app = getApp()
+module.exports = {
+integration: function(pName, unitId) {           //整合选择数组
+  return new Promise((resolve, reject) => {
+    switch (pName) {
+      case 'cargo':         //通过产品选择成品
+        return Promise.all([updateData(true, 3, unitId), updateData(true, 5, unitId)]).then(([p3, p5]) => {
+          app.mData.product[unitId].forEach(proId => {
+            app.aData.product[unitId][proId].cargo = app.mData.cargo[unitId].filter(cargoId => { app.aData.cargo[unitId][cargoId].product == proId })
+          })
+          resolve(p3 || p5);
+        }).catch(console.error);
+        break;
+      case 'specs':
+        return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(([p7, p6]) => {           //通过规格选择成品
+          app.mData.goods[unitId].forEach(goodsId => {
+            app.aData.goods[unitId][goodsId].specs = app.mData.specs[unitId].filter(specsId => { app.aData.specs[unitId][specId].goods == goodsId })
+          })
+          resolve(p7 || p6);
+        }).catch(console.error);
+        break;
+    }
+  }).catch(console.error);
+},
+
+readShowFormat: function(req, uId) {
+  var unitId = uId ? uId : app.roleData.uUnit.objectId;
+  return new Promise((resolve, reject) => {
+    let promArr = [];               //定义一个Promise数组
+    for (let i = 0; i < req.length; i++) {
+      switch (req[i].t) {
+        case 'MS':
+          req[i].e = app.roleData.sUnit.uName;
+          break;
+        case 'sObject':                    //对象选择字段
+          if (req[i].gname == 'goodstype') {
+            req[i].slave = require('../libs/goodstype').slave;
+          } else {
+            promArr.push(
+              updateData(true, [req[i].gname], unitId).then(newUpdate => {
+                req[i].slave = app.aData[req[i].gname][unitId];
+                return newUpdate;
+              })
+            );
+          };
+          break;
+        case 'specsel':                    //规格选择字段
+          promArr.push(
+            updateData(true, 'cargo', unitId).then(newUpdate => {
+              req[i].master = app.aData.specs[unitId];
+              req[i].slave = {};
+              app.mData.specs[unitId].forEach(specsId => {
+                req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+              });
+              return newUpdate;
+            })
+          );
+          break;
+        case 'sId':
+          promArr.push(
+            updateData(true, req[i].gname, unitId).then(newUpdate => {
+              req[i].aData = app.aData[req[i].gname][unitId];
+              return newUpdate;
+            })
+          )
+          break;
+      }
+    }
+    resolve(promArr);
+  }).then(pArr => {
+    return Promise.all(pArr).then(() => { return req })
+  }).catch(console.error);
+},
+
+initData: function(req, vData) {      //对数据录入或编辑的格式数组和数据对象进行初始化操作
+  let vDataKeys = Object.keys(vData);            //数据对象是否为空
+  let vifData = (vDataKeys.length == 0);
+  var funcArr = [];
+  let unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
+  return new Promise((resolve, reject) => {
+    let promArr = [];               //定义一个Promise数组
+    for (let i = 0; i < req.length; i++) {
+      switch (req[i].t) {
+        case 'MS':
+          req[i].e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName;
+          break;
+        case 'sObject':                    //对象选择字段
+          req[i].osv = [0, 0];
+          if (req[i].gname == 'goodstype') {
+            req[i].objarr = require('../libs/goodstype').droneId;
+            req[i].master = require('../libs/goodstype').master;
+            req[i].slave = require('../libs/goodstype').slave;
+          } else {
+            const cargosel = () => {
+              return new Promise((resolve, reject) => {
+                updateData(true, 'cargo', unitId).then(newUpdate => {
+                  req[i].master = app.aData.product[unitId];
+                  req[i].slave = app.aData.cargo[unitId];
+                  req[i].objarr = app.mData.product[unitId].map(proId => {
+                    return { masterId: proId, slaveId: app.aData.product[unitId][proId].cargo }
+                  })
+                  resolve(newUpdate);
+                })
+              })
+            }
+            promArr.push(cargosel);
+          };
+          break;
+        case 'specsel':                    //规格选择字段
+          const specssel=()=>{
+            return new Promise((resolve,reject)=>{
+              updateData(true, 'cargo', unitId).then(newUpdate => {
+                req[i].objarr = app.aData.goods[unitId][vData.objectId].specs;
+                req[i].master = {};
+                req[i].slave = {};
+                req[i].objarr.forEach(specsId => {
+                  req[i].master[specsId] = app.aData.specs[unitId][specsId];
+                  req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+                })
+                resolve(newUpdate);
+              })
+            })
+          }
+          promArr.push(pecssel());
+          break;
+        case 'producttype':
+          req[i].indlist = app.roleData.uUnit.indType.code;
+          break;
+        case 'sId':
+          const sId = () => {
+            return new Promise((resolve, reject) => {
+              updateData(true, req[i].gname, unitId).then(newUpdate => {
+                req[i].mData = app.mData[req[i].gname][unitId];
+                req[i].aData = app.aData[req[i].gname][unitId];
+                req[i].mn = vifData ? 0 : req[i].mData.indexOf(vData[req[i].gname]);
+                resolve(newUpdate);
+              })
+            })
+          }
+          promArr.push(sId());
+          break;
+        case 'arrplus':
+          const arrplus = () => {
+            return new Promise((resolve, reject) => {
+              updateData(true, 3, unitId).then(newUpdate => {
+                req[i].sId = app.mData.product[unitId];
+                req[i].objects = app.aData.product[unitId];
+                resolve(newUpdate);
+              })
+            })
+          }
+          promArr.push(arrplus())
+          break;
+      }
+      if (vifData) {
+        switch (req[i].t) {
+          case 'chooseAd':
+            const cLocation=()=> {
+              return new Promise((resolve, reject) => {
+                wx.getSetting({
+                  success(res) {
+                    if (res.authSetting['scope.userLocation']) {                   //用户已经同意小程序使用用户地理位置
+                      resolve(true)
+                    } else {
+                      wx.authorize({
+                        scope: 'scope.userLocation',
+                        success() { resolve(true) },
+                        fail() {
+                          wx.showToast({ title: '请授权使用位置', duration: 2500, icon: 'loading' });
+                          setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
+                          reject();
+                        }
+                      })
+                    };
+                  }
+                })
+              }).then((vifAuth) => {
+                return new Promise((resolve, reject) => {
+                  wx.getLocation({
+                    type: 'wgs84',
+                    success: function (res) {
+                      vData[req[i].gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude })
+                      resolve(true)
+                    },
+                    fail() { reject() }
+                  })
+                })
+              }).catch(console.error)
+            };
+            promArr.push(cLocation());          //地理位置字段
+            break;
+          case 'eDetail':                      //详情字段
+            vData[req[i].gname] = [                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
+              { t: "h2", e: "大标题" },
+              { t: "p", e: "正文简介" },
+              { t: "h3", e: "中标题" },
+              { t: "p", e: "正文" },
+              { t: "h4", e: "1、小标题" },
+              { t: "p", e: "图片文章混排说明" },
+              { t: "-2", c: 'http://ac-trce3aqb.clouddn.com/eb90b6ebd3ef72609afc.png', e: "图片内容说明" },
+              { t: "p", e: "正文" },
+              { t: "h4", e: "2、小标题" },
+              { t: "p", e: "音频文章混排" },
+              { t: "-3", c: "https://i.y.qq.com/v8/playsong.html?songid=108407446&source=yqq", e: "录音内容说明" },
+              { t: "p", e: "正文" },
+              { t: "h4", p: "3、小标题" },
+              { t: "p", p: "视频文章混排" },
+              { t: "-4", c: "https://v.qq.com/x/page/f05269wf11h.html?ptag=2_5.9.0.13560_copy", e: "视频内容说明" },
+              { t: "p", e: "正文" },
+              { t: "p", e: "章节结尾" },
+              { t: "p", e: "文章结尾" }
+            ];
+            break;
+          case 'assettype':
+            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            break;
+          case 'producttype':
+            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            break;
+          case 'industrytype':
+            vData[req[i].gname] = { code: [], sName: ['点此处进行选择'] };
+            break;
+          case 'arrplus':
+            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            break;
+          case 'ed':
+            vData[req[i].gname] = { code: 0, sName: '点此处进入编辑' };
+            break;
+          case 'listsel':
+            vData[req[i].gname] = 0;
+            break;
+          case 'arrList':
+            vData[req[i].gname] = [];
+            break;
+          case 'sedate':
+            vData[req[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)];
+            break;
+        }
+      };
+      if (req[i].csc) {
+        funcArr.push('f_' + req[i].csc);
+        if (['aslist', 'arrsel'].indexOf(req[i].csc) >= 0) {
+          req[i].aVl = [0, 0, 0];
+          req[i].inclose = vifData ? true : false;
+        };
+      } else {
+        if (req[i].t.length > 2) { funcArr.push('i_' + req[i].t) };             //每个输入类型定义的字段长度大于2则存在对应处理过程
+      };
+    };
+    resolve(promArr);
+  }).then(pArr => {
+    console.log(pArr.length)
+    return Promise.all(pArr).then(() => {
+      console.log(req)
+      return { reqData: req, vData, funcArr }
+    })
+  }).catch(console.error);
+}
+}
