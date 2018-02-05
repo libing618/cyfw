@@ -36,14 +36,19 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
       procedureclass.forEach(pClass => { if (pClass.pModel == pNo) { pNo = pClass.pNo } });
     }
     var cName = procedureclass[pNo].pModel;
-    var unitId = uId ? uId : app.roleData.uUnit.objectId;
-    let inFamily = typeof procedureclass[pNo].afamily != 'undefined';
+    let isAll = (pNo == 1);            //是否读所有数据
+    let inFamily = typeof procedureclass[pNo].afamily != 'undefined';            //是否有分类数组
     var umdata = [];
     let updAt = app.mData.pAt[cName];
     var readProcedure = new AV.Query(cName);                                      //进行数据库初始化操作
-    if (pNo != 1) {
+    if (isAll) {
+      updAt = (typeof app.mData.pAt[cName] == 'undefined') ? [0,0] : app.mData.pAt[cName];
+      umdata = app.mData[cName];
+    } else {
+      var unitId = uId ? uId : app.roleData.uUnit.objectId;
       readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
-      updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [new Date(0), new Date(0)] : app.mData.pAt[cName][unitId];
+      updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [0, 0] : app.mData.pAt[cName][unitId];
+      umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
     };
     if (isDown) {
       readProcedure.greaterThan('updatedAt',new Date(updAt[1]));          //查询本地最新时间后修改的记录
@@ -53,57 +58,58 @@ const updateData=(isDown, pNo, uId)=> {    //更新页面显示数据,isDown下�
       readProcedure.lessThan('updatedAt',new Date(updAt[0]));          //查询最后更新时间前修改的记录
       readProcedure.descending('updatedAt');           //按更新时间降序排列
     };
-    return readProcedure.find()
-  }).then((arp) => {
-    var lena = arp.length;
-    if (lena > 0) {
-      if (pNo == 1) {
-        umdata = app.mData[cName];
-      } else {
-        umdata = (typeof app.mData[cName][unitId] == 'undefined') ? [] : app.mData[cName][unitId];
-      }
-      let aPlace = -1;
-      if (isDown) {
-        updAt[1] = arp[lena - 1].updatedAt;                          //更新本地最新时间
-        updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
-      } else {
-        updAt[0] = arp[lena - 1].updatedAt;          //更新本地最后更新时间
-      };
-      arp.forEach(aProcedure => {
+    readProcedure.find().then(arp => {
+      var lena = arp.length;
+      if (lena > 0) {
+        let aPlace = -1, aProcedure;
         if (isDown) {
-          if (inFamily) {                         //存在afamily类别
-            aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.id);
-            if (aPlace >= 0) { umdata[aProcedure.afamily].splice(aPlace, 1) }           //删除本地的重复记录列表
-            umdata[aProcedure.afamily].unshift(aProcedure.id);
-          } else {
-            aPlace = umdata.indexOf(aProcedure.id);
-            if (aPlace >= 0) { umdata.splice(aPlace, 1) }           //删除本地的重复记录列表
-            umdata.unshift(aProcedure.id);
-          }
+          updAt[1] = arp[lena - 1].updatedAt;                          //更新本地最新时间
+          updAt[0] = arp[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
         } else {
-          if (inFamily) {
-            umdata[aProcedure.afamily].push(aProcedure.id);
-          } else {
-            umdata.push(aProcedure.id);                   //分类ID数组增加对应ID
-          }
+          updAt[0] = arp[lena - 1].updatedAt;          //更新本地最后更新时间
         };
-        app.aData[cName][aProcedure.id] = aProcedure;                        //将数据对象记录到本机
-      });
-      if (pNo != 1) {
-        app.mData.pAt[cName][unitId] = updAt;
-        app.mData[cName][unitId] = umdata;
-      } else {
+        console.log(updAt, '---', umdata)
+        arp.forEach(aProc => {
+          aProcedure = aProc.toJSON();
+          if (inFamily) {                         //存在afamily类别
+            if (typeof umdata[aProcedure.afamily] == 'undefined') { umdata[aProcedure.afamily]=[] };
+            if (isDown) {
+              aPlace = umdata[aProcedure.afamily].indexOf(aProcedure.objectId);
+              if (aPlace >= 0) { umdata[aProcedure.afamily].splice(aPlace, 1) }           //删除本地的重复记录列表
+              umdata[aProcedure.afamily].unshift(aProcedure.objectId);
+            } else {
+              umdata[aProcedure.afamily].push(aProcedure.objectId);
+            }
+          } else {
+            if (isDown) {
+              aPlace = umdata.indexOf(aProcedure.objectId);
+              if (aPlace >= 0) { umdata.splice(aPlace, 1) }           //删除本地的重复记录列表
+              umdata.unshift(aProcedure.objectId);
+            } else {
+              umdata.push(aProcedure.objectId);                   //分类ID数组增加对应ID
+            }
+          };
+          if (isAll) {
+            app.aData[cName][aProcedure.objectId] = aProcedure;                        //将数据对象记录到本机
+          } else {
+            app.aData[cName][unitId][aProcedure.objectId] = aProcedure;
+          }
+        });
+      };
+      if (isAll) {
         app.mData.pAt[cName] = updAt;
         app.mData[cName] = umdata;
+      } else {
+        app.mData.pAt[cName][unitId] = updAt;
+        app.mData[cName][unitId] = umdata;
       };
-      resolve(true);               //数据有更新
-    } else { resolve(false); }               //数据无更新
-  }).catch(error => {
-    wx.onNetworkStatusChange(res => {
-      if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
+      resolve(lena > 0);               //数据更新状态
+    }).catch(error => {
+      wx.onNetworkStatusChange(res => {
+        if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
+      });
     });
-    return error;
-  });
+  }).catch(console.error);
 };
 
 module.exports = {
@@ -177,25 +183,30 @@ module.exports = {
               req[i].slave = require('../libs/goodstype').slave;
             } else {
               promArr.push(
-                updateData(true,[req[i].gname],unitId).then(()=>{req[i].slave = app.aData[req[i].gname][unitId]})
+                updateData(true,[req[i].gname],unitId).then(newUpdate=>{
+                  req[i].slave = app.aData[req[i].gname][unitId];
+                  return newUpdate;
+                })
               );
             };
             break;
           case 'specsel' :                    //规格选择字段
             promArr.push(
-              updateData(true,'cargo',unitId).then(()=>{
+              updateData(true,'cargo',unitId).then(newUpdate=>{
                 req[i].master = app.aData.specs[unitId];
                 req[i].slave = {};
                 app.mData.specs[unitId].forEach(specsId=>{
                   req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
                 });
+                return newUpdate;
               })
             );
             break;
           case 'sId' :
             promArr.push(
-              updateData(true,req[i].gname,unitId).then(()=>{
+              updateData(true,req[i].gname,unitId).then(newUpdate=>{
                 req[i].aData = app.aData[req[i].gname][unitId];
+                return newUpdate;
               })
             )
             break;
@@ -215,7 +226,6 @@ module.exports = {
     return new  Promise((resolve, reject) => {
       let promArr = [];               //定义一个Promise数组
       for (let i=0;i<req.length;i++){
-        console.log(i, '---', req[i].t)
         switch (req[i].t){
           case 'MS':
             req[i].e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName ;
@@ -228,19 +238,20 @@ module.exports = {
               req[i].slave = require('../libs/goodstype').slave;
             } else {
               promArr.push(
-                updateData(true,'cargo',unitId).then(()=>{
+                updateData(true,'cargo',unitId).then(newUpdate=>{
                   req[i].master = app.aData.product[unitId];
                   req[i].slave = app.aData.cargo[unitId];
                   req[i].objarr = app.mData.product[unitId].map(proId=>{
                     return {masterId:proId,slaveId:app.aData.product[unitId][proId].cargo}
                   })
+                  return newUpdate;
                 })
               );
             };
             break;
           case 'specsel' :                    //规格选择字段
             promArr.push(
-              updateData(true,'cargo',unitId).then(()=>{
+              updateData(true,'cargo',unitId).then(newUpdate=>{
                 req[i].objarr = app.aData.goods[unitId][vData.objectId].specs;
                 req[i].master = {};
                 req[i].slave = {};
@@ -248,6 +259,7 @@ module.exports = {
                   req[i].master[specsId] = app.aData.specs[unitId][specsId];
                   req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
                 })
+                return newUpdate;
               })
             );
             break;
@@ -255,16 +267,20 @@ module.exports = {
             req[i].indlist = app.roleData.uUnit.indType.code;
             break;
           case 'sId' :
-            promArr.push( updateData(true,req[i].gname,unitId).then(()=>{
+            promArr.push( updateData(true,req[i].gname,unitId).then(newUpdate=>{
               req[i].mData = app.mData[req[i].gname][unitId];
               req[i].aData = app.aData[req[i].gname][unitId];
               req[i].mn = vifData ? 0 : req[i].mData.indexOf(vData[req[i].gname]);
+              console.log(req[i].t, '---',req[i])
+              return newUpdate;
             }) )
             break;
           case 'arrplus' :
-            promArr.push(updateData(true, 3, unitId).then(() => {
+            promArr.push(updateData(true, 3, unitId).then(newUpdate => {
               req[i].sId = app.mData.product[unitId][0];
               req[i].objects = app.aData.product[unitId];
+              console.log(req[i].t, '---', req[i])
+              return newUpdate;
             }) )
             break;
         }

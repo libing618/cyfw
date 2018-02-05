@@ -1,5 +1,5 @@
 const { updateData, appDataExist, integration } = require('../../model/initupdate.js');
-const {iMenu, rSum, indexClick} = require('../../util/util.js');
+const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()
 Page({
@@ -13,17 +13,17 @@ Page({
   onLoad:function(options){
     var that = this ;
     let pageSetData = {};
+    pageSetData.grids = iMenu('production');          //更新菜单数据
     cargoSum(['yield', 'cargoStock']).then(cSum=>{
       pageSetData.pandect = cSum.rSum;
       pageSetData.mSum = cSum.mSum;
+      if (appDataExist('cargo',app.roleData.uUnit.objectId)){
+        pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
+        pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
+        pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
+      }
+      that.setData( pageSetData );
     });
-    pageSetData.grids = iMenu('production');          //更新数据
-    if (appDataExist('cargo',app.roleData.uUnit.objectId)){
-      pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
-      pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
-      pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
-    }
-    that.setData( pageSetData );
   },
 
   setPage: function(iu){

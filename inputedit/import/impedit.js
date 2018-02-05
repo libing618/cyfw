@@ -135,6 +135,19 @@ module.exports = {
     this.setData(vdSet);
   },
 
+  f_mCost:function(e){
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    inmcost = Number(e.detail.value);
+    let vdSet = {};
+    if (isNaN(inmcost)){
+      vdSet['vData.'+this.data.reqData[n].gname] = 0;      //不能输入非数字
+    } else {
+      vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;      //不能超过30%
+    }
+    vdSet.vData.mCost = 87-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
+    this.setData( vdSet );
+  },
+  
   f_objsel: function (e) {                         //对象选择类型
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标

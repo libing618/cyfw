@@ -153,6 +153,9 @@ module.exports = [
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
+    {gname: "channel", p:'渠道分成比例%',t:"dg",func:"mCost"},
+    {gname: "extension", p:'推广分成比例%',t:"dg",func:"mCost"},
+    {gname: "mCost", p:'销售管理总占比', t: "fg"},
     {gname:"details", p:'详情',t:"eDetail" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",

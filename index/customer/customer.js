@@ -13,17 +13,17 @@ Page({
   onLoad:function(options){
     var that = this ;
     let pageSetData = {};
-    cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
+    pageSetData.grids = iMenu('customer');          //更新菜单数据
+    cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum => {
       pageSetData.pandect = cSum.rSum;
       pageSetData.mSum = cSum.mSum;
+      if (appDataExist('cargo', app.roleData.uUnit.objectId)) {
+        pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
+        pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
+        pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
+      }
+      that.setData(pageSetData);
     });
-    pageSetData.grids = iMenu('customer');          //更新数据
-    if (appDataExist('cargo',app.roleData.uUnit.objectId)){
-      pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
-      pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
-      pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
-    }
-    that.setData( pageSetData );
   },
 
   setPage: function(iu){
