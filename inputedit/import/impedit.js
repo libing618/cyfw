@@ -81,14 +81,7 @@ function setRole(puRoles,suRoles){
 module.exports = {
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
-    this.setData(vdSet(this.data.reqData[n].gname, this.data.mData[Number(e.detail.value)]))
-    let sIdKey = 's_' + this.data.reqData[n].gname;
-    for (let i = 0; i < this.data.reqData.length; i++) {
-      if (this.data.reqData[i].gname == sIdKey) {
-        this.setData(rdSet(i, 'sId', this.data.mData[Number(e.detail.value)]));
-        break;
-      }
-    }
+    this.setData(vdSet(this.data.reqData[n].gname, this.data.reqData[n].maData[Number(e.detail.value)].objectId));
   },
 
   f_aslist: function (e) {                         //选择行业类型
@@ -147,7 +140,7 @@ module.exports = {
     vdSet.vData.mCost = 87-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
     this.setData( vdSet );
   },
-  
+
   f_objsel: function (e) {                         //对象选择类型
     var that = this;
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标

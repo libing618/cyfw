@@ -58,10 +58,10 @@
 </template>
 
 <template name="i_sId">
-  <picker id="ac-{{n}}" mode="selector" value="{{mn}}" range="{{mData}}" bindchange="f_idsel">
+  <picker id="ac-{{n}}" mode="selector" value="{{mn}}" range="{{maData}}" range-key="sName" bindchange="f_idsel">
     <view class="weui-cell">
       <view class="weui-cell__hd">{{p}}:</view>
-      <view class="weui-cell__bd">{{aData[mData[mn]].uName}}</view>
+      <view class="weui-cell__bd">{{maData[mn]}}</view>
     </view>
   </picker>
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>

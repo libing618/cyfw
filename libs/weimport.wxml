@@ -30,18 +30,24 @@
 <template name="c_objsel">
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cell">
-    <view class="weui-cell__hd"><image src="{{slave[c].thumbnail}}"/></view>
-    <view class="weui-cell__bd">slave[c].uName</view>
-    <view class="weui-cell__bd">slave[c].title</view>
+    <view class="weui-cell__hd"><image src="{{slave.thumbnail}}"/></view>
+    <view class="weui-cell__bd">slave.uName</view>
+    <view class="weui-cell__bd">slave.title</view>
   </view>
 </template>
 
 <template name="c_idsel">
   <view class="weui-cell">{{p}}:</view>
-  <view class="weui-cell">
-    <view class="weui-cell__hd"><image src="{{aData[c].thumbnail}}"/></view>
-    <view class="weui-cell__bd">aData[c].uName</view>
-    <view class="weui-cell__bd">aData[c].title</view>
+  <view class="weui-cell" id="{{c}}">
+    <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+        <image class="weui-media-box__thumb" src="{{thumbnail}}" background-size="cover"></image>
+      </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+        <view class="weui-media-box__title">{{uName}}</view>
+        <view class="weui-media-box__desc">{{title}}</view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -63,12 +69,12 @@
     <block wx:for="{{c}}" wx:key="{{index}}" wx:for-item="specsId">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{maste[specsId].thumbnail}}" background-size="cover"></image>
+          <image class="weui-media-box__thumb" src="{{master[specsId].thumbnail}}" background-size="cover"></image>
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{slave[specsId].uName}}/{{maste[specsId].package}}份装/{{maste[specsId].price}}元</view>
-          <view class="weui-media-box__desc">{{maste[specsId].title}}</view>
-          <view class="weui-media-box__desc">已售{{sstock.scale(slave[specsId],maste[specsId].package)}},库存{{sstock.csupply(slave[specsId],maste[specsId].package)}}</view>
+          <view class="weui-media-box__title">{{slave[specsId].uName}}/{{master[specsId].package}}份装/{{master[specsId].price}}元</view>
+          <view class="weui-media-box__desc">{{master[specsId].title}}</view>
+          <view class="weui-media-box__desc">已售{{sstock.scale(slave[specsId],master[specsId].package)}},库存{{sstock.csupply(slave[specsId],maste[specsId].package)}}</view>
         </view>
       </view>
     </block>
@@ -240,7 +246,7 @@
 <template name="tabPanel">
 <view class="weui-tab__panel">
   <block wx:for="{{tPage}}" wx:key="{{index}}">
-    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+    <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}&uId={{pageData[item].unitId}}">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>

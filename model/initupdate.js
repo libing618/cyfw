@@ -1,7 +1,16 @@
 const AV = require('../libs/leancloud-storage.js');
 const procedureclass = require('procedureclass.js');
 var app = getApp();
-
+function isAllData(pNo){
+  switch (pNo){
+    case 1 :
+      return true;
+      break;
+    default :
+      return false;
+      break;
+  }
+}
 module.exports = {
   appDataExist: function(dKey0,dKey1,dKey2){              //检查app.aData是否存在二三级的键值
     let dExist = true;
@@ -16,13 +25,15 @@ module.exports = {
     return dExist;
   },
 
+  isAllData: isAllData,
+
   updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown下拉刷新
     return new Promise((resolve, reject) => {
       if (typeof pNo == 'string') {
         procedureclass.forEach(pClass => { if (pClass.pModel == pNo) { pNo = pClass.pNo } });
       }
       var cName = procedureclass[pNo].pModel;
-      let isAll = (pNo == 1);            //是否读所有数据
+      let isAll = isAllData(pNo);            //是否读所有数据
       let inFamily = typeof procedureclass[pNo].afamily != 'undefined';            //是否有分类数组
       var umdata = [];
       let updAt = app.mData.pAt[cName];

@@ -20,7 +20,8 @@ Page({
     var that = this;
     let dProcedure = Number(app.procedures[options.approveId].dProcedure);
     let procedureClass = require('../../model/procedureclass.js')[dProcedure];
-    readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].unitId).then(req=>{
+    app.procedures[options.approveId].dObject.unitId = app.procedures[options.approveId].unitId;
+    readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].dObject).then(req=>{
       that.setData({
         bsType: req,      //流程内容格式
         pBewrite: procedureClass.pBewrite,     //流程说明

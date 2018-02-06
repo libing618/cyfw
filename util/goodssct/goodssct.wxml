@@ -1,13 +1,21 @@
+<import src="../../libs/weimport.wxml" />
 <view class="page">
   <view class="page__bd">
-    <block wx:for="{{goods}}" wx:key="{{index}}">
-      <view class="weui-cell__hd" id="">
-          <image src="{{pageData[item].thumbnail}}" class="weui-thumb"></image>
-      </view>
-      <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item.objectId}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__bd">{{pageData[item].uName}}</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">{{pageData[item].title}}</view>
-      </navigator>
-    </block>
+    <view class="weui-tab__panel">
+      <block wx:for="{{goods}}" wx:key="{{index}}">
+        <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active" id="{{item}}" bindtap="cSure">
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+            <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">{{pageData[item].uName}}</view>
+            <view class="weui-media-box__desc">{{pageData[item].title}}</view>
+          </view>
+        </view>
+        <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}&uId={{pageData[item].unitId}}">
+          <button class="weui-cell__ft" size="mini">详情</button>
+        </navigator>
+      </block>
+    </view>
   </view>
 </view>

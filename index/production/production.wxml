@@ -17,8 +17,8 @@
           <view class="weui-cell">产量{{mSum[ac][0]}}份,库存{{mSum[ac][0]}}份</view>
         </view>
       </view>
-      <view hidden="{{iClicked!=ac}}" wx:for="{{cargo[ac].cargo}}" wx:key="{{index}}">
-        <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+      <view hidden="{{iClicked!=ac}}" wx:for="{{pageData[ac].cargo}}" wx:key="{{index}}">
+        <navigator url="/page/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}&uId={{cargo[item].unitId}}">
           <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
               <image class="weui-media-box__thumb" src="{{cargo[item].thumbnail}}" background-size="cover"></image>

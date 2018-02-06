@@ -1,4 +1,4 @@
-const { updateData,className,classInFamily } = require('../../model/initupdate');
+const { updateData,className,classInFamily ,isAllData } = require('../../model/initupdate');
 var app = getApp()
 Page ({
   data: {
@@ -8,6 +8,7 @@ Page ({
     pageData: []
   },
   artid: null,
+  isAll:false,
   cName: '',
   inFamily: false,
 
@@ -18,6 +19,7 @@ Page ({
     if (! isNaN(pno)) {
       that.cName = className(pno);
       that.inFamily = classInFamily(pno);
+      that.isAll = isAllData(pno);
       that.setData({
         pNo: pno,
         dObjectId: isNaN(that.artid) ? -1 : that.artid
@@ -31,15 +33,15 @@ Page ({
 
   setPage: function(iu){     //有更新则重新传输页面数据
     if (iu){
-      if (this.data.pNo==1){
+      if (this.isAll){
         this.setData({
-          mPage: isNaN(that.artid) ? app.mData.articles : app.mData.articles[this.artid],
-          pageData: isNaN(that.artid) ? app.aData.articles : app.aData.articles[this.artid]
+          mPage: this.inFamily ? app.mData[this.cName][this.artid] : app.mData[this.cName],
+          pageData: app.aData[this.cName]
         })
       } else {
         this.setData({
           mPage: this.inFamily ? app.mData[this.cName][app.roleData.uUnit.objectId][that.artid] : app.mData[this.cName][app.roleData.uUnit.objectId],
-          pageData: this.inFamily ? app.aData[this.cName][app.roleData.uUnit.objectId][that.artid] : app.aData[this.cName][app.roleData.uUnit.objectId]
+          pageData: app.aData[this.cName][app.roleData.uUnit.objectId]
         })
       }
     }
