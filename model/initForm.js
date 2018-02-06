@@ -28,49 +28,48 @@ integration: function(pName, unitId) {           //整合选择数组
 readShowFormat: function(req, uId) {
   var unitId = uId ? uId : app.roleData.uUnit.objectId;
   return new Promise((resolve, reject) => {
-    let promArr = [];               //定义一个Promise数组
-    for (let i = 0; i < req.length; i++) {
-      switch (req[i].t) {
+    let setPromise = new Set();
+    var reqData=req.map(reqField=>{
+      switch (reqField.t) {
         case 'MS':
-          req[i].e = app.roleData.sUnit.uName;
+          reqField.e = app.roleData.sUnit.uName;
           break;
-        case 'sObject':                    //对象选择字段
-          if (req[i].gname == 'goodstype') {
-            req[i].slave = require('../libs/goodstype').slave;
-          } else {
-            promArr.push(
-              updateData(true, [req[i].gname], unitId).then(newUpdate => {
-                req[i].slave = app.aData[req[i].gname][unitId];
-                return newUpdate;
-              })
-            );
-          };
+        case 'sObject':
+          if (reqField.gname == 'goodstype') {
+            reqField.slave = require('../libs/goodstype').slave;
+          } else {setPromise.add(reqField.gname) };
           break;
         case 'specsel':                    //规格选择字段
-          promArr.push(
-            updateData(true, 'cargo', unitId).then(newUpdate => {
-              req[i].master = app.aData.specs[unitId];
-              req[i].slave = {};
-              app.mData.specs[unitId].forEach(specsId => {
-                req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
-              });
-              return newUpdate;
-            })
-          );
+          setPromise.add('cargo');
           break;
         case 'sId':
-          promArr.push(
-            updateData(true, req[i].gname, unitId).then(newUpdate => {
-              req[i].aData = app.aData[req[i].gname][unitId];
-              return newUpdate;
-            })
-          )
+          setPromise.add(reqField.gname);
           break;
+      };
+      return reqField;
+    })
+    let promArr = [];                   //定义一个Promise数组
+    setPromise.forEach(nPromise=> {promArr.push(updateData(true, nPromise, unitId))})
+    return Promise.all(promArr).then(()=>{
+      for (let i = 0; i < reqData.length; i++) {
+        switch (reqData[i].t) {
+          case 'sObject':                    //对象选择字段
+            if (reqData[i].gname != 'goodstype') { reqData[i].slave = app.aData[reqData[i].gname][unitId]; };
+            break;
+          case 'specsel':                    //规格选择字段
+            reqData[i].master = app.aData.specs[unitId];
+            reqData[i].slave = {};
+            app.mData.specs[unitId].forEach(specsId => {
+              reqData[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+            });
+            break;
+          case 'sId':
+            reqData[i].aData = app.aData[reqData[i].gname][unitId];
+            break;
+        }
       }
-    }
-    resolve(promArr);
-  }).then(pArr => {
-    return Promise.all(pArr).then(() => { return req })
+      resolve(reqData);
+    });
   }).catch(console.error);
 },
 
@@ -81,81 +80,35 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
   let unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
   return new Promise((resolve, reject) => {
     let promArr = [];               //定义一个Promise数组
-    for (let i = 0; i < req.length; i++) {
-      switch (req[i].t) {
+    let setPromise = new Set();
+    var reqData=req.map(reqField=>{
+      switch (reqField.t) {
         case 'MS':
-          req[i].e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName;
+          reqField.e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName;
           break;
-        case 'sObject':                    //对象选择字段
-          req[i].osv = [0, 0];
-          if (req[i].gname == 'goodstype') {
-            req[i].objarr = require('../libs/goodstype').droneId;
-            req[i].master = require('../libs/goodstype').master;
-            req[i].slave = require('../libs/goodstype').slave;
-          } else {
-            const cargosel = () => {
-              return new Promise((resolve, reject) => {
-                updateData(true, 'cargo', unitId).then(newUpdate => {
-                  req[i].master = app.aData.product[unitId];
-                  req[i].slave = app.aData.cargo[unitId];
-                  req[i].objarr = app.mData.product[unitId].map(proId => {
-                    return { masterId: proId, slaveId: app.aData.product[unitId][proId].cargo }
-                  })
-                  resolve(newUpdate);
-                })
-              })
-            }
-            promArr.push(cargosel);
-          };
+        case 'sObject':
+          reqField.osv = [0, 0];
+          if (reqField.gname == 'goodstype') {
+            reqField.objarr = require('../libs/goodstype').droneId;
+            reqField.master = require('../libs/goodstype').master;
+            reqField.slave = require('../libs/goodstype').slave;
+          } else {setPromise.add(reqField.gname) };
           break;
         case 'specsel':                    //规格选择字段
-          const specssel=()=>{
-            return new Promise((resolve,reject)=>{
-              updateData(true, 'cargo', unitId).then(newUpdate => {
-                req[i].objarr = app.aData.goods[unitId][vData.objectId].specs;
-                req[i].master = {};
-                req[i].slave = {};
-                req[i].objarr.forEach(specsId => {
-                  req[i].master[specsId] = app.aData.specs[unitId][specsId];
-                  req[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
-                })
-                resolve(newUpdate);
-              })
-            })
-          }
-          promArr.push(pecssel());
-          break;
-        case 'producttype':
-          req[i].indlist = app.roleData.uUnit.indType.code;
+          setPromise.add('cargo');
           break;
         case 'sId':
-          const sId = () => {
-            return new Promise((resolve, reject) => {
-              updateData(true, req[i].gname, unitId).then(newUpdate => {
-                req[i].mData = app.mData[req[i].gname][unitId];
-                req[i].aData = app.aData[req[i].gname][unitId];
-                req[i].mn = vifData ? 0 : req[i].mData.indexOf(vData[req[i].gname]);
-                resolve(newUpdate);
-              })
-            })
-          }
-          promArr.push(sId());
+          setPromise.add(reqField.gname);
           break;
         case 'arrplus':
-          const arrplus = () => {
-            return new Promise((resolve, reject) => {
-              updateData(true, 3, unitId).then(newUpdate => {
-                req[i].sId = app.mData.product[unitId];
-                req[i].objects = app.aData.product[unitId];
-                resolve(newUpdate);
-              })
-            })
-          }
-          promArr.push(arrplus())
+          setPromise.add('product');
           break;
-      }
+        case 'producttype':
+          reqField.indlist = app.roleData.uUnit.indType.code;
+          break;
+      };
       if (vifData) {
-        switch (req[i].t) {
+        switch (reqField.t) {
           case 'chooseAd':
             const cLocation=()=> {
               return new Promise((resolve, reject) => {
@@ -181,7 +134,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
                   wx.getLocation({
                     type: 'wgs84',
                     success: function (res) {
-                      vData[req[i].gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude })
+                      vData[reqField.gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude })
                       resolve(true)
                     },
                     fail() { reject() }
@@ -192,7 +145,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             promArr.push(cLocation());          //地理位置字段
             break;
           case 'eDetail':                      //详情字段
-            vData[req[i].gname] = [                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
+            vData[reqField.gname] = [                     //内容部分定义：t为类型,e为文字或说明,c为媒体文件地址或内容
               { t: "h2", e: "大标题" },
               { t: "p", e: "正文简介" },
               { t: "h3", e: "中标题" },
@@ -214,48 +167,77 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             ];
             break;
           case 'assettype':
-            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
           case 'producttype':
-            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
           case 'industrytype':
-            vData[req[i].gname] = { code: [], sName: ['点此处进行选择'] };
+            vData[reqField.gname] = { code: [], sName: ['点此处进行选择'] };
             break;
           case 'arrplus':
-            vData[req[i].gname] = { code: 0, sName: '点此处进行选择' };
+            vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
           case 'ed':
-            vData[req[i].gname] = { code: 0, sName: '点此处进入编辑' };
+            vData[reqField.gname] = { code: 0, sName: '点此处进入编辑' };
             break;
           case 'listsel':
-            vData[req[i].gname] = 0;
+            vData[reqField.gname] = 0;
             break;
           case 'arrList':
-            vData[req[i].gname] = [];
+            vData[reqField.gname] = [];
             break;
           case 'sedate':
-            vData[req[i].gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)];
+            vData[reqField.gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)];
             break;
         }
       };
-      if (req[i].csc) {
-        funcArr.push('f_' + req[i].csc);
-        if (['aslist', 'arrsel'].indexOf(req[i].csc) >= 0) {
-          req[i].aVl = [0, 0, 0];
-          req[i].inclose = vifData ? true : false;
-        };
-      } else {
-        if (req[i].t.length > 2) { funcArr.push('i_' + req[i].t) };             //每个输入类型定义的字段长度大于2则存在对应处理过程
-      };
-    };
-    resolve(promArr);
-  }).then(pArr => {
-    console.log(pArr.length)
-    return Promise.all(pArr).then(() => {
-      console.log(req)
-      return { reqData: req, vData, funcArr }
+      return reqField;
     })
+    setPromise.forEach(nPromise=> {promArr.push(updateData(true, nPromise, unitId))})
+    return Promise.all(promArr).then(() => {
+      for (let i = 0; i < reqData.length; i++) {
+        switch (reqData[i].t) {
+          case 'sObject':                    //对象选择字段
+            if (reqData[i].gname != 'goodstype') {
+              reqData[i].master = app.aData.product[unitId];
+              reqData[i].slave = app.aData.cargo[unitId];
+              reqData[i].objarr = app.mData.product[unitId].map(proId => {
+                return { masterId: proId, slaveId: app.aData.product[unitId][proId].cargo }
+              })
+            };
+            break;
+          case 'specsel':                    //规格选择字段
+            reqData[i].objarr = app.aData.goods[unitId][vData.objectId].specs;
+            reqData[i].master = {};
+            reqData[i].slave = {};
+            reqData[i].objarr.forEach(specsId => {
+              reqData[i].master[specsId] = app.aData.specs[unitId][specsId];
+              reqData[i].slave[specsId] = app.aData.cargo[unitId][app.aData.specs[unitId][specsId].cargo];
+            });
+            break;
+          case 'sId':
+            reqData[i].mData = app.mData[reqData[i].gname][unitId];
+            reqData[i].aData = app.aData[reqData[i].gname][unitId];
+            reqData[i].mn = vifData ? 0 : reqData[i].mData.indexOf(vData[reqData[i].gname]);
+            break;
+          case 'arrplus':
+            reqData[i].sId = app.mData.product[unitId];
+            reqData[i].objects = app.aData.product[unitId];
+            break;
+        }
+        if (reqData[i].csc) {
+          funcArr.push('f_' + reqData[i].csc);
+          if (['aslist', 'arrsel'].indexOf(reqData[i].csc) >= 0) {
+            reqData[i].aVl = [0, 0, 0];
+            reqData[i].inclose = vifData ? true : false;
+          };
+        } else {
+          if (reqData[i].t.length > 2) { funcArr.push('i_' + reqData[i].t) };             //每个输入类型定义的字段长度大于2则存在对应处理过程
+        };
+      };
+      resolve({ reqData, vData, funcArr });
+    });
   }).catch(console.error);
 }
 }

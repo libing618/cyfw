@@ -24,7 +24,7 @@ module.exports = {
       var cName = procedureclass[pNo].pModel;
       let isAll = (pNo == 1);            //是否读所有数据
       let inFamily = typeof procedureclass[pNo].afamily != 'undefined';            //是否有分类数组
-      var umdata = [],uadata = {};
+      var umdata = [];
       let updAt = app.mData.pAt[cName];
       var readProcedure = new AV.Query(cName);                                      //进行数据库初始化操作
       if (isAll) {
@@ -34,10 +34,19 @@ module.exports = {
         var unitId = uId ? uId : app.roleData.uUnit.objectId;
         readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
         updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [0, 0] : app.mData.pAt[cName][unitId];
-        if (typeof app.mData[cName][unitId] == 'undefined') {
+        if (typeof app.mData[cName][unitId] == 'undefined') {       //添加以单位ID为Key的JSON初值
+          let uaobj = {},upobj={},umobj={};
+          if (typeof app.mData[cName] != 'undefined') { for (ikey in app.mData[cName]) {umobj[ikey]=app.mData[cName][ikey]} };
+          umobj[unitId] = [];
+          app.mData[cName] = umobj;
+          if (typeof app.aData[cName] != 'undefined') { for (ikey in app.aData[cName]) {upobj[ikey]=app.aData[cName][ikey]} };
+          uaobj[unitId] = {};
+          app.aData[cName] = uaobj;
+          if (typeof app.mData.pAt[cName] != 'undefined') { for (ikey in app.mData.pAt[cName]) {upobj[ikey]=app.mData.pAt[cName][ikey]} };
+          upobj[unitId] = [0, 0];
+          app.mData.pAt[cName] = upobj;
+        } else {
           umdata = app.mData[cName][unitId];
-          uadata[unitId] = {};
-          app.aData[cName] = uadata;
         }
       };
       if (isDown) {
@@ -57,11 +66,6 @@ module.exports = {
             updAt[0] = results[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
           } else {
             updAt[0] = results[lena - 1].updatedAt;          //更新本地最后更新时间
-          };
-          if (isAll) {
-            app.mData.pAt[cName] = updAt;
-          } else {
-            app.mData.pAt[cName][unitId] = updAt;
           };
           for (let i = 0; i < lena; i++) {//arp.forEach(aProc => {
             aProcedure = results[i].toJSON();
@@ -92,9 +96,10 @@ module.exports = {
         };
         if (isAll) {
           app.mData[cName] = umdata;
+          app.mData.pAt[cName] = updAt;
         } else {
           app.mData[cName][unitId] = umdata;
-    //      console.log(app.mData[cName][unitId])
+          app.mData.pAt[cName][unitId] = updAt;
         };
         resolve(lena > 0);               //数据更新状态
       }).catch(error => {
