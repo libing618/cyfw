@@ -46,10 +46,10 @@ module.exports = {
   fetchMenu: function(){
     app.roleData = wx.getStorageSync('roleData') || app.roleData;
     return new AV.Query('userInit')
-      .notEqualTo('updatedAt',app.roleData.wmenu.updatedAt)
+      .notEqualTo('updatedAt',new Date(app.roleData.wmenu.updatedAt))
       .select(['manage', 'plan', 'production', 'customer'])
       .equalTo('objectId',app.globalData.user.userRol.objectId).find().then( fetchMenu =>{
-      if (fetchMenu) {                          //菜单在云端有变化
+      if (fetchMenu.length>0) {                          //菜单在云端有变化
         app.roleData.wmenu = fetchMenu[0].toJSON();
         ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0}) })
         wx.setStorage({ key: 'roleData', data: app.roleData });
@@ -76,22 +76,22 @@ module.exports = {
     }).then(()=>{
       if (app.globalData.user.unit != '0') {
         return new AV.Query('_Role')
-        .notEqualTo('updatedAt',app.roleData.uUnit.updatedAt)
+        .notEqualTo('updatedAt', new Date(app.roleData.uUnit.updatedAt))
         .equalTo('objectId',app.globalData.user.unit).first().then( uRole =>{
           if (uRole) {                          //本单位信息在云端有变化
             app.roleData.uUnit = uRole.toJSON();
-            if (app.roleData.uUnit.sUnit != '0'){
-              return new AV.Query('_Role')
-              .notEqualTo('updatedAt',app.roleData.sUnit.updatedAt)
-              .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
-                if (sRole) {
-                  app.roleData.sUnit = sRole.toJSON();
-                  wx.setStorage({ key: 'roleData', data: app.roleData });
-                };
-              }).catch(console.error)
-            }
-            wx.setStorage({ key: 'roleData', data: app.roleData });
           }
+          if (app.roleData.uUnit.sUnit != '0'){
+            return new AV.Query('_Role')
+            .notEqualTo('updatedAt', new Date(app.roleData.sUnit.updatedAt))
+            .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
+              if (sRole) {
+                app.roleData.sUnit = sRole.toJSON();
+                wx.setStorage({ key: 'roleData', data: app.roleData });
+              };
+            }).catch(console.error)
+          }
+          wx.setStorage({ key: 'roleData', data: app.roleData });
         }).catch(console.error)
       };
       app.imLogin(app.globalData.user.username);
