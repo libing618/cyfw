@@ -128,7 +128,7 @@ module.exports = [
   "pSuccess": [
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
     {gname:"uName", p:'成品名称', t:"h2" },
-    {gname:"title", p:'成品简介',t:"p" },
+    {gname:"title", p:'成品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },

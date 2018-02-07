@@ -61,7 +61,7 @@
   <picker id="ac-{{n}}" mode="selector" value="{{mn}}" range="{{maData}}" range-key="sName" bindchange="f_idsel">
     <view class="weui-cell">
       <view class="weui-cell__hd">{{p}}:</view>
-      <view class="weui-cell__bd">{{maData[mn]}}</view>
+      <view class="weui-cell__bd">{{maData[mn].sName}}</view>
     </view>
   </picker>
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>

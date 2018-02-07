@@ -81,7 +81,24 @@ function setRole(puRoles,suRoles){
 module.exports = {
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
-    this.setData(vdSet(this.data.reqData[n].gname, this.data.reqData[n].maData[Number(e.detail.value)].objectId));
+    let sIdValue = this.data.reqData[n].maData[Number(e.detail.value)].objectId;
+    let rvdSet = vdSet(this.data.reqData[n].gname, sIdValue);
+    rvdSet['reqData[' + n + '].mn'] = Number(e.detail.value);
+    let sIdNumber = -1, sIdName = 's_' + this.data.reqData[n].gname;
+    for (let i=0;i<this.data.reqData.length;i++){
+      if (this.data.reqData[i].gname==sIdName){
+        sIdNumber = i;
+        break;
+      }
+    }
+    if (sIdNumber>=0){
+      if (this.data.reqData[n].sId != sIdValue){
+        rvdSet['reqData[' + sIdNumber + '].sId'] = sIdValue;
+        rvdSet['reqData[' + sIdNumber + '].aVl'] = [0, 0, 0];
+        rvdSet['vData.' + sIdName] = { code: 0, sName: '点此处进行选择' };
+      }
+    this.setData(rvdSet);      
+    }
   },
 
   f_aslist: function (e) {                         //选择行业类型

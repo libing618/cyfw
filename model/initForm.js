@@ -177,7 +177,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
           case 'industrytype':
-            vData[reqField.gname] = { code: [], sName: ['点此处进行选择'] };
+            vData[reqField.gname] = { code: [], sName: [] };
             break;
           case 'arrplus':
             vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
@@ -228,7 +228,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             reqData[i].mn = vifData ? 0 : app.mData[reqData[i].gname][unitId].indexOf(vData[reqData[i].gname]);
             break;
           case 'arrplus':
-            reqData[i].sId = app.mData.product[unitId];
+            reqData[i].sId = vData.sId ? vData.sId : app.mData.product[unitId][0];
             reqData[i].objects = app.aData.product[unitId];
             break;
         }
