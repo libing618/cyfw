@@ -167,7 +167,7 @@ module.exports = {
   binddata: (subscription, initialStats, onChange) => {
     let stats = [...initialStats]
     const remove = value => {
-      stats = stats.filter(target => target.id !== value.id)
+      stats = stats.filter(target => {return target.id !== value.id})
       return onChange(stats)
     }
     const upsert = value => {

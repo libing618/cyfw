@@ -24,7 +24,7 @@ Page({
               that.data.specData = app.aData[4];
               let shelves={};
               that.data.mPage.forEach(pObjectId=>{
-                shelves[pObjectId] = specData.mPage.filter(spec => {that.data.specPage[spec].product==pObjectId})
+                shelves[pObjectId] = specData.mPage.filter(spec => {return that.data.specPage[spec].product==pObjectId})
               })
               that.data.specPage = shelves;
             }

@@ -28,7 +28,8 @@
           </view>
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
             <view class="weui-media-box__title">{{cargo[item].uName}}</view>
-            <view class="weui-media-box__desc">产量{{cargo[item].yield}},库存{{cargo[item].cargoStock}}</view>
+            <view class="weui-media-box__desc">{{cargo[item].title}}</view>
+            <view class="weui-media-box__desc">销量{{cargo[item].sold}},库存{{cargo[item].cargoStock}}</view>
           </view>
         </navigator>
       </view>

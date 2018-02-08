@@ -97,7 +97,7 @@ module.exports = {
         rvdSet['reqData[' + sIdNumber + '].aVl'] = [0, 0, 0];
         rvdSet['vData.' + sIdName] = { code: 0, sName: '点此处进行选择' };
       }
-    this.setData(rvdSet);      
+    this.setData(rvdSet);
     }
   },
 
@@ -147,7 +147,7 @@ module.exports = {
 
   f_mCost:function(e){
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
-    inmcost = Number(e.detail.value);
+    let inmcost = Number(e.detail.value);
     let vdSet = {};
     if (isNaN(inmcost)){
       vdSet['vData.'+this.data.reqData[n].gname] = 0;      //不能输入非数字
@@ -155,6 +155,16 @@ module.exports = {
       vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;      //不能超过30%
     }
     vdSet.vData.mCost = 87-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
+    this.setData( vdSet );
+  },
+
+  f_canSupply:function(e){
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    let inNumber = Number(e.detail.value);
+    let vdSet = {};
+    if (isNaN(inNumber)){ inNumber = 0 };      //不能输入非数字
+    vdSet['vData.'+this.data.reqData[n].gname] = inNumber ;
+    vdSet.vData.canSupply = inNumber;
     this.setData( vdSet );
   },
 

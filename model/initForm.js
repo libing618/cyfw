@@ -10,7 +10,8 @@ integration: function(pName, unitId) {           //整合选择数组
         return Promise.all([updateData(true, 3, unitId), updateData(true, 5, unitId)]).then(([p3, p5]) => {
           app.mData.product[unitId].forEach(proId => {
             if (typeof app.aData.product[unitId][proId] !='undefined') { selves = app.aData.product[unitId][proId] };
-            selves.cargo = app.mData.cargo[unitId].filter(cargoId => { app.aData.cargo[unitId][cargoId].product == proId });
+            selves.cargo = app.mData.cargo[unitId].filter(cargoId => { return app.aData.cargo[unitId][cargoId].product == proId });
+            console.log(proId,'===>>',selves.cargo)
             app.aData.product[unitId][proId] = selves;
           })
           resolve(p3 || p5);
@@ -20,7 +21,7 @@ integration: function(pName, unitId) {           //整合选择数组
         return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(([p7, p6]) => {           //通过规格选择成品
           app.mData.goods[unitId].forEach(goodsId => {
             if (typeof app.aData.goods[unitId][goodsId] != 'undefined') { selves = app.aData.goods[unitId][goodsId] };
-            selves.specs = app.mData.specs[unitId].filter(specsId => { app.aData.specs[unitId][specId].goods == goodsId });
+            selves.specs = app.mData.specs[unitId].filter(specsId => { return app.aData.specs[unitId][specId].goods == goodsId });
             app.aData.goods[unitId][goodsId] = selves;
           })
           resolve(p7 || p6);

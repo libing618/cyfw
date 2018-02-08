@@ -17,7 +17,7 @@ Page({
 
   setPage: function(iu){
     if (iu){
-      cargoSum(['yield', 'cargoStock']).then(cSum=>{
+      cargoSum(['sold', 'cargoStock']).then(cSum=>{
         this.setData({
           cargo:app.aData.cargo[app.roleData.uUnit.objectId],
           pandect:cSum.rSum,
@@ -30,7 +30,7 @@ Page({
   onReady:function(){
     var that = this;
     integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-      cargoSum(['yield', 'cargoStock']).then(cSum=>{
+      cargoSum(['sold', 'cargoStock']).then(cSum=>{
         that.setData({
           mPage:app.mData.product[app.roleData.uUnit.objectId],
           pageData:app.aData.product[app.roleData.uUnit.objectId],

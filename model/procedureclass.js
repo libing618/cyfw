@@ -132,7 +132,8 @@ module.exports = [
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },
-    {gname:"stock", p:'库存', t:"dg",csc:"number" }
+    {gname:"cargoStock", p:'库存', t:"dg",csc:"number", func:"canSupply"},
+    {gname: "canSupply", p:'可供销售', t: "fg"}
   ],
   "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
