@@ -141,7 +141,7 @@ module.exports = {
         })
       }
       resolve({rSum:fieldSum,mSum:mSum});
-    }).catch( error=> {reject(error)} );
+    }).catch( console.error );
   },
 
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机

@@ -1,4 +1,4 @@
-const { updateData, appDataExist } = require('../../model/initupdate.js');
+const { updateData } = require('../../model/initupdate.js');
 const { integration } = require('../../model/initForm.js');
 const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
 
@@ -12,19 +12,7 @@ Page({
     grids:[]
   },
   onLoad:function(options){
-    var that = this ;
-    let pageSetData = {};
-    pageSetData.grids = iMenu('production');          //更新菜单数据
-    cargoSum(['yield', 'cargoStock']).then(cSum=>{
-      pageSetData.pandect = cSum.rSum;
-      pageSetData.mSum = cSum.mSum;
-      if (appDataExist('cargo',app.roleData.uUnit.objectId)){
-        pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
-        pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
-        pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
-      }
-      that.setData( pageSetData );
-    });
+    this.setData({ grids: iMenu('production') });          //更新菜单数据
   },
 
   setPage: function(iu){
@@ -40,18 +28,17 @@ Page({
   },
 
   onReady:function(){
+    var that = this;
     integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-      if (isupdated) {
-        cargoSum(['yield', 'cargoStock']).then(cSum=>{
-          this.setData({
-            mPage:app.mData.product[app.roleData.uUnit.objectId],
-            pageData:app.aData.product[app.roleData.uUnit.objectId],
-            cargo:app.aData.cargo[app.roleData.uUnit.objectId],
-            pandect:cSum.rSum,
-            mSum: cSum.mSum
-          })
+      cargoSum(['yield', 'cargoStock']).then(cSum=>{
+        that.setData({
+          mPage:app.mData.product[app.roleData.uUnit.objectId],
+          pageData:app.aData.product[app.roleData.uUnit.objectId],
+          cargo:app.aData.cargo[app.roleData.uUnit.objectId],
+          pandect:cSum.rSum,
+          mSum: cSum.mSum
         })
-      }
+      })
     });
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
