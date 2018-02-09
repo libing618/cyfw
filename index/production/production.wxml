@@ -3,7 +3,7 @@
 <view class="page">
   <view class="page__hd">
     <view class="page__title">产量库存总览</view>
-    <view class="page__desc">总产量{{pandect[0]}}件，现库存{{pandect[1]}}件。</view>
+    <view class="page__desc">可供应总量{{pandect[0]}}件，总库存{{pandect[1]}}件。</view>
   </view>
   <view class="page__bd">
     <template is="showgrids" data="{{grids}}"/>
@@ -15,7 +15,7 @@
         <view class="weui-cells weui-cells_in-small-appmsg">
           <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{ac}}" bindtap="indexClick">
             <view class="weui-cell__hd">{{pageData[ac].uName}}</view>
-            <view class="weui-cell__bd weui-cell_primary">产量{{mSum[ac][0]}}份,库存{{mSum[ac][0]}}份</view>
+            <view class="weui-cell__bd weui-cell_primary">可供应量{{mSum[ac][0]}}份,库存{{mSum[ac][1]}}份</view>
             <view hidden="{{iClicked==ac}}" class="weui-cell__ft weui-cell__ft_in-access"></view>
           </view>
         </view>
@@ -29,7 +29,7 @@
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
             <view class="weui-media-box__title">{{cargo[item].uName}}</view>
             <view class="weui-media-box__desc">{{cargo[item].title}}</view>
-            <view class="weui-media-box__desc">销量{{cargo[item].sold}},库存{{cargo[item].cargoStock}}</view>
+            <view class="weui-media-box__desc">可供应量{{cargo[item].canSupply}},库存{{cargo[item].cargoStock}}</view>
           </view>
         </navigator>
       </view>

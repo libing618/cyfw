@@ -125,22 +125,21 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let sLength = fields.length;
       let fieldSum = new Array(sLength);
-      let masteSum = new Array(sLength);
       let mSum = {};
       fieldSum.fill(0);         //定义汇总数组长度且填充为0
       if (app.mData.product[app.roleData.uUnit.objectId]){
         app.mData.product[app.roleData.uUnit.objectId].forEach(mId=>{
-          masteSum.fill(0);
+          mSum[mId] = [];
+          for (let i = 0; i < sLength; i++) {mSum[mId].push(0)};
           app.aData.product[app.roleData.uUnit.objectId][mId].cargo.forEach(aId=>{
             for (let i=0;i<sLength;i++){
               fieldSum[i] += app.aData.cargo[app.roleData.uUnit.objectId][aId][fields[i]];
-              masteSum[i] += app.aData.cargo[app.roleData.uUnit.objectId][aId][fields[i]];
+              mSum[mId][i] = mSum[mId][i]+app.aData.cargo[app.roleData.uUnit.objectId][aId][fields[i]];
             }
           })
-          mSum[mId] = masteSum;
         })
       }
-      resolve({rSum:fieldSum,mSum:mSum});
+      resolve({rSum:fieldSum,mSum});
     }).catch( console.error );
   },
 

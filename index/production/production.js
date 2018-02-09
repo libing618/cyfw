@@ -9,6 +9,7 @@ Page({
     pNo: 5,                       //流程的序号5为成品信息
     pageData: {},
     iClicked: '0',
+    mSum: {},
     grids:[]
   },
   onLoad:function(options){
@@ -17,7 +18,7 @@ Page({
 
   setPage: function(iu){
     if (iu){
-      cargoSum(['sold', 'cargoStock']).then(cSum=>{
+      cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
         this.setData({
           cargo:app.aData.cargo[app.roleData.uUnit.objectId],
           pandect:cSum.rSum,
@@ -30,7 +31,7 @@ Page({
   onReady:function(){
     var that = this;
     integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-      cargoSum(['sold', 'cargoStock']).then(cSum=>{
+      cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
         that.setData({
           mPage:app.mData.product[app.roleData.uUnit.objectId],
           pageData:app.aData.product[app.roleData.uUnit.objectId],

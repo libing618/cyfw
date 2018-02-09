@@ -11,7 +11,6 @@ integration: function(pName, unitId) {           //整合选择数组
           app.mData.product[unitId].forEach(proId => {
             if (typeof app.aData.product[unitId][proId] !='undefined') { selves = app.aData.product[unitId][proId] };
             selves.cargo = app.mData.cargo[unitId].filter(cargoId => { return app.aData.cargo[unitId][cargoId].product == proId });
-            console.log(proId,'===>>',selves.cargo)
             app.aData.product[unitId][proId] = selves;
           })
           resolve(p3 || p5);

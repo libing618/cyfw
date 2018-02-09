@@ -12,24 +12,12 @@ Page({
     grids:[]
   },
   onLoad:function(options){
-    var that = this ;
-    let pageSetData = {};
-    pageSetData.grids = iMenu('customer');          //更新菜单数据
-    cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum => {
-      pageSetData.pandect = cSum.rSum;
-      pageSetData.mSum = cSum.mSum;
-      if (appDataExist('cargo', app.roleData.uUnit.objectId)) {
-        pageSetData.mPage = app.mData.product[app.roleData.uUnit.objectId];
-        pageSetData.pageData = app.aData.product[app.roleData.uUnit.objectId];
-        pageSetData.cargo = app.aData.cargo[app.roleData.uUnit.objectId];
-      }
-      that.setData(pageSetData);
-    });
+    this.setData({grids: iMenu('customer')});          //更新菜单数据
   },
 
   setPage: function(iu){
     if (iu){
-      cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
+      cargoSum(['sold', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
         this.setData({
           cargo:app.aData.cargo[app.roleData.uUnit.objectId],
           pandect:cSum.rSum,
@@ -42,7 +30,7 @@ Page({
   onReady:function(){
     integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
       if (isupdated) {
-        cargoSum(['canSupply', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
+        cargoSum(['sold', 'reserve', 'payment', 'delivering', 'delivered']).then(cSum=>{
           this.setData({
             mPage:app.mData.product[app.roleData.uUnit.objectId],
             pageData:app.aData.product[app.roleData.uUnit.objectId],

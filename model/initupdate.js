@@ -47,13 +47,13 @@ module.exports = {
         updAt = (typeof app.mData.pAt[cName][unitId] == 'undefined') ? [0, 0] : app.mData.pAt[cName][unitId];
         if (typeof app.mData[cName][unitId] == 'undefined') {       //添加以单位ID为Key的JSON初值
           let uaobj = {},upobj={},umobj={};
-          if (typeof app.mData[cName] != 'undefined') { umobj=app.mData[cName]} };
+          if (typeof app.mData[cName] != 'undefined') { umobj=app.mData[cName] };
           umobj[unitId] = [];
           app.mData[cName] = umobj;
-          if (typeof app.aData[cName] != 'undefined') { uaobj[ikey]=app.aData[cName]} };
+          if (typeof app.aData[cName] != 'undefined') { uaobj=app.aData[cName] };
           uaobj[unitId] = {};
           app.aData[cName] = uaobj;
-          if (typeof app.mData.pAt[cName] != 'undefined') { upobj=app.mData.pAt[cName]} };
+          if (typeof app.mData.pAt[cName] != 'undefined') { upobj=app.mData.pAt[cName] };
           upobj[unitId] = [0, 0];
           app.mData.pAt[cName] = upobj;
         } else {
