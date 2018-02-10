@@ -138,7 +138,7 @@ module.exports = {
     this.setData(vdSet);
   },
 
-  f_float: function (e) {
+  f_digit: function (e) {
     let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
     let vdSet = {};
     vdSet['vData.' + this.data.reqData[n].gname] = isNaN(Number(e.detail.value)) ? '0.00' : parseFloat(Number(e.detail.value).toFixed(2));      //不能输入非数字,转换为浮点数保留两位小数
@@ -154,7 +154,8 @@ module.exports = {
     } else {
       vdSet['vData.'+this.data.reqData[n].gname] = inmcost>30 ? 30 : inmcost ;      //不能超过30%
     }
-    vdSet.vData.mCost = 87-inmcost-Number(n==1 ? that.data.vData.channel : that.data.vData.extension)
+    this.data.vData[this.data.reqData[n].gname] = isNaN(inmcost) ? 0 : (inmcost > 30 ? 30 : inmcost)
+    vdSet['vData.mCost'] = 87 - (this.data.vData.channel ? this.data.vData.channel : 0) - (this.data.vData.extension ? this.data.vData.extension :0);
     this.setData( vdSet );
   },
 
@@ -184,7 +185,7 @@ module.exports = {
         break;
       case 'pa':
         let aval = e.detail.value;
-        if (that.data.reqData[n].osv[0] == aval[0]) { osv[1] = 0 };
+        if (that.data.reqData[n].osv[0] != aval[0]) { aval[1] = 0 };
         that.setData(rdSet(n, 'osv', aval));
         break;
     }

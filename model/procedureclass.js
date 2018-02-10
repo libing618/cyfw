@@ -131,8 +131,8 @@ module.exports = [
     {gname:"title", p:'成品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "thumb" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
-    {gname:"retail_price", p:'零售价', t:"dg",csc:"float" },
-    {gname:"cargoStock", p:'库存', t:"dg",csc:"number", func:"canSupply"},
+    {gname:"retail_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
+    {gname:"cargoStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
     {gname: "canSupply", p:'可供销售', t: "fg"}
   ],
   "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
@@ -154,8 +154,8 @@ module.exports = [
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
-    {gname: "channel", p:'渠道分成比例%',t:"dg",func:"mCost"},
-    {gname: "extension", p:'推广分成比例%',t:"dg",func:"mCost"},
+    {gname: "channel", p:'渠道分成比例%',t:"dg",itype:"digit",csc:"mCost"},
+    {gname: "extension", p:'推广分成比例%',t:"dg",itype:"digit",csc:"mCost"},
     {gname: "mCost", p:'销售管理总占比', t: "fg"},
     {gname:"details", p:'详情',t:"eDetail" }
   ],

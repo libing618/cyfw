@@ -50,7 +50,7 @@ Page({
           break;
         case 'undefined':               //未提交或新建的数据KEY为审批流程pModel的值
           that.data.dObjectId = pClass.pModel;
-          aaData = appDataExist(pClass.pModel, app.roleData.uUnit.objectId, pClass.pModel) ? app.aData[pClass.pModel][app.roleData.uUnit.objectId][pClass.pModel] : {} ;
+          aaData = appDataExist(pClass.pModel, app.roleData.uUnit.objectId, pClass.pModel) ? app.aData[pClass.pModel][app.roleData.uUnit.objectId][pClass.pModel] : require('../../test/goods0')[0]//{} ;
           titleName += pClass.pName;
           break;
       }

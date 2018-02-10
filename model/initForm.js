@@ -199,6 +199,9 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
           case 'sedate':
             vData[reqField.gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)];
             break;
+          case 'fg' :
+            vData[reqField.gname] = 0;
+            break;
         }
       };
       return reqField;

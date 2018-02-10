@@ -73,15 +73,14 @@ Page ({
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-          that.setData({cargo:app.aData.cargo[app.roleData.uUnit.objectId]});
-          that.fetchData.bind(that) ;
-        } else {
-          wx.showToast({ title: '无库存数据！', duration: 2500 });
-          setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-        }
-      }).catch(console.error);
-      wx.setNavigationBarTitle({
-        title: app.roleData.uUnit.nick+'的'+oClass.oprocess[ops.oState]
+        that.setData({cargo:app.aData.cargo[app.roleData.uUnit.objectId]});
+        that.fetchData.bind(that) ;
+        wx.setNavigationBarTitle({
+          title: app.roleData.uUnit.nick + '的' + oClass.oprocess[ops.oState]
+        });
+      }).catch( ()=>{
+        wx.showToast({ title: '无库存数据！', duration: 2500 });
+        setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
       });
     };
   },
