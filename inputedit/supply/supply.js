@@ -1,6 +1,5 @@
 // 供货操作
 const AV = require('../../libs/leancloud-storage.js');
-const cargoPlan = require('../../model/cargoPlan.js');
 const supplies = require('../../model/supplies.js');
 const oClass = require('../../model/operationclass.js')[1];
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
@@ -73,17 +72,9 @@ Page ({
     if (checkRols(oClass.ouRoles[ops.oState])){  //检查用户操作权限
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
-      new AV.Query(cargoPlan)
-      .equalTo('unitId',app.roleData.uUnit.objectId)
-      .select(['unitId','cargo','cargoStock','payment','delivering'])
-      .find().then(cargoPlans=>{
-        if (cargoPlans){
-          cargoPlans.forEach(cPlan=>{
-            that.cargoPlans[cPlan.id] = cPlan;
-            that.data.cargoCount[cPlan.id] = cPlan.cargoStock;
-          });
-          that.setData({cargoCount:that.data.cargoCount,oState:ops.oState});
-          that.indexClick = indexClick ;
+      integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
+          that.setData({cargo:app.aData.cargo[app.roleData.uUnit.objectId]});
+          that.fetchData.bind(that) ;
         } else {
           wx.showToast({ title: '无库存数据！', duration: 2500 });
           setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
