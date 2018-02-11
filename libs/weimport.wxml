@@ -13,7 +13,7 @@
 </view>
 </template>
 
-<template name="c_listsel">
+<template name="s_listsel">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{p}}:</view>
     <view class="weui-cell__ft">{{aList[c]}}</view>
@@ -81,7 +81,7 @@
   </view>
 </template>
 
-<template name="c_float">
+<template name="c_digit">
   <view class="weui-cell">
     <view class="weui-cell__bd">{{p}}:</view>
     <view class="weui-cell__ft">{{c}}</view>
@@ -96,9 +96,9 @@
 </template>
 
 <template name="s_p">
-  <view class="weui-article__p">
+<view class="weui-cell">
     <text>{{c}}</text>
-  </view>
+</view>
 </template>
 
 <template name="s_pics">

@@ -110,7 +110,7 @@ module.exports = [
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
     {gname:"address", p: '服务地址', t: "ed" },
-    {gname:"price", p:'价格', t:"dg",csc:"float" },
+    {gname:"price", p:'价格', t:"dg",csc:"digit" },
     {gname:"serParty", p:'服务方', t:"h4" },
     {gname:"serName", p:'联系人姓名', t:"h4" },
     {gname:"serPhone", p:'联系人电话', t:"h4" }

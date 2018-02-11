@@ -30,7 +30,7 @@ module.exports = [
 },
 {
   uName: '枣夹核桃',
-  goodstype: 1002,
+  goodstype: '537094815',
   title: '枣夹核桃,尽享休闲美味',
   desc: '拥有多种人体所必须的营养元素，长期食用枣夹核桃仁具有益气养神、补血养颜、补肝降压、抗癌养身、滋补五脏，润肤乌发等功效，适宜各种人群，特别是对体质虚弱、气血双亏者大有益处，是一种不可多得的养生保健食品。红枣的香甜掩盖了核桃的苦涩，核桃的酥脆油香升华了红枣得香甜。肉厚细腻的红枣，酥脆醇厚的核桃，双重美味令人心醉，大自然的精华双重叠加。,250g',
   specstype: 0,
@@ -40,6 +40,10 @@ module.exports = [
     "http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG"
   ],
   tvidio: 'http://ac-Trce3aqb.clouddn.com/d3a3bfb513239d50f6da.mp4',
+  specstype: 0,
+  mCost: 70,
+  channel: 7,
+  extension: 10,
   details: [{ t: "h2", e: "枣夹核桃" },
   { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/03dd01f5f0632549a33f.jpg', e: "" },
   { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/681c44ca067ba5e3faad.jpg', e: "" },
@@ -53,7 +57,7 @@ module.exports = [
 },
 {
   uName: '薄皮核桃',
-  goodstype: 1002,
+  goodstype: '538097835',
   title: '天然纯野生薄皮核桃',
   desc: '核桃性温味甘，有健胃补血、润肺止咳、安神助眠、润肤黑发等功效，尤其冬季食用还有镇咳平喘的作用，对慢性气管炎和哮喘病患者疗效极佳。',
   specstype: 0,
@@ -63,6 +67,10 @@ module.exports = [
     "http://ac-AG9H6EpE.clouddn.com/0a5bb41a747bb3612a2e.JPG"
   ],
   tvidio: 'http://ac-Trce3aqb.clouddn.com/d3a3bfb513239d50f6da.mp4',
+  specstype: 0,
+  mCost: 70,
+  channel: 7,
+  extension: 10,
   details: [{ t: "h2", e: "薄皮核桃" },
   { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/bcec334ca1e087f73be9.jpg', e: "" },
   { t: "-2", c: 'http://ac-ag9h6epe.clouddn.com/5bfb63e4d0aca4cb5eb6.png', e: "" }

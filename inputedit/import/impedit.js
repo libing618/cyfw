@@ -469,21 +469,24 @@ module.exports = {
     let approvalID = parseInt(that.data.pNo);        //流程序号
     var approvalClass = require('../../model/procedureclass.js')[approvalID];       //流程定义和数据结构
     var subData = e.detail.value;
+    let cNumber = ['fg','dg','listsel'];       //数字类型定义
+    let cObject = ['assettype','producttype','arrplus','ed'];       //对象类型定义
     if (Array.isArray(that.data.vData.details)) {
       for (let i = 0; i < that.data.vData.details.length; i++) {
         that.data.vData.details[i].e = subData['ade' + i];
         that.data.vData.details[i].c = subData['adc' + i];
       };
     };
-    var emptyField = '';
-    var evField = {};                   //检查处理每个请求字段
-    for (let i = 0; i < approvalClass.pSuccess.length; i++) {
-      if (approvalClass.pSuccess[i].gname in subData) {
-        if (subData[approvalClass.pSuccess[i].gname]) {
-          that.data.vData[approvalClass.pSuccess[i].gname] = subData[approvalClass.pSuccess[i].gname];
-        } else { emptyField += '《' + approvalClass.pSuccess[i].p + '》'; }
+    var emptyField = '';                   //检查是否有字段输入为空
+    that.data.reqData.forEach(req=>{
+      if (req.gname in subData){ that.data.vData[req.gname]=subData[req.gname]; }
+      if (typeof that.data.vData[req.gname]=='undefined'){
+        emptyField += '《' + req.p + '》';
+      } else {
+        if ( cNumber.indexOf(req.t)>=0 ) { that.data.vData[req.gname] = Number(that.data.vData[req.gname]); }
+        if ( cObject.indexOf(req.t)>=0 && typeof that.data.vData[req.gname]=='string') {that.data.vData[req.gname] = JSON.parse(that.data.vData[req.gname])}
       }
-    };
+    });
     var sFilePath = new Promise(function (resolve, reject) {         //本地媒体文件归类
       let filePaths = [];
       const mdtn = ['pic', 'thumb', 'vidio', 'file'];

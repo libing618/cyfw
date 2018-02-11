@@ -23,7 +23,7 @@ Page({
     if (!isNaN(that.pno) && isNaN(artid)) {             //检查参数
       let pClass = require('../../model/procedureclass.js')[that.pno];
       that.cName = pClass.pModel;
-      that.inFamily = typeof pClass.afamily != 'undefined';
+      that.inFamily = (typeof pClass.afamily != 'undefined');
       that.unitId = options.uId ? options.uId : app.roleData.uUnit.objectId;
       that.data.vData = that.isAll ? app.aData[that.cName][options.artId] : app.aData[that.cName][that.unitId][options.artId];
       let showFormat = pClass.pSuccess;
@@ -33,9 +33,9 @@ Page({
             {gname:"pics", p:'图片集',t:"pics"},
             {gname:"uName", p:'名称', t:"h1" },
             {gname:"title", p:'简介',t:"h2" },
-            {gname:"tvidio", p:'视频简介',t: "vidio" },
-            {gname:"desc", p:'描述',t:"p" },
-            {gname:"specstype", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
+            {gname:"tvidio", p:'',t: "vidio" },
+            {gname:"desc", p:'',t:"p" },
+            {gname:"specstype", p:'规格类型', t:"listsel", aList:['单品','套餐']},
             {gname:"specs", p:'规格',t:"specsel",csc:"specsel" },
             {gname:"details", p:'详情',t:"eDetail" }]
           break;
@@ -46,7 +46,7 @@ Page({
         that.setData(that.data);
       });
       wx.setNavigationBarTitle({
-        title: cUnitName+ '的' + that.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName ,
+        title: cUnitName+ '的' + (that.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName) ,
       })
     } else {
       wx.showToast({ title: '数据传输有误！',icon:'loading', duration: 2500 });
