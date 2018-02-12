@@ -208,18 +208,83 @@ module.exports = [
 },
 {
   "pNo": 9,
-  "pName": "生产计划",
+  "pName": "原材料与包装",
   "pSuccess": [
-    {gname:"uName", p:'计划名称', t:"h3" },
+    {gname:"uName", p:'材料名称', t:"h3" },
+    {gname:"title", p:'材料简述',t:"p" },
+    {gname:"dafamily", p:'材料类型',inclose:false,t:"listsel", aList:['自产原料','外购原料','包装'] },
+    {gname:"thumbnail", p:'图片',t: "thumb" },
+    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
+    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
+    {gname:"rawStocks", p:'', t:"arrList",inclose:true },
+    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
+    {gname:"startTime", p:'起点时间', t:"datetime" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "puRoles": [
+    "11",
+    "10"
+  ],
+  "pModel": "prodesign"
+},
+{
+  "pNo": 10,
+  "pName": "成品内含原料及包装",
+  "pSuccess": [
+    {gname:"uName", p:'计划名称', t:"h2" },
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
-    {gname:"title", p:'计划简述',t:"p" },
+    {gname:"title", p:'计划简述',t:"h3" },
     {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
     {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
-    {gname:"startTime", p:'起点时间', t:"datetime" },
-    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true }
+    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
+    {gname:"startTime", p:'起点时间', t:"datetime" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "puRoles": [
+    "11",
+    "10"
+  ],
+  "pModel": "prodesign"
+},
+{
+  "pNo": 11,
+  "pName": "供货前仓储物流",
+  "pSuccess": [
+    {gname:"uName", p:'计划名称', t:"h3" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
+    {gname:"title", p:'计划简述',t:"h3" },
+    {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
+    {gname:"thumbnail", p:'图片',t: "thumb" },
+    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
+    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
+    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
+    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
+    {gname:"startTime", p:'起点时间', t:"datetime" }
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "puRoles": [
+    "11",
+    "10"
+  ],
+  "pModel": "prodesign"
+},
+{
+  "pNo": 12,
+  "pName": "生产计划",
+  "pSuccess": [
+    {gname:"uName", p:'计划名称', t:"h3" },
+    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
+    {gname:"title", p:'计划简述',t:"h3" },
+    {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
+    {gname:"thumbnail", p:'图片',t: "thumb" },
+    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
+    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
+    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
+    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
+    {gname:"startTime", p:'起点时间', t:"datetime" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
   "puRoles": [

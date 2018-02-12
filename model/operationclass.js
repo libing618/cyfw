@@ -7,14 +7,28 @@ module.exports = [
       {gname: "uName", p:'名称', t:"h3" },
       {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
       { gname: "thumbnail", p: '图片', t: "thumb" },
+      { gname: "vUnit", p: '供货商', t: "h3", e: '单位名称' }
+    ],
+    "ouRoles": [1,0,0],
+    "oBewrite": "产品条线确认采购计划,综合条线采购原料并入库。",
+    "oModel": "rawOperate"
+  },
+  {
+    "oNo": 1,
+    "oName": "仓储物流",
+    "oprocess": ['采购计划', '原料采购', '原料入库'],
+    "oSuccess": [
+      {gname: "uName", p:'名称', t:"h3" },
+      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
+      { gname: "thumbnail", p: '图片', t: "thumb" },
       { gname: "sUnit", p: '供货商', t: "h3", e: '单位名称' }
     ],
     "ouRoles": [1,0,0],
     "oBewrite": "产品条线确认采购计划,综合条线采购原料并入库。",
-    "oModle": "rawOperate"
+    "oModel": "rawOperate"
   },
   {
-    "oNo": 1,
+    "oNo": 2,
     "oName": "订单处理",
     "oprocess": ['订单确认', '成品出货', '到货确认'],
     "oSuccess": [
@@ -24,6 +38,7 @@ module.exports = [
     ],
     "ouRoles": [1,1,3],
     "oBewrite": "产品条线确认订单并出货,服务条线进行店铺确认。",
-    "oModle": "cargoPlan"
-  }
+    "oModel": "cargo"
+  }，
+
 ]
