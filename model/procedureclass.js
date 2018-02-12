@@ -4,7 +4,7 @@
 //csc对应关系：objsel对象选择，存储gname对应数据表选择的ID值，显示slave对应uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
 //csc对应关系：specsel对象选择，存储gname对应数据表选择的ID值，显示slave对应要素及carga要素
 //csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname][unitId].uName
-//csc对应关系：t:"dg"为数据型,csc的float代表2位小数点浮点数，number则为整数型
+//csc对应关系：t:"dg"为数据型,csc的digit代表2位小数点浮点数，number则为整数型
 module.exports = [
 {
   "pNo": 0,
@@ -71,7 +71,6 @@ module.exports = [
     "32",
     "31"
   ],
-  "suRoles": ["32"],
   "pModel": "asset"
 },
 {
@@ -87,7 +86,7 @@ module.exports = [
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
     {gname:"PARM_attention", p:'注意事项', t:"h4" },
-    {gname:"PARM_period", p:'期限(天)', t:"dg",csc:"float" },
+    {gname:"PARM_period", p:'期限(天)', t:"dg",csc:"digit" },
     {gname:"standard_code", p:'执行标准', t:"h4" },
     {gname:"license_no", p:'许可证号', t:"h4" },
     {gname:"surface", p:'外观范围', t:"arrList",inclose:true },
@@ -178,7 +177,7 @@ module.exports = [
     {gname:"title", p:'简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
     {gname:"package", p:'含成品数量', t:"dg",csc:"number" },
-    {gname:"price", p:'零售价', t:"dg",csc:"float" }
+    {gname:"price", p:'零售价', t:"dg",csc:"digit" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -193,9 +192,9 @@ module.exports = [
   "afamily":['众筹','团购','促销'],
   "pSuccess": [
     {gname:"specs", p:'商品规格', t:"sId", csc:"idsel" },
-    {gname:"base_price", p:'基础优惠价', t:"dg",csc:"float" },
+    {gname:"base_price", p:'基础优惠价', t:"dg",csc:"digit" },
     {gname:"base_amount", p:'基础目标数量',t:"dg",csc:"number" },
-    {gname:"big_price", p:'大额优惠价', t:"dg",csc:"float" },
+    {gname:"big_price", p:'大额优惠价', t:"dg",csc:"digit" },
     {gname:"big_amount", p:'大额目标数量',t:"dg",csc:"number" },
     {gname:"start_end", p:'活动起止日期', t:"sedate",endif:false}
   ],
@@ -214,35 +213,25 @@ module.exports = [
     {gname:"title", p:'材料简述',t:"p" },
     {gname:"dafamily", p:'材料类型',inclose:false,t:"listsel", aList:['自产原料','外购原料','包装'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
-    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"rawStocks", p:'', t:"arrList",inclose:true },
-    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
-    {gname:"startTime", p:'起点时间', t:"datetime" }
+    {gname:"rawStocks", p:'原材料库存', t:"dg",csc:"number" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
   "puRoles": [
     "11",
     "10"
   ],
-  "pModel": "prodesign"
+  "pModel": "material"
 },
 {
   "pNo": 10,
   "pName": "成品内含原料及包装",
   "pSuccess": [
-    {gname:"uName", p:'计划名称', t:"h2" },
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
-    {gname:"title", p:'计划简述',t:"h3" },
-    {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
-    {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
-    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
-    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
-    {gname:"startTime", p:'起点时间', t:"datetime" }
+    {gname:"material", p:'材料(包装)', t:"sId",csc:"idsel" },
+    {gname:"dOutput", p:'内含数量', t:"dg",csc:"number" },
+    {gname:"price", p:'价格预算', t:"dg",csc:"digit"}
   ],
-  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
     "11",
     "10"
@@ -251,28 +240,6 @@ module.exports = [
 },
 {
   "pNo": 11,
-  "pName": "供货前仓储物流",
-  "pSuccess": [
-    {gname:"uName", p:'计划名称', t:"h3" },
-    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
-    {gname:"title", p:'计划简述',t:"h3" },
-    {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
-    {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
-    {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
-    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
-    {gname:"startTime", p:'起点时间', t:"datetime" }
-  ],
-  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
-  "puRoles": [
-    "11",
-    "10"
-  ],
-  "pModel": "prodesign"
-},
-{
-  "pNo": 12,
   "pName": "生产计划",
   "pSuccess": [
     {gname:"uName", p:'计划名称', t:"h3" },
@@ -286,7 +253,7 @@ module.exports = [
     {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
     {gname:"startTime", p:'起点时间', t:"datetime" }
   ],
-  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
     "11",
     "10"

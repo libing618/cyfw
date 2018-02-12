@@ -2,7 +2,7 @@
 <view class="page">
   <view class="page__bd page__ac_spacing">
     <block wx:for="{{reqData}}" wx:key="index">
-      <template is="{{item.csc ? 'c_'+item.csc : 's_'+item.t}}" data="{{...item, c:vData[item.gname]}}"></template>
+      <template is="s_{{item.t}}" data="{{...item, c:vData[item.gname]}}"></template>
     </block>
   </view>
 

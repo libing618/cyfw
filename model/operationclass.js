@@ -15,8 +15,8 @@ module.exports = [
   },
   {
     "oNo": 1,
-    "oName": "仓储物流",
-    "oprocess": ['采购计划', '原料采购', '原料入库'],
+    "oName": "包装仓储",
+    "oprocess": ['生产计划', '包装加工', '成品入库'],
     "oSuccess": [
       {gname: "uName", p:'名称', t:"h3" },
       {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
@@ -39,6 +39,6 @@ module.exports = [
     "ouRoles": [1,1,3],
     "oBewrite": "产品条线确认订单并出货,服务条线进行店铺确认。",
     "oModel": "cargo"
-  }，
+  }
 
 ]

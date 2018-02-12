@@ -117,7 +117,7 @@
       <view class="weui-label">{{p}}:</view>
     </view>
     <view class="weui-cell__bd">
-      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="{{itype}}" bindblur="f_{{csc}}"/>
+      <input id="dg-{{n}}" name="{{gname}}" value="{{c}}" class="weui-input" type="{{itype ? itype : csc}}" bindblur="f_{{csc}}"/>
     </view>
   </view>
 </template>

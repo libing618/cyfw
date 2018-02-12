@@ -4,10 +4,10 @@
     function(i,cArray){ return i==cArray.length-1 ? '' : '、' }
  </wxs>
 
-<template name="c_aslist">
+<template name="s_industrytype">
 <view class="weui-cell">
-  <view class="weui-cell__bd">{{p}}:</view>
-  <view class="weui-cell__ft">
+  <view class="weui-cell__hd">{{p}}:</view>
+  <view class="weui-cell__bd">
     <view wx:for="{{c.sName}}" wx:key="{{index}}">{{item}}{{mDot(index,c.sName)}}</view>
   </view>
 </view>
@@ -15,28 +15,48 @@
 
 <template name="s_listsel">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{aList[c]}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{aList[c]}}</view>
   </view>
 </template>
 
-<template name="c_arrsel">
+<template name="s_assettype">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{c.sName}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c.sName}}</view>
   </view>
 </template>
 
-<template name="c_objsel">
+<template name="s_producttype">
+  <view class="weui-cell">
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c.sName}}</view>
+  </view>
+</template>
+
+<template name="s_arrplus">
+  <view class="weui-cell">
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c.sName}}</view>
+  </view>
+</template>
+
+<template name="s_sObject">
   <view class="weui-cell">{{p}}:</view>
-  <view class="weui-cell">
-    <view class="weui-cell__hd"><image src="{{slave.thumbnail}}"/></view>
-    <view class="weui-cell__bd">slave.uName</view>
-    <view class="weui-cell__bd">slave.title</view>
+  <view class="weui-cell" id="{{c}}">
+    <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+        <image class="weui-media-box__thumb" src="{{slave.thumbnail}}" background-size="cover"></image>
+      </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+        <view class="weui-media-box__title">{{slave.uName}}</view>
+        <view class="weui-media-box__desc">{{slave.title}}</view>
+      </view>
+    </view>
   </view>
 </template>
 
-<template name="c_idsel">
+<template name="s_sId">
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cell" id="{{c}}">
     <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
@@ -51,7 +71,7 @@
   </view>
 </template>
 
-<template name="c_specsel">
+<template name="s_specsel">
 <wxs module="sstock">
   module.exports = {
     scale: function(spec,pkn){
@@ -81,17 +101,17 @@
   </view>
 </template>
 
-<template name="c_digit">
+<template name="s_dg">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{c}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c}}</view>
   </view>
 </template>
 
-<template name="c_number">
+<template name="s_fg">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{c}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c}}</view>
   </view>
 </template>
 
@@ -128,15 +148,15 @@
 
 <template name="s_h3">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{c}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c}}</view>
   </view>
 </template>
 
 <template name="s_h4">
   <view class="weui-cell" style="font-size: 24rpx;">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{c}}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{c}}</view>
   </view>
 </template>
 
@@ -146,9 +166,7 @@
 </template>
 
 <template name="s_ed">
-  <view class="weui-cell__hd">
-    <view class="weui-label">{{p}}:</view>
-  </view>
+  <view class="weui-cell__hd">{{p}}:</view>
   <view class="weui-cell__bd">{{c.sName}}</view>
 </template>
 
@@ -176,13 +194,15 @@
 
 <template name="s_vidio">
   <view class="weui-article__-4">{{p}}:</view>
-  <video src="{{c}}" controls></video>
+  <view class="weui-picker">
+    <video controls="{{true}}" src="{{c}}"></video>
+  </view>
 </template>
 
 <template name="s_arrList">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">
       <view wx:for="{{c}}" wx:key="{{index}}">{{ item }}{{mDot(index,c)}}</view>
     </view>
   </view>
@@ -197,8 +217,8 @@
 
 <template name="s_sCargo">
   <view class="weui-cell">
-    <view class="weui-cell__bd">{{p}}:</view>
-    <view class="weui-cell__ft">{{ ad[c].uName }}</view>
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{ ad[c].uName }}</view>
   </view>
 </template>
 
