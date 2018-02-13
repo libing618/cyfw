@@ -5,7 +5,7 @@ module.exports = [
     "oprocess": ['采购计划', '原料采购', '原料入库'],
     "oSuccess": [
       {gname: "uName", p:'名称', t:"h3" },
-      {inclose: true, gname:"protype", p:'产品类别',t:"producttype", aVl:[0, 0, 0] },
+      {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
       { gname: "thumbnail", p: '图片', t: "thumb" },
       { gname: "vUnit", p: '供货商', t: "h3", e: '单位名称' }
     ],
@@ -24,7 +24,7 @@ module.exports = [
       { gname: "sUnit", p: '供货商', t: "h3", e: '单位名称' }
     ],
     "ouRoles": [1,0,0],
-    "oBewrite": "产品条线确认采购计划,综合条线采购原料并入库。",
+    "oBewrite": "产品条线确认出品计划,产品条线包装并入库。",
     "oModel": "rawOperate"
   },
   {

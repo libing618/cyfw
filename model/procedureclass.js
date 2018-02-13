@@ -81,8 +81,8 @@ module.exports = [
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype",  csc:"arrsel" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t:"thumb" },
-    {gname:"aGeoPoint", p:'地理位置', t: "chooseAd" },
-    {gname:"address", p:'地址', t: "ed" },
+    {gname:"aGeoPoint", p:'出厂位置', t: "chooseAd" },
+    {gname:"address", p:'产地', t: "ed" },
     {gname:"PARM_content", p:'内容', t:"h4" },
     {gname:"PARM_additive", p:'附加', t:"h4" },
     {gname:"PARM_attention", p:'注意事项', t:"h4" },
@@ -215,7 +215,7 @@ module.exports = [
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"rawStocks", p:'原材料库存', t:"dg",csc:"number" }
   ],
-  "pBewrite": "产品条线提出产品设置或修改申请，由营销条线负责人进行审批。",
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
     "11",
     "10"
@@ -236,7 +236,7 @@ module.exports = [
     "11",
     "10"
   ],
-  "pModel": "prodesign"
+  "pModel": "content"
 },
 {
   "pNo": 11,
@@ -247,11 +247,9 @@ module.exports = [
     {gname:"title", p:'计划简述',t:"h3" },
     {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "thumb" },
-    {gname:"asset", p:'出货的固定资产', t:"sId",csc:"idsel" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"rawStocks", p:'原材料', t:"arrList",inclose:true },
-    {gname:"pPlan", p:['开始点(24时制)','计划进度(%)'], t:"table",inclose:true },
-    {gname:"startTime", p:'起点时间', t:"datetime" }
+    {gname:"rawStart", p:'原材料供应起点时间', t:"datetime" },
+    {gname:"ackStart", p:'包装加工起点时间', t:"datetime" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
