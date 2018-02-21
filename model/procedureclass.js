@@ -105,7 +105,7 @@ module.exports = [
   "pName": "服务",
   "pSuccess": [
     {gname:"uName", p:'名称', t:"h2" },
-    {gname:"serFamily", p:'服务类型', inclose:false,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费']},
+    {gname:"serFamily", p:'服务类型', inclose: true, t:"producttype",  csc:"arrsel"},
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
     {gname:"address", p: '服务地址', t: "ed" },
@@ -249,7 +249,7 @@ module.exports = [
     {gname:"thumbnail", p:'图片',t: "thumb" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
     {gname:"rawStart", p:'原材料供应起点时间', t:"datetime" },
-    {gname:"ackStart", p:'包装加工起点时间', t:"datetime" }
+    {gname:"packStart", p:'包装加工起点时间', t:"datetime" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
@@ -257,5 +257,25 @@ module.exports = [
     "10"
   ],
   "pModel": "prodesign"
+},
+{
+  "pNo": 12,
+  "pName": "产品批发",
+  "pSuccess": [
+    {gname:"product", p:'产品', t:"sId", csc:"idsel" },
+    {gname:"uName", p:'批发品名称', t:"h2" },
+    {gname:"title", p:'批发品简介',t:"h4" },
+    {gname:"thumbnail", p:'图片简介',t: "thumb" },
+    {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
+    {gname:"whole_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
+    {gname:"wholeStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
+    {gname: "canwholesale", p:'可供销售', t: "fg"}
+  ],
+  "pBewrite": "产品条线提出服务设置或修改申请，由产品条线负责人进行审批。",
+  "puRoles": [
+    "12",
+    "11"
+  ],
+  "pModel": "wholesale"
 }
 ]

@@ -1,7 +1,7 @@
 // 供货操作
 const AV = require('../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
-const oClass = require('../../model/operationclass.js')[1];
+const oClass = require('../../model/operationclass.js')[2];
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
 
 var app = getApp();
@@ -12,9 +12,7 @@ Page ({
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
     pageData: [],
     iClicked: '0',
-    reqData:[{gname:"nowPacking", p: '出品包装号',t: "inScan",n:0}],
-    nowPacking: '',
-    specCount: {}
+    reqData:[{gname:"nowPacking", p: '出品包装号',t: "inScan",n:0}]
   },
   subscription: {},
   indexField:'',      //定义索引字段
