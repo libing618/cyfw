@@ -12,23 +12,31 @@ Page({
       {gname: "aGeoPoint", p: '选择地理位置', t: "chooseAd" },
       {gname: "address", p: '详细地址', t: "ed"}
     ],
-    shops: app.roleData.uUnit.shops
+    vData: app.roleData.uUnit
   },
+  distributorLog:{},
   onLoad:function(options){
     var that = this;
     if (checkRols(9)) {
       new AV.Query('manufactor').equalTo('unitId',app.roleData.uUnit.objectId).first().then(manufactor=>{
-        if (manufactor) { that.setData({ vData: manufactor.toJSON() }) }
-      }).catch(err=>{
-        that.setData({ vData: app.roleData.uUnit })
-      });
+        if (manufactor) {
+          that.setData({ vData: manufactor.toJSON() });
+          that.distributorLog = manufactor;
+        }
+      }).catch( console.error);
     };
   },
   i_thumb:i_thumb,
   i_chooseAd:i_chooseAd,
   fSave:function(e){
     var that = this;
-    let newmf=new AV.Object.extend('manufactor');
+    let newmf = new AV.Object.extend('manufactor');
+    if (that.distributorLog) {
+      newmf.id = that.distributorLog.id;
+      delete that.distributorLog.id;
+    } else {
+      that.distributorLog = app.roleData.uUnit;
+    }
     newmf.set('unitId',app.roleData.uUnit.objectId);
     newmf.set('uName',app.roleData.uUnit.uName);
     newmf.set('adminPhone', app.globalData.user.mobilePhoneNumber);
@@ -41,6 +49,7 @@ Page({
     newmf.set('address', e.detail.value.address);
     newmf.set('agreement',e.detail.value.agreement);
     newmf.save().then(()=>{
+      new AV.Object.extend('distributorLog').set(that.distributorLog).save();
       wx.showToast({ title: '分销信息已发布', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     }).catch( console.error );
