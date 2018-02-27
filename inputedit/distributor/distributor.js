@@ -30,13 +30,12 @@ Page({
   i_chooseAd:i_chooseAd,
   fSave:function(e){
     var that = this;
-    let newmf = new AV.Object.extend('manufactor');
+    var sObject = AV.Object.extend('manufactor');
+    let newmf = new sObject();
     if (that.distributorLog) {
       newmf.id = that.distributorLog.id;
       delete that.distributorLog.id;
-    } else {
-      that.distributorLog = app.roleData.uUnit;
-    }
+    };
     newmf.set('unitId',app.roleData.uUnit.objectId);
     newmf.set('uName',app.roleData.uUnit.uName);
     newmf.set('adminPhone', app.globalData.user.mobilePhoneNumber);
@@ -49,7 +48,12 @@ Page({
     newmf.set('address', e.detail.value.address);
     newmf.set('agreement',e.detail.value.agreement);
     newmf.save().then(()=>{
-      new AV.Object.extend('distributorLog').set(that.distributorLog).save();
+      if ( that.distributorLog ){
+        let dLog = AV.Object.extend('distributorLog');
+        let saveLog = new dLog();
+        saveLog.set(that.distributorLog);
+        saveLog.save();
+      }
       wx.showToast({ title: '分销信息已发布', duration: 2500 });
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     }).catch( console.error );
