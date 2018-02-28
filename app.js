@@ -158,8 +158,7 @@ App({
     });
     let pClass = require('model/procedureclass.js');
     for (let i=0;i<pClass.length;i++){
-      that.mData.procedures[i] = [];
-      that.aData[pClass.pModel] = {};
+      that.mData.procedures[i] = []
     }
     that.aData = wx.getStorageSync('aData') || that.aData;              //读数据记录的缓存
     that.mData = wx.getStorageSync('mData') || that.mData;              //读数据管理的缓存
