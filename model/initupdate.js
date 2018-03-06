@@ -113,8 +113,10 @@ module.exports = {
         };
         resolve(lena > 0);               //数据更新状态
       }).catch(error => {
-        wx.onNetworkStatusChange(res => {
-          if (!res.isConnected) { wx.showToast({ title: '请检查网络！' }) }
+        wx.getNetworkType({
+          success: function (res) {
+            if (res.networkType=='none') { wx.showToast({ title: '请检查网络！' }) }
+          }
         });
       });
     }).catch(console.error);
