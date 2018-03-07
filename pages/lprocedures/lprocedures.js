@@ -2,46 +2,37 @@ const { updateData,className,classInFamily ,isAllData } = require('../../model/i
 var app = getApp()
 Page ({
   data: {
-    pNo: 2,                       //流程的序号
+    pNo: '',                       //流程
     mPage: [],                 //页面管理数组
-    dObjectId: 0,             //已建数据的ID作为修改标志，则为新建
+    artId: 0,             //已建数据的ID作为修改标志，则为新建
     pageData: []
   },
-  artid: null,
   isAll:false,
-  cName: '',
   inFamily: false,
 
   onLoad: function (ops) {        //传入参数为pNo,不得为空
     var that = this;
-    let pno = Number(ops.pNo);
     that.artid = Number(ops.artId);
-    if (! isNaN(pno)) {
-      that.cName = className(pno);
-      that.inFamily = classInFamily(pno);
-      that.isAll = isAllData(pno);
-      that.setData({
-        pNo: pno,
-        dObjectId: isNaN(that.artid) ? -1 : that.artid
-      });
-      that.setPage(true);
-    } else {
-      wx.showToast({ title: '数据传输有误', duration: 2500 });
-      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-    };
+    that.inFamily = classInFamily(ops.pNo);
+    that.isAll = isAllData(ops.pNo);
+    that.setData({
+      pNo: ops.pNo,
+      artId: isNaN(that.artid) ? ops.pNo : that.artid
+    });
+    that.setPage(true);
   },
 
   setPage: function(iu){     //有更新则重新传输页面数据
     if (iu){
       if (this.isAll){
         this.setData({
-          mPage: this.inFamily ? app.mData[this.cName][this.artid] : app.mData[this.cName],
-          pageData: app.aData[this.cName]
+          mPage: this.inFamily ? app.mData[this.data.pNo][this.artid] : app.mData[this.data.pNo],
+          pageData: app.aData[this.data.pNo]
         })
       } else {
         this.setData({
-          mPage: this.inFamily ? app.mData[this.cName][app.roleData.uUnit.objectId][that.artid] : app.mData[this.cName][app.roleData.uUnit.objectId],
-          pageData: app.aData[this.cName][app.roleData.uUnit.objectId]
+          mPage: this.inFamily ? app.mData[this.data.pNo][app.roleData.uUnit.objectId][that.artid] : app.mData[this.data.pNo][app.roleData.uUnit.objectId],
+          pageData: app.aData[this.data.pNo][app.roleData.uUnit.objectId]
         })
       }
     }

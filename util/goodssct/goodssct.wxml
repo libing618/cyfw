@@ -12,7 +12,7 @@
             <view class="weui-media-box__desc">{{pageData[item].title}}</view>
           </view>
         </view>
-        <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}&uId={{pageData[item].unitId}}">
+        <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
           <button class="weui-cell__ft" size="mini">详情</button>
         </navigator>
       </block>

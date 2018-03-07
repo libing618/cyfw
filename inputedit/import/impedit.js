@@ -466,8 +466,7 @@ module.exports = {
 
   fSubmit: function (e) {
     var that = this;
-    let approvalID = parseInt(that.data.pNo);        //流程序号
-    var approvalClass = require('../../model/procedureclass.js')[approvalID];       //流程定义和数据结构
+    var approvalClass = require('../../model/procedureclass.js')[that.data.pNo];       //流程定义和数据结构
     var subData = e.detail.value;
     let cNumber = ['fg','dg','listsel'];       //数字类型定义
     let cObject = ['assettype','producttype','arrplus','ed'];       //对象类型定义
@@ -638,7 +637,7 @@ module.exports = {
               } else {
                 let nApproval = AV.Object.extend('sengpi');        //创建审批流程
                 var fcApproval = new nApproval();
-                fcApproval.set('dProcedure', approvalID);                //流程类型
+                fcApproval.set('dProcedure', that.data.pNo);                //流程类型
                 fcApproval.set('dResult', 0);                //流程处理结果0为提交
                 fcApproval.set("unitName", app.roleData.uUnit.uName);                 //申请单位
                 fcApproval.set("sponsorName", app.globalData.user.uName);         //申请人

@@ -15,13 +15,13 @@ Page({
   onLoad:function(options){
     var that = this;
     if ( checkRols(9) ) {
-      updateData(true,3).then(proData=>{
+      updateData(true,'order').then(proData=>{
         if (proData){
-          that.data.mPage = proData.mPage;
-          that.data.pageData = app.aData[3];
-          updateData(true,4).then(specData=>{
+          that.data.mPage = app.mData.order[app.globalData.user.unit];
+          that.data.pageData = app.aData.order;
+          updateData(true,'specs').then(specData=>{
             if(specData){
-              that.data.specData = app.aData[4];
+              that.data.specData = app.aData.specs;
               let shelves={};
               that.data.mPage.forEach(pObjectId=>{
                 shelves[pObjectId] = specData.mPage.filter(spec => {return that.data.specPage[spec].product==pObjectId})

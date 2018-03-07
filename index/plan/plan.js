@@ -1,50 +1,42 @@
 const {iMenu} = require('../../util/util');
-const { updateData, appDataExist } = require('../../model/initupdate');
-const { integration } = require('../../model/initForm.js');
+const { updateData } = require('../../model/initupdate');
+const { integration,unitData } = require('../../model/initForm.js');
 var app = getApp();
 Page({
   data:{
     mPage: [],
-    pNo: 6,                       //流程的序号6为商品信息
+    pNo: 'goods',                       //商品信息
     pageData: {},
     wWidth: app.globalData.sysinfo.windowWidth,
-    grids: []
+    grids: iMenu('plan')
   },
   onLoad:function(options){    // 生命周期函数--监听页面加载
-    var that = this;
-    let pageSetData = {};
-    pageSetData.pandect = [app.mData.goods[app.roleData.uUnit.objectId] ? app.mData.goods[app.roleData.uUnit.objectId].length : 0, app.mData.specs[app.roleData.uUnit.objectId] ? app.mData.specs[app.roleData.uUnit.objectId].length : 0];
-    pageSetData.grids = iMenu('plan');          //更新数据
-    if (appDataExist('goods',app.roleData.uUnit.objectId)){
-      pageSetData.mPage = app.mData.goods[app.roleData.uUnit.objectId];
-      pageSetData.pageData= app.aData.goods[app.roleData.uUnit.objectId];
-    }
-    that.setData( pageSetData )
+    this.setPage(true);
   },
 
   setPage: function(iu){
     if (iu){
       this.setData({
         mPage:app.mData.goods[app.roleData.uUnit.objectId],
-        pageData:app.aData.goods[app.roleData.uUnit.objectId],
+        pageData:unitData('goods'),
         pandect:[app.mData.goods[app.roleData.uUnit.objectId].length,app.mData.specs[app.roleData.uUnit.objectId].length]
       })
     }
   },
 
   onReady: function(){
-    integration('specs',app.roleData.uUnit.objectId).then(()=>{ this.setPage(appDataExist('goods',app.roleData.uUnit.objectId)) });              //更新缓存以后有变化的数据
+    integration('specs',app.roleData.uUnit.objectId).then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的商品' : '用户体验产品服务',
     })
   },
 
   onPullDownRefresh:function(){
-    updateData(true,6).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(true,'goods').then(isupdated=>{ this.setPage(isupdated) });
   },
 
   onReachBottom:function(){
-    updateData(false,6).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(false,'goods').then(isupdated=>{ this.setPage(isupdated) });
   },
 
   onShareAppMessage: function() {    // 用户点击右上角分享

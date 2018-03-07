@@ -1,7 +1,7 @@
 //原材料
 const AV = require('../../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
-const oClass = require('../../model/operationclass.js')[0];
+const oClass = require('../../model/procedureclass.js').rawOperate;
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
 var app = getApp()
 Page({

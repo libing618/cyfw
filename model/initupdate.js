@@ -2,61 +2,47 @@ const AV = require('../libs/leancloud-storage.js');
 const procedureclass = require('procedureclass.js');
 var app = getApp();
 function isAllData(cName){
-  switch (cName){
-    case 'articles' :
-      return true;
-      break;
-    default :
-      return false;
-      break;
-  }
+  return (cName=='articles')
 };
-function appDataExist(dKey0, dKey1, dKey2) {              //检查app.aData是否存在二三级的键值
-  let dExist = true;
-  if (typeof app.aData[dKey0] == 'undefined') { return false }
-  if (dKey1 in app.aData[dKey0]) {
-    if (typeof dKey2 == 'string') {
-      if (!(dKey2 in app.aData[dKey0][dKey1])) {
-        dExist = false;
-      }
-    }
-  } else { dExist = false };
-  return dExist;
+function appDataExist(dKey0, dKey1) {              //检查app.aData是否存在二三级的键值
+  if (typeof app.mData.pAt[dKey0] == 'undefined') {
+    app.mData.pAt[dKey0] = [0,0];
+    return false
+  }
+  if (dKey1 in app.mData.pAt[dKey0]) {
+    return true;
+  } else {
+    let dExist = app.mData.pAt[dKey0];
+    dExist[dKey1] = [0,0];
+    app.mData.pAt[dKey0] = dExist;
+    return false;
+  };
 };
 module.exports = {
   appDataExist: appDataExist,
 
   isAllData: isAllData,
 
-  updateData: function (isDown, pNo, uId, udcName) {    //更新页面显示数据,isDown下拉刷新,pNo类定义序号, uId单位Id, udcName类定义文件名
+  updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown下拉刷新,pNo类定义序号, uId单位Id
     return new Promise((resolve, reject) => {
-      let udClass = typeof udcName == 'string' ? require(udcName) : procedureclass;
-      if (typeof pNo == 'string') {
-        udClass.forEach(pClass => { if (pClass.pModel == pNo) { pNo = pClass.pNo } });
-      }
-      var cName = udClass[pNo].pModel;
-      let isAll = isAllData(cName);            //是否读所有数据
-      let inFamily = typeof udClass[pNo].afamily != 'undefined';            //是否有分类数组
-      var umdata ,updAt;
-      var readProcedure = new AV.Query(cName);                                      //进行数据库初始化操作
+      let isAll = isAllData(pNo);            //是否读所有数据
+      let inFamily = typeof procedureclass[pNo].afamily != 'undefined';            //是否有分类数组
+      var umdata=[] ,updAt;
+      var readProcedure = new AV.Query(pNo);                                      //进行数据库初始化操作
       if (isAll) {
-        updAt = appDataExist(cName, 'pAt') ? app.aData[cName].pAt : [0, 0];
-        umdata = app.mData[cName] || [];
-        if (typeof app.aData[cName] == 'undefined') { app.aData[cName]={} };
+        updAt = appDataExist(pNo) ? app.mData.pAt[pNo] : [0, 0];
+        umdata = app.mData[pNo] || [];
       } else {
         var unitId = uId ? uId : app.roleData.uUnit.objectId;
         readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
-        updAt = appDataExist(cName, unitId, 'pAt') ? app.aData[cName][unitId].pAt : [0, 0];
-        if (typeof app.mData[cName][unitId] == 'undefined') {       //添加以单位ID为Key的JSON初值
-          let uaobj = {},upobj={},umobj={};
-          if (typeof app.mData[cName] != 'undefined') { umobj=app.mData[cName] };
+        updAt = appDataExist(pNo, unitId) ? app.mData.pAt[pNo][unitId] : [0, 0];
+        if (typeof app.mData[pNo][unitId] == 'undefined') {       //添加以单位ID为Key的JSON初值
+          let umobj={};
+          if (typeof app.mData[pNo] != 'undefined') { umobj=app.mData[pNo] };
           umobj[unitId] = [];
-          app.mData[cName] = umobj;
-          if (typeof app.aData[cName] != 'undefined') { uaobj=app.aData[cName] };
-          uaobj[unitId] = {};
-          app.aData[cName] = uaobj;
+          app.mData[pNo] = umobj;
         } else {
-          umdata = app.mData[cName][unitId] || [];
+          umdata = app.mData[pNo][unitId] || [];
         }
       };
       if (isDown) {
@@ -97,26 +83,19 @@ module.exports = {
                 umdata.push(aProcedure.objectId);                   //分类ID数组增加对应ID
               }
             };
-            if (isAll) {
-              app.aData[cName][aProcedure.objectId] = aProcedure;                        //将数据对象记录到本机
-            } else {
-              app.aData[cName][unitId][aProcedure.objectId] = aProcedure;
-            }
+            app.aData[pNo][aProcedure.objectId] = aProcedure;                        //将数据对象记录到本机
           };
         };
         if (isAll) {
-          app.mData[cName] = umdata;
-          app.aData[cName].pAt = updAt;
+          app.mData[pNo] = umdata;
+          app.mData.pAt[pNo] = updAt;
         } else {
-          app.mData[cName][unitId] = umdata;
-          app.aData[cName][unitId].pAt = updAt;
+          app.mData[pNo][unitId] = umdata;
+          app.mData.pAt[pNo][unitId] = updAt;
         };
         resolve(lena > 0);               //数据更新状态
       }).catch(error => {
-        wx.getNetworkType({
-          success: function (res) {
-            if (res.networkType=='none') { wx.showToast({ title: '请检查网络！' }) }
-          }
+        if (!that.netState) { wx.showToast({ title: '请检查网络！' }) }
         });
       });
     }).catch(console.error);

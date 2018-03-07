@@ -18,7 +18,7 @@
         </view>
       </view>
       <view hidden="{{iClicked!=ac}}" wx:for="{{pageData[ac].cargo}}" wx:key="{{index}}">
-        <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}&uId={{cargo[item].unitId}}">
+        <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
           <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
               <image class="weui-media-box__thumb" src="{{cargo[item].thumbnail}}" background-size="cover"></image>

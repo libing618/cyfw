@@ -6,7 +6,7 @@ var app = getApp()
 Page({
   data:{
     mPage: [],
-    pNo: 5,                       //流程的序号5为成品信息
+    pNo: 'cargo',                       //流程的序号5为成品信息
     pageData: {},
     iClicked: '0',
     mSum: {},
@@ -14,12 +14,15 @@ Page({
   },
   onLoad:function(options){
     this.setData({ grids: iMenu('production') });          //更新菜单数据
+    this.setPage(true);
   },
 
   setPage: function(iu){
     if (iu){
       cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
         this.setData({
+          mPage:app.mData.product[app.roleData.uUnit.objectId],
+          pageData:app.aData.product[app.roleData.uUnit.objectId],
           cargo:app.aData.cargo[app.roleData.uUnit.objectId],
           pandect:cSum.rSum,
           mSum: cSum.mSum
@@ -30,17 +33,7 @@ Page({
 
   onReady:function(){
     var that = this;
-    integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-      cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
-        that.setData({
-          mPage:app.mData.product[app.roleData.uUnit.objectId],
-          pageData:app.aData.product[app.roleData.uUnit.objectId],
-          cargo:app.aData.cargo[app.roleData.uUnit.objectId],
-          pandect:cSum.rSum,
-          mSum: cSum.mSum
-        })
-      })
-    });
+    integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
     })
@@ -49,10 +42,10 @@ Page({
   indexClick:indexClick,
 
   onPullDownRefresh: function() {
-    updateData(true,5).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(true,'cargo').then(isupdated=>{ this.setPage(isupdated) });
   },
   onReachBottom: function() {
-    updateData(false,5).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(false,'cargo').then(isupdated=>{ this.setPage(isupdated) });
   },
   onShareAppMessage: function() {
     // 用户点击右上角分享

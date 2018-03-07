@@ -24,10 +24,10 @@ const realtime = new Realtime({
 App({
   globalData: require('globaldata.js').globalData,
   roleData: require('globaldata.js').roleData,
-  mData: require('globaldata.js').mData,                          //以objectId为key的数据记录
-  aData: {},
-  iData: {},
-  procedures: {},
+  mData:  wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
+  aData:  wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
+  procedures: wx.getStorageSync('procedures') || {},              //读流程的缓存
+  netState: true,
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
@@ -143,6 +143,16 @@ App({
 
   onLaunch: function () {
     var that = this;            //调用应用实例的方法获取全局数据
+    wx.getNetworkType({
+      success: function (res) {
+        if (res.networkType == 'none') {
+          that.netState = false;
+          wx.showToast({ title: '请检查网络！' });
+        } else {
+          that.netState = true;
+        }
+      }
+    });
     wx.getSystemInfo({                     //读设备信息
       success: function(res) {
         that.globalData.sysinfo = res;
@@ -156,15 +166,13 @@ App({
         };
       }
     });
-    let pClass = require('model/procedureclass.js');
-    for (let i=0;i<pClass.length;i++){
-      that.mData.procedures[i] = []
-    }
-    that.aData = wx.getStorageSync('aData') || that.aData;              //读数据记录的缓存
-    that.mData = wx.getStorageSync('mData') || that.mData;              //读数据管理的缓存
-    that.procedures = wx.getStorageSync('procedures') || that.procedures;              //读流程的缓存
     wx.onNetworkStatusChange(res=>{
-      if (!res.isConnected) { wx.showToast({title:'请检查网络！'}) }
+      if (!res.isConnected) {
+        that.netState = false;
+        wx.showToast({ title: '请检查网络！' });
+      } else {
+        that.netState = true;
+      }
     });
   },
 

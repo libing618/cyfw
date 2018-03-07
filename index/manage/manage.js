@@ -8,7 +8,7 @@ Page({
     scrollTop : 0,
     scrollHeight: app.globalData.sysinfo.windowHeight-80,
     mPage: app.mData.articles,
-    pNo: 1,                       //流程的序号1为文章类信息
+    pNo: 'articles',                       //文章类信息
     pageData: app.aData.articles,
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
     userAuthorize: -2,              //中间部分-2显示欢迎词，-1为授权按钮,0为用户授权,1为用户已注册
@@ -59,7 +59,7 @@ Page({
   },
 
   onReady: function(){
-    updateData(true,1).then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
+    updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
   },
   userInfoHandler: function (e) {
     var that = this;
@@ -72,10 +72,10 @@ Page({
   tabClick: tabClick,
 
   onPullDownRefresh:function(){
-    updateData(true,1).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
   onReachBottom:function(){
-    updateData(false,1).then(isupdated=>{ this.setPage(isupdated) });
+    updateData(false,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
   onShareAppMessage: function() {    // 用户点击右上角分享
     return {
