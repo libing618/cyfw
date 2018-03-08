@@ -96,13 +96,8 @@ module.exports = {
         resolve(lena > 0);               //数据更新状态
       }).catch(error => {
         if (!that.netState) { wx.showToast({ title: '请检查网络！' }) }
-        });
       });
     }).catch(console.error);
-  },
-
-  className: function(pNo) {              //返回数据表名
-    return procedureclass[pNo].pModel
   },
 
   classInFamily: function(pNo) {              //判断数据表是否有分类控制

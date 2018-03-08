@@ -1,4 +1,4 @@
-const { updateData,className,classInFamily ,isAllData } = require('../../model/initupdate');
+const { updateData,classInFamily ,isAllData } = require('../../model/initupdate');
 var app = getApp()
 Page ({
   data: {
@@ -25,16 +25,22 @@ Page ({
   setPage: function(iu){     //有更新则重新传输页面数据
     if (iu){
       if (this.isAll){
-        this.setData({
-          mPage: this.inFamily ? app.mData[this.data.pNo][this.artid] : app.mData[this.data.pNo],
-          pageData: app.aData[this.data.pNo]
-        })
+        if (this.inFamily){
+          this.data.mPage = app.mData[this.data.pNo][this.artid] || []
+        } else {
+          this.data.mPage = app.mData[this.data.pNo] || []
+        }
       } else {
-        this.setData({
-          mPage: this.inFamily ? app.mData[this.data.pNo][app.roleData.uUnit.objectId][that.artid] : app.mData[this.data.pNo][app.roleData.uUnit.objectId],
-          pageData: app.aData[this.data.pNo][app.roleData.uUnit.objectId]
-        })
+        if (this.inFamily){
+          this.data.mPage = app.mData[this.data.pNo][app.roleData.uUnit.objectId][this.artid] || []
+        } else {
+          this.data.mPage = app.mData[this.data.pNo][app.roleData.uUnit.objectId] || []
+        }
       }
+      this.setData({
+        mPage: this.data.mPage,
+        pageData: app.aData[this.data.pNo]
+      })
     }
   },
 

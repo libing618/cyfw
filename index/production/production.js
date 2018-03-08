@@ -14,7 +14,7 @@ Page({
   },
   onLoad:function(options){
     this.setData({ grids: iMenu('production') });          //更新菜单数据
-    this.setPage(true);
+    this.setPage(mData.product[app.roleData.uUnit.objectId]);
   },
 
   setPage: function(iu){

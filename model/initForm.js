@@ -4,7 +4,7 @@ var app = getApp();
 function unitData(cName,uId){
   let uData = {};
   let unitId = uId ? uId : app.roleData.uUnit.objectId;
-  app.mData[cName][unitId].forEach(cuId=>{uData[unitId]=app.aData[cName][cuId]});
+  if (app.mData[cName][unitId]) {app.mData[cName][unitId].forEach(cuId=>{uData[unitId]=app.aData[cName][cuId]})};
   return uData;
 };
 module.exports = {
@@ -15,7 +15,7 @@ integration: function(pName, unitId) {           //整合选择数组
     let selves = {};
     switch (pName) {
       case 'cargo':         //通过产品选择成品
-        return Promise.all([updateData(true, 3, unitId), updateData(true, 5, unitId)]).then(([p3, p5]) => {
+        return Promise.all([updateData(true, "product", unitId), updateData(true, "cargo", unitId)]).then(([p3, p5]) => {
           app.mData.product[unitId].forEach(proId => {
             if (typeof app.aData.product[proId] !='undefined') { selves = app.aData.product[proId] };
             selves.cargo = app.mData.cargo[unitId].filter(cargoId => { return app.aData.cargo[cargoId].product == proId });
@@ -25,7 +25,7 @@ integration: function(pName, unitId) {           //整合选择数组
         }).catch(console.error);
         break;
       case 'specs':
-        return Promise.all([updateData(true, 7, unitId), updateData(true, 6, unitId)]).then(([p7, p6]) => {           //通过规格选择成品
+        return Promise.all([updateData(true, "specs", unitId), updateData(true, "goods", unitId)]).then(([p7, p6]) => {           //通过规格选择成品
           app.mData.goods[unitId].forEach(goodsId => {
             if (typeof app.aData.goods[goodsId] != 'undefined') { selves = app.aData.goods[goodsId] };
             selves.specs = app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });

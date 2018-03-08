@@ -1,12 +1,12 @@
 //gname为字段名称，p为显示的没字名，t为编辑类型，css为存储和显示类型
-//csc对应关系：aslist行业数组选择，存储{code：代码数组，sName:代码对应值的数组}
-//csc对应关系：arrsel数组选择，存储{code：选择值，sName:选择对应的值}
-//csc对应关系：objsel对象选择，存储gname对应数据表选择的ID值，显示slave对应uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
-//csc对应关系：specsel对象选择，存储gname对应数据表选择的ID值，显示slave对应要素及carga要素
-//csc对应关系：idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname].uName
-//csc对应关系：t:"dg"为数据型,csc的digit代表2位小数点浮点数，number则为整数型
+//csc对应关系:aslist行业数组选择，存储{code:代码数组，sName:代码对应值的数组}
+//csc对应关系:arrsel数组选择，存储{code:选择值，sName:选择对应的值}
+//csc对应关系:objsel对象选择，存储gname对应数据表选择的ID值，显示slave对应uName:选择记录的名称，title:选择记录的简介，thumbnail:选择记录的缩略图}
+//csc对应关系:specsel对象选择，存储gname对应数据表选择的ID值，显示slave对应要素及carga要素
+//csc对应关系:idsel数组选择，存储gname对应数据表选择的ID值，显示选择对应的app.aData[gname].uName
+//csc对应关系:t:"dg"为数据型,csc的digit代表2位小数点浮点数，number则为整数型
 module.exports = {
-"_Role"：{
+"_Role":{
   "pName": "单位名称和负责人",
   "pSuccess": [
     {gname:"afamily", p:'厂商类型', inclose:false,t:"listsel", aList:['产品制造人','物流服务人','电商服务站','生产厂家','电子商务企业']},
@@ -30,7 +30,7 @@ module.exports = {
   ],
   "pModel": "_Role"
 },
-"articles"：{
+"articles":{
   "pName": "文章",
   "afamily": ['商圈人脉','品牌建设','扶持优惠','产品宣传','常见问题'],
   "pSuccess": [
@@ -51,7 +51,7 @@ module.exports = {
   ],
   "pModel": "articles"
 },
-"asset"：{
+"asset":{
   "pName": "固定资产登记",
   "pSuccess": [
     {gname:"uName", p:'固定资产名称', t:"h2" },

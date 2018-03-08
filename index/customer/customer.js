@@ -13,7 +13,7 @@ Page({
   },
   onLoad:function(options){
     this.setData({grids: iMenu('customer')});          //更新菜单数据
-    this.setPage(true);
+    this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
   },
 
   setPage: function(iu){

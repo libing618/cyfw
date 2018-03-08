@@ -11,7 +11,7 @@ Page({
     grids: iMenu('plan')
   },
   onLoad:function(options){    // 生命周期函数--监听页面加载
-    this.setPage(true);
+    this.setPage(app.mData.goods[app.roleData.uUnit.objectId]);
   },
 
   setPage: function(iu){
