@@ -4,29 +4,29 @@
   <view class="page__bd">
     <block wx:for="{{mPage}}" wx:key="{{index}}" wx:for-item="sp" wx:for-index="i">
     <view wx:if="{{pageData[sp].inSale}}"
-      <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{mData[sp].thumbnail}}" background-size="cover"></image>
-        </view>
-        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{mData[sp].uName}}</view>
-          <view class="weui-media-box__desc">渠道分成{{sData[sp].channel}}%　推广分成{{sData[sp].extension}}%</view>
-        </view>
+    <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" id="{{sp}}" bindtap="indexClick">
+      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+        <image class="weui-media-box__thumb" src="{{pageData[sp].thumbnail}}" background-size="cover"></image>
       </view>
+      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+        <view class="weui-media-box__title">{{pageData[sp].uName}}</view>
+        <view class="weui-media-box__desc">{{pageData[sp].title}}</view>
+      </view>
+    </view>
     </view>
     </block>
   </view>
   <view class="page__hd">未上架商品(点击单品上架)</view>
   <view class="page__bd">
     <block wx:for="{{mPage}}" wx:key="{{index}}" wx:for-item="mp" wx:for-index="i">
-    <view wx:if="{{!pageData[sp].inSale}}"
+    <view wx:if="{{!pageData[mp].inSale}}"
       <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" id="{{mp}}" bindtap="indexClick">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-          <image class="weui-media-box__thumb" src="{{mData[mp].thumbnail}}" background-size="cover"></image>
+          <image class="weui-media-box__thumb" src="{{pageData[mp].thumbnail}}" background-size="cover"></image>
         </view>
         <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-          <view class="weui-media-box__title">{{mData[mp].uName}}</view>
-          <view class="weui-media-box__desc">{{mData[mp].title}}</view>
+          <view class="weui-media-box__title">{{pageData[mp].uName}}</view>
+          <view class="weui-media-box__desc">{{pageData[mp].title}}</view>
         </view>
       </view>
     </view>

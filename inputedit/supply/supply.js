@@ -71,7 +71,7 @@ Page ({
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-        that.setData({cargo:app.aData.cargo[app.roleData.uUnit.objectId]});
+        that.setData({cargo:app.aData.cargo});
         that.fetchData.bind(that) ;
         wx.setNavigationBarTitle({
           title: app.roleData.uUnit.nick + '的' + oClass.oprocess[ops.oState]

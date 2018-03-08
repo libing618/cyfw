@@ -1,5 +1,5 @@
 const { updateData } = require('../../model/initupdate.js');
-const { integration } = require('../../model/initForm.js');
+const { integration,unitData } = require('../../model/initForm.js');
 const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()
@@ -22,8 +22,8 @@ Page({
       cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
         this.setData({
           mPage:app.mData.product[app.roleData.uUnit.objectId],
-          pageData:app.aData.product[app.roleData.uUnit.objectId],
-          cargo:app.aData.cargo[app.roleData.uUnit.objectId],
+          pageData:aunitData('product'),
+          cargo:unitData('cargo'),
           pandect:cSum.rSum,
           mSum: cSum.mSum
         })

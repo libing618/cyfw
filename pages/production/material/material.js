@@ -3,6 +3,7 @@ const AV = require('../../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
 const oClass = require('../../model/procedureclass.js').rawOperate;
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
+const { integration,unitData } = require('../../model/initForm.js');
 var app = getApp()
 Page({
   data: {
@@ -70,7 +71,7 @@ Page({
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
-        that.setData({cargo:app.aData.cargo[app.roleData.uUnit.objectId]});
+        that.setData({cargo:unitData('cargo',app.roleData.uUnit.objectId);
         that.fetchData.bind(that) ;
         wx.setNavigationBarTitle({
           title: app.roleData.uUnit.nick + '的' + oClass.oprocess[ops.oState]
