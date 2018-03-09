@@ -1,4 +1,3 @@
-const {iMenu} = require('../../util/util');
 const { updateData } = require('../../model/initupdate');
 const { integration,unitData } = require('../../model/initForm.js');
 var app = getApp();
@@ -8,7 +7,7 @@ Page({
     pNo: 'goods',                       //商品信息
     pageData: {},
     wWidth: app.globalData.sysinfo.windowWidth,
-    grids: iMenu('plan')
+    grids: app.roleData.iMenu.plan
   },
   onLoad:function(options){    // 生命周期函数--监听页面加载
     this.setPage(app.mData.goods[app.roleData.uUnit.objectId]);

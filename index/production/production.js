@@ -1,6 +1,6 @@
 const { updateData } = require('../../model/initupdate.js');
 const { integration,unitData } = require('../../model/initForm.js');
-const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
+const {cargoSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()
 Page({
@@ -10,11 +10,10 @@ Page({
     pageData: {},
     iClicked: '0',
     mSum: {},
-    grids:[]
+    grids:app.roleData.iMenu.production
   },
   onLoad:function(options){
-    this.setData({ grids: iMenu('production') });          //更新菜单数据
-    this.setPage(mData.product[app.roleData.uUnit.objectId]);
+    this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
   },
 
   setPage: function(iu){

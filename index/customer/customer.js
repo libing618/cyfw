@@ -1,6 +1,6 @@
-const { updateData, appDataExist } = require('../../model/initupdate.js');
+const { updateData } = require('../../model/initupdate.js');
 const { integration,unitData } = require('../../model/initForm.js');
-const {iMenu, cargoSum, indexClick} = require('../../util/util.js');
+const {cargoSum, indexClick} = require('../../util/util.js');
 
 var app = getApp()
 Page({
@@ -9,10 +9,9 @@ Page({
     pNo: "cargo",                       //流程的序号5为成品信息
     pageData: unitData('cargo'),
     iClicked: '0',
-    grids:[]
+    grids:app.roleData.iMenu.customer
   },
   onLoad:function(options){
-    this.setData({grids: iMenu('customer')});          //更新菜单数据
     this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
   },
 

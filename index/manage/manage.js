@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData } = require('../../model/initupdate');
-const {openWxLogin,fetchMenu,iMenu,tabClick} = require('../../util/util');
+const {openWxLogin,fetchMenu,tabClick} = require('../../util/util');
 var app = getApp()
 Page({
   data: {
@@ -14,7 +14,7 @@ Page({
     userAuthorize: -2,              //中间部分-2显示欢迎词，-1为授权按钮,0为用户授权,1为用户已注册
     pageCk: app.mData.pCk1,
     wWidth: app.globalData.sysinfo.windowWidth,
-    grids: []
+    grids: app.roleData.iMenu.manage
   },
 
   onLoad: function () {
@@ -22,7 +22,7 @@ Page({
     return Promise.resolve( AV.User.current()).then(lcuser => {           //读缓存登录信息
       if (lcuser) {                //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
         app.globalData.user = lcuser.toJSON();
-        fetchMenu().then(()=>{ that.setData({ userAuthorize: 0, grids: iMenu('manage') }) });
+        fetchMenu().then(()=>{ that.setData({ userAuthorize: 0, grids: app.roleData.iMenu.manage }) });
       } else {
         wx.getSetting({
           success(res) {
@@ -30,7 +30,7 @@ Page({
               openWxLogin(that.data.userAuthorize).then( mstate=> {
                 app.logData.push([Date.now(), '系统初始化设备' + app.globalData.sysinfo.toString()]);                      //本机初始化时间记入日志
                 fetchMenu().then(()=>{
-                  that.setData({ userAuthorize: mstate, grids: iMenu('manage') })
+                  that.setData({ userAuthorize: mstate, grids: app.roleData.iMenu.manage })
                 }).catch((menuErr) => {
                   app.logData.push([Date.now(), '菜单更新失败' + menuErr.toString()]);
                 });
@@ -65,7 +65,7 @@ Page({
     var that = this;
     openWxLogin(that.data.userAuthorize).then( (mstate)=> {
       app.logData.push([Date.now(), '用户授权' + app.globalData.sysinfo.toString()]);                      //用户授权时间记入日志
-      that.setData({ userAuthorize: 0, grids: iMenu('manage') })
+      that.setData({ userAuthorize: 0, grids: app.roleData.iMenu.manage })
     }).catch( console.error );
   },
 

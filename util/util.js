@@ -7,7 +7,15 @@ function formatNumber(n) {
 function exitPage(){
   wx.showToast({ title: '权限不足请检查', duration: 2500 });
   setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-}
+};
+function iMenu(index){
+  let mValue = require('../libs/allmenu.js')[index];
+  let mArr = app.roleData.wmenu[index].map(rNumber=>{
+    return {tourl:mValue['N'+rNumber].tourl, mIcon:mValue['m'+rNumber],mName:mValue['N'+rNumber].mName}
+  });
+  if (index=='manage'){ mArr[0].mIcon=app.globalData.user.avatarUrl }      //把微信头像地址存入第一个菜单icon
+  return mArr;
+};
 module.exports = {
   openWxLogin: function(lStatus) {            //注册登录（本机登录状态）
     return new Promise((resolve, reject) => {
@@ -51,7 +59,10 @@ module.exports = {
       .equalTo('objectId',app.globalData.user.userRol.objectId).find().then( fetchMenu =>{
       if (fetchMenu.length>0) {                          //菜单在云端有变化
         app.roleData.wmenu = fetchMenu[0].toJSON();
-        ['manage', 'plan', 'production', 'customer'].forEach(mname => { app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0}) })
+        ['manage', 'plan', 'production', 'customer'].forEach(mname => {
+          app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0});
+          app.roleData.iMenu[mname] = iMenu(mname);
+        });
         wx.setStorage({ key: 'roleData', data: app.roleData });
       };
       return wx.getUserInfo({        //检查客户信息
@@ -63,6 +74,7 @@ module.exports = {
               if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
                 updateInfo = true;
                 app.globalData.user[iKey] = userInfo[iKey];
+                app.roleData.iMenu.manage[0].mIcon=app.globalData.user.avatarUrl;
               }
             };
             if (updateInfo){
@@ -96,15 +108,6 @@ module.exports = {
       };
       app.imLogin(app.globalData.user.username);
     }).catch( console.error );
-  },
-
-  iMenu: function(index){
-    let mValue = require('../libs/allmenu.js')[index];
-    let mArr = app.roleData.wmenu[index].map(rNumber=>{
-      return {tourl:mValue['N'+rNumber].tourl, mIcon:mValue['m'+rNumber],mName:mValue['N'+rNumber].mName}
-    });
-    if (index=='manage'){ mArr[0].mIcon=app.globalData.user.avatarUrl }      //把微信头像地址存入第一个菜单icon
-    return mArr;
   },
 
   checkRols: function(ouRole){
