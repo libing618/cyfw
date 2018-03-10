@@ -122,28 +122,6 @@ module.exports = {
     }
   },
 
-  cargoSum: function(fields){
-    return new Promise((resolve, reject) => {
-      let sLength = fields.length;
-      let fieldSum = new Array(sLength);
-      let mSum = {};
-      fieldSum.fill(0);         //定义汇总数组长度且填充为0
-      if (app.mData.product[app.roleData.uUnit.objectId]){
-        app.mData.product[app.roleData.uUnit.objectId].forEach(mId=>{
-          mSum[mId] = [];
-          for (let i = 0; i < sLength; i++) {mSum[mId].push(0)};
-          app.aData.product[mId].cargo.forEach(aId=>{
-            for (let i=0;i<sLength;i++){
-              fieldSum[i] += app.aData.cargo[aId][fields[i]];
-              mSum[mId][i] = mSum[mId][i]+app.aData.cargo[aId][fields[i]];
-            }
-          })
-        })
-      }
-      resolve({rSum:fieldSum,mSum});
-    }).catch( console.error );
-  },
-
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
       let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};

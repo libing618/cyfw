@@ -1,6 +1,6 @@
-const { updateData } = require('../../model/initupdate.js');
+const { cargoSum, updateData } = require('../../model/initupdate.js');
 const { integration,unitData } = require('../../model/initForm.js');
-const {cargoSum, indexClick} = require('../../util/util.js');
+const {indexClick} = require('../../util/util.js');
 
 var app = getApp()
 Page({

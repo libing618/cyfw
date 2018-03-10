@@ -17,41 +17,6 @@ Page({
     grids: app.roleData.iMenu.manage
   },
 
-  // onLoad: function () {
-  //   var that = this;
-  //   return new Promise((resolve, reject) => {           //读缓存登录信息
-  //     let lcuser = AV.User.current();
-  //     if (lcuser) {                //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
-  //       app.globalData.user = lcuser.toJSON();
-  //       fetchMenu().then(()=>{
-  //         that.setData({ userAuthorize: 0, grids: app.roleData.iMenu.manage })
-  //       }).catch(fmerr=>reject(fmerr));
-  //     } else {
-  //       wx.getSetting({
-  //         success(res) {
-  //           if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
-  //             openWxLogin(that.data.userAuthorize).then( mstate=> {
-  //               app.logData.push([Date.now(), '系统初始化设备' + app.globalData.sysinfo.toString()]);                      //本机初始化时间记入日志
-  //               fetchMenu().then(()=>{
-  //                 that.setData({ userAuthorize: mstate, grids: app.roleData.iMenu.manage })
-  //               }).catch((menuErr) => {
-  //                 app.logData.push([Date.now(), '菜单更新失败' + menuErr.toString()]);
-  //               });
-  //             }).catch((loginErr) => {
-  //               app.logData.push([Date.now(), '系统登录失败' + loginErr.toString()]);
-  //             });
-  //           } else {
-  //             that.setData({ userAuthorize:-1 });
-              
-  //           }
-  //         }
-  //       })
-  //     }
-  //   }).catch((lcuErr) => {
-  //     app.logData.push([Date.now(), '注册用户状态错误' + lcuErr.toString()]);
-  //   })
-  // },
-
   setPage: function(iu){
     if (iu){
       this.setData({
@@ -64,6 +29,7 @@ Page({
   onReady: function(){
     updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
   },
+  
   userInfoHandler: function (e) {
     var that = this;
     openWxLogin(that.data.userAuthorize).then( (mstate)=> {

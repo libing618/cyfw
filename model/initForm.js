@@ -4,7 +4,7 @@ var app = getApp();
 function unitData(cName,uId){
   let uData = {};
   let unitId = uId ? uId : app.roleData.uUnit.objectId;
-  if (app.mData[cName][unitId]) {app.mData[cName][unitId].forEach(cuId=>{uData[unitId]=app.aData[cName][cuId]})};
+  if (app.mData[cName][unitId]) { app.mData[cName][unitId].forEach(cuId => { uData[cuId]=app.aData[cName][cuId]})};
   return uData;
 };
 module.exports = {
@@ -17,7 +17,7 @@ integration: function(pName, unitId) {           //整合选择数组
       case 'cargo':         //通过产品选择成品
         return Promise.all([updateData(true, "product", unitId), updateData(true, "cargo", unitId)]).then(([p3, p5]) => {
           app.mData.product[unitId].forEach(proId => {
-            if (typeof app.aData.product[proId] !='undefined') { selves = app.aData.product[proId] };
+            if (typeof app.aData.product[proId] !='undefined') { selves[proId] = app.aData.product[proId] };
             selves.cargo = app.mData.cargo[unitId].filter(cargoId => { return app.aData.cargo[cargoId].product == proId });
             app.aData.product[proId] = selves;
           })
@@ -26,11 +26,21 @@ integration: function(pName, unitId) {           //整合选择数组
         break;
       case 'specs':
         return Promise.all([updateData(true, "specs", unitId), updateData(true, "goods", unitId)]).then(([p7, p6]) => {           //通过规格选择成品
-          app.mData.goods[unitId].forEach(goodsId => {
-            if (typeof app.aData.goods[goodsId] != 'undefined') { selves = app.aData.goods[goodsId] };
-            selves.specs = app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });
-            app.aData.goods[goodsId] = selves;
-          })
+          let allspecs = Promise.resolve(updateData(false,"specs", unitId)).then(notEnd=>{
+            if (notEnd) {
+              return allspecs();
+            } else {
+              app.mData.goods[unitId].forEach(goodsId => {
+                // if (typeof app.aData.goods[goodsId] != 'undefined') { selves[goodsId] = app.aData.goods[goodsId] };
+                // selves.specs = app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });
+                // app.aData.goods[goodsId] = selves;
+                if (typeof app.aData.goods[goodsId] != 'undefined') {
+                  app.aData.goods[goodsId].specs =  app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });
+                }
+                console.log(goodsId)
+              })
+            }
+          });
           resolve(p7 || p6);
         }).catch(console.error);
         break;
