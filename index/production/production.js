@@ -6,11 +6,11 @@ var app = getApp()
 Page({
   data:{
     mPage: [],
-    pNo: 'cargo',                       //流程的序号5为成品信息
+    pNo: 'cargo',                       //成品信息
     pageData: {},
     iClicked: '0',
     mSum: {},
-    grids:app.roleData.iMenu.production
+    grids: app.roleData.iMenu.production
   },
   onLoad:function(options){
     this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
@@ -21,7 +21,7 @@ Page({
       cargoSum(['canSupply', 'cargoStock']).then(cSum=>{
         this.setData({
           mPage:app.mData.product[app.roleData.uUnit.objectId],
-          pageData:aunitData('product'),
+          pageData:unitData('product'),
           cargo:unitData('cargo'),
           pandect:cSum.rSum,
           mSum: cSum.mSum

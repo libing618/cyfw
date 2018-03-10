@@ -9,7 +9,7 @@ Page({
     pNo: "cargo",                       //流程的序号5为成品信息
     pageData: unitData('cargo'),
     iClicked: '0',
-    grids:app.roleData.iMenu.customer
+    grids: app.roleData.iMenu.customer
   },
   onLoad:function(options){
     this.setPage(app.mData.product[app.roleData.uUnit.objectId]);

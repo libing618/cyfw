@@ -12,11 +12,8 @@
   </view>
 
   <view class="page__bd">
-    <view wx:if="{{userAuthorize==-2}}">
-      <text>欢迎使用创业服务平台</text>
-    </view>
-    <view wx:elif="{{userAuthorize==-1}}">
-      <button open-type="getUserInfo" bindgetuserinfo="userInfoHandler">允许微信在本平台上登录</button>
+    <view wx:if="{{unAuthorize}}">
+      <button open-type="getUserInfo" bindgetuserinfo="userInfoHandler">我要使用这个平台</button>
     </view>
     <view wx:else>
       <template is="showgrids" data="{{grids}}"/>
