@@ -24,7 +24,7 @@ Page({
   },
 
   onReady: function(){
-    integration('specs',app.roleData.uUnit.objectId).then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
+    integration('goods','specs',app.roleData.uUnit.objectId).then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的商品' : '用户体验产品服务',
     })

@@ -10,41 +10,22 @@ function unitData(cName,uId){
 module.exports = {
 unitData: unitData,
 
-integration: function(pName, unitId) {           //整合选择数组
+integration: function (masterClass, slaveClass, unitId) {    //整合选择数组(主表，从表，单位Id)
   return new Promise((resolve, reject) => {
-    let selves = {};
-    switch (pName) {
-      case 'cargo':         //通过产品选择成品
-        return Promise.all([updateData(true, "product", unitId), updateData(true, "cargo", unitId)]).then(([p3, p5]) => {
-          app.mData.product[unitId].forEach(proId => {
-            if (typeof app.aData.product[proId] !='undefined') { selves[proId] = app.aData.product[proId] };
-            selves.cargo = app.mData.cargo[unitId].filter(cargoId => { return app.aData.cargo[cargoId].product == proId });
-            app.aData.product[proId] = selves;
-          })
-          resolve(p3 || p5);
-        }).catch(console.error);
-        break;
-      case 'specs':
-        return Promise.all([updateData(true, "specs", unitId), updateData(true, "goods", unitId)]).then(([p7, p6]) => {           //通过规格选择成品
-          let allspecs = Promise.resolve(updateData(false,"specs", unitId)).then(notEnd=>{
-            if (notEnd) {
-              return allspecs();
-            } else {
-              app.mData.goods[unitId].forEach(goodsId => {
-                // if (typeof app.aData.goods[goodsId] != 'undefined') { selves[goodsId] = app.aData.goods[goodsId] };
-                // selves.specs = app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });
-                // app.aData.goods[goodsId] = selves;
-                if (typeof app.aData.goods[goodsId] != 'undefined') {
-                  app.aData.goods[goodsId].specs =  app.mData.specs[unitId].filter(specsId => { return app.aData.specs[specId].goods == goodsId });
-                }
-                console.log(goodsId)
-              })
+    return Promise.all([updateData(true, masterClass, unitId), updateData(true, slaveClass, unitId)]).then(([uMaster, uSlave]) => {
+      let allcargo = Promise.resolve(updateData(false, "cargo", unitId)).then(notEnd => {
+        if (notEnd) {
+          return allspecs();
+        } else {
+          app.mData[masterClass][unitId].forEach(masterId => {
+            if (typeof app.aData[masterClass][masterId] != 'undefined') {
+              app.aData[masterClass][masterId][slaveClass] = app.mData[slaveClass][unitId].filter(slaveId => { return app.aData[slaveClass][slaveId][masterClass] == masterId });
             }
-          });
-          resolve(p7 || p6);
-        }).catch(console.error);
-        break;
-    }
+          })
+        }
+        resolve(uMaster || uSlave)
+      });
+    })
   }).catch(console.error);
 },
 

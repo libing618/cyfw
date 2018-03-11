@@ -110,12 +110,14 @@ module.exports = {
         app.mData.product[app.roleData.uUnit.objectId].forEach(mId => {
           mSum[mId] = [];
           for (let i = 0; i < sLength; i++) { mSum[mId].push(0) };
-          app.aData.product[mId].cargo.forEach(aId => {
-            for (let i = 0; i < sLength; i++) {
-              fieldSum[i] += app.aData.cargo[aId][fields[i]];
-              mSum[mId][i] = mSum[mId][i] + app.aData.cargo[aId][fields[i]];
-            }
-          })
+          if (app.aData.product[mId].cargo){
+            app.aData.product[mId].cargo.forEach(aId => {
+              for (let i = 0; i < sLength; i++) {
+                fieldSum[i] += app.aData.cargo[aId][fields[i]];
+                mSum[mId][i] = mSum[mId][i] + app.aData.cargo[aId][fields[i]];
+              }
+            })
+          };
         })
       }
       resolve({ rSum: fieldSum, mSum });

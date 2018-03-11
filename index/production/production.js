@@ -32,7 +32,7 @@ Page({
 
   onReady:function(){
     var that = this;
-    integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
+    integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
     })
