@@ -9,7 +9,7 @@ function exitPage(){
   setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
 }
 module.exports = {
-  openWxLogin: function(lStatus) {            //注册登录（本机登录状态）
+  openWxLogin: function() {            //注册登录（本机登录状态）
     return new Promise((resolve, reject) => {
       wx.login({
         success: function(wxlogined) {
@@ -55,55 +55,62 @@ module.exports = {
             ['manage', 'plan', 'production', 'customer'].forEach(mname => {
               app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0});
             });
-            app.roleData.iMenu = require('../libs/allmenu.js').iMenu(mname);
-            app.roleData.iMenu.manage[0].mIcon = app.globalData.user.avatarUrl;     //把微信头像地址存入第一个菜单icon
-            wx.setStorage({ key: 'roleData', data: app.roleData });
+            resolve(true);
+          } else {
+            resolve(false);
           };
-          return wx.getUserInfo({        //检查客户信息
-            withCredentials: false,
-            success: function ({ userInfo }) {
-              if (userInfo) {
-                let updateInfo = false;
-                for (var iKey in userInfo){
-                  if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
-                    updateInfo = true;
-                    app.globalData.user[iKey] = userInfo[iKey];
-                    app.roleData.iMenu.manage[0].mIcon=app.globalData.user.avatarUrl;
-                  }
-                };
-                if (updateInfo){
-                  AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
-                    rLoginUser.set(userInfo).save();
-                  })
-                }
-              }
-            }
-          });
         })
       } else {
-        app.roleData.iMenu = require('../libs/allmenu.js').iMenu(mname);
+        resolve(false);
       };
-    }).then(()=>{
+    }).then(updateMenu=>{
+      return new Promise((resolve, reject) => {
+        app.roleData.iMenu = require('../libs/allmenu.js').iMenu(app.roleData.wmenu);
+        wx.getUserInfo({        //检查客户信息
+          withCredentials: false,
+          success: function ({ userInfo }) {
+            if (userInfo) {
+              let updateInfo = false;
+              for (var iKey in userInfo){
+                if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
+                  updateInfo = true;
+                  app.globalData.user[iKey] = userInfo[iKey];
+                }
+              };
+              app.roleData.iMenu.manage[0].mIcon=app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
+              if (updateInfo){
+                AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
+                  rLoginUser.set(userInfo).save().then(()=>{ resolve(true) });
+                })
+              } else {
+                resolve(updateMenu);
+              };
+            }
+          }
+        });
+      });
+    }).then(uMenu=>{
       if (app.globalData.user.unit != '0') {
         return new AV.Query('_Role')
         .notEqualTo('updatedAt', new Date(app.roleData.uUnit.updatedAt))
         .equalTo('objectId',app.globalData.user.unit).first().then( uRole =>{
           if (uRole) {                          //本单位信息在云端有变化
             app.roleData.uUnit = uRole.toJSON();
-          }
+            uMenu = true;
+          };
           if (app.roleData.uUnit.sUnit != '0'){
             return new AV.Query('_Role')
             .notEqualTo('updatedAt', new Date(app.roleData.sUnit.updatedAt))
             .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
               if (sRole) {
                 app.roleData.sUnit = sRole.toJSON();
-                wx.setStorage({ key: 'roleData', data: app.roleData });
+                uMenu = true;
               };
             }).catch(console.error)
           }
-          wx.setStorage({ key: 'roleData', data: app.roleData });
         }).catch(console.error)
       };
+      if (uMenu) {wx.setStorage({ key: 'roleData', data: app.roleData });}
       app.imLogin(app.globalData.user.username);
     }).catch(error=> {return error} );
   },
