@@ -3,7 +3,7 @@ const AV = require('../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
 const oClass = require('../../model/procedureclass.js').supplies;
 const { checkRols,indexClick,binddata } = require('../../util/util.js');
-
+const { integration,unitData } = require('../../model/initForm.js');
 var app = getApp();
 Page ({
   data: {
@@ -70,7 +70,7 @@ Page ({
     if (checkRols(oClass.ouRoles[ops.oState])){  //检查用户操作权限
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
-      integration('cargo',app.roleData.uUnit.objectId).then(isupdated=>{
+      integration('product','cargo',app.roleData.uUnit.objectId).then(isupdated=>{
         that.setData({cargo:app.aData.cargo});
         that.fetchData.bind(that) ;
         wx.setNavigationBarTitle({
