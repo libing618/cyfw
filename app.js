@@ -7,8 +7,6 @@ const AudioMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js
 const VideoMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').VideoMessage;
 const LocationMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').LocationMessage;
 const FileMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').FileMessage;
-const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
-
 AV.init({
     appId: "Trce3aqbc6spacl6TjA1pndr-gzGzoHsz",                    // 初始化存储 SDK
     appKey: "CBbIFAhL4zOyCT9PQM5273bP"
@@ -34,7 +32,6 @@ App({
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
   urM: [],                           //未读信息
-
 
   imLogin: function(username){                               //实时通信客户端登录
     realtime.createIMClient(username+wxappNumber).then( (im)=> {

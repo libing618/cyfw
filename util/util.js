@@ -1,4 +1,5 @@
 const AV = require('../libs/leancloud-storage.js');
+const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
 var app = getApp();
 function formatNumber(n) {
   n = n.toString()
