@@ -14,7 +14,7 @@ Page({
   onLoad: function (ops) {        //传入参数为pNo,不得为空06
     var that = this;
     let oClass = require('../../../model/procedureclass.js').packOperate;
-    if (weutil.checkRols(oClass.ouRoles[ops.oState])) {  //检查用户操作权限
+    if (weutil.checkRols(oClass.ouRoles[ops.oState],app.globalData.user)) {  //检查用户操作权限
       that.setData({
         oArray: weutil.arrClose(oClass.oSuccess[ops.oNo].gname, app.nData[1]),     //确定数组分类字段
         pageData: app.oData[1],

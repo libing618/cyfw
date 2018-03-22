@@ -10,7 +10,7 @@ Page({
     pageData: {},
     iClicked: '0',
     mSum: {},
-    grids: app.roleData.iMenu.production
+    grids: []
   },
   onLoad:function(options){
     this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
@@ -35,7 +35,9 @@ Page({
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
-    })
+    });
+    this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.production, 'production');
+    this.setData({ grids: this.grids })
   },
 
   indexClick:indexClick,

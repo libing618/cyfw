@@ -67,7 +67,7 @@ Page ({
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
-    if (checkRols(oClass.ouRoles[ops.oState])){  //检查用户操作权限
+    if (checkRols(oClass.ouRoles[ops.oState],app.globalData.user)){  //检查用户操作权限
       that.indexField = oClass.oSuccess[ops.oState].indexField;
       that.sumField = oClass.oSuccess[ops.oState].sumField;
       integration('product','cargo',app.roleData.uUnit.objectId).then(isupdated=>{

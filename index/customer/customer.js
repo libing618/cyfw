@@ -9,10 +9,11 @@ Page({
     pNo: "cargo",                       //流程的序号5为成品信息
     pageData: unitData('cargo'),
     iClicked: '0',
-    grids: app.roleData.iMenu.customer
+    grids: []
   },
   onLoad:function(options){
     this.setPage(app.mData.product[app.roleData.uUnit.objectId]);
+
   },
 
   setPage: function(iu){
@@ -33,7 +34,9 @@ Page({
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{ this.setPage(isupdated) });
     wx.setNavigationBarTitle({
       title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的销售管理' : '用户体验产品销售',
-    })
+    });
+    this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.customer, 'customer');
+    this.setData({ grids: this.grids })
   },
 
   indexClick:indexClick,

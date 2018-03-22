@@ -51,7 +51,7 @@ Page({
     })
   },
 
-  tabClick: require('../../../util/util').tabClick,
+  tabClick: require('../../../model/initupdate').tabClick,
 
   anClick: function(e){                           //选择审批流程类型的数组下标
     app.mData.proceduresCk = parseInt(e.currentTarget.id.substring(3));

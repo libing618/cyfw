@@ -17,7 +17,7 @@ Page({
   distributorLog:{},
   onLoad:function(options){
     var that = this;
-    if (checkRols(9)) {
+    if (checkRols(9,app.globalData.user)) {
       new AV.Query('manufactor').equalTo('unitId',app.roleData.uUnit.objectId).first().then(manufactor=>{
         if (manufactor) {
           that.setData({ vData: manufactor.toJSON() });

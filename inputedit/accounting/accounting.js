@@ -14,7 +14,7 @@ Page({
   },
   onLoad:function(options){
     var that = this;
-    if ( checkRols(9) ) {
+    if ( checkRols(9,app.globalData.user) ) {
       updateData(true,'order').then(proData=>{
         if (proData){
           that.data.mPage = app.mData.order[app.globalData.user.unit];

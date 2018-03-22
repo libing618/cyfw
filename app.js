@@ -8,8 +8,8 @@ const VideoMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js
 const LocationMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').LocationMessage;
 const FileMessage = require('./libs/leancloud-realtime-plugin-typed-messages.js').FileMessage;
 AV.init({
-    appId: "Trce3aqbc6spacl6TjA1pndr-gzGzoHsz",                    // 初始化存储 SDK
-    appKey: "CBbIFAhL4zOyCT9PQM5273bP"
+  appId: "Trce3aqbc6spacl6TjA1pndr-gzGzoHsz",                    // 初始化存储 SDK
+  appKey: "CBbIFAhL4zOyCT9PQM5273bP"
 });
 const realtime = new Realtime({
   appId: 'Trce3aqbc6spacl6TjA1pndr-gzGzoHsz',                      // 初始化实时通讯 SDK
@@ -19,10 +19,11 @@ const realtime = new Realtime({
   plugins: [TypedMessagesPlugin],                    // 注册富媒体消息插件
   pushOfflineMessages: true                          //使用离线消息通知方式
 });
-const { openWxLogin, fetchMenu } = require('./util/util');
+const openWxLogin = require('./util/util').openWxLogin;
+const fetchMenu = require('./util/util').fetchMenu;
 let lcUser = AV.User.current();
 App({
-  globalData: {user:lcUser.toJSON()} || require('globaldata.js').globalData,
+  globalData: lcUser ? {user:lcUser.toJSON()} : require('globaldata.js').globalData,
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
@@ -173,19 +174,15 @@ App({
         that.netState = true;
       }
     });
-  },
-
-  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
-    var that = this;
     if (that.globalData.user.objectId != '0') {             //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
-      fetchMenu();
+      fetchMenu(that);
     } else {
       return Promise.resolve(
         wx.getSetting({
           success(res) {
-            if (res.authSetting['scope.userInfo']){                   //用户已经同意小程序使用用户信息
-              openWxLogin().then((loginOk) => {
-                fetchMenu().then(() => {
+            if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
+              openWxLogin(that).then((loginOk) => {
+                fetchMenu(that).then(() => {
                   resolve('系统登录:' + loginOk.toString());                      //本机初始化时间记入日志
                 });
               }).catch((loginErr) => { reject('系统登录失败:' + loginErr.toString()) });
@@ -198,6 +195,12 @@ App({
         app.logData.push([Date.now(), lcuErr]);
       })
     }
+    console.log('onLaunch')
+  },
+
+  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
+    var that = this;
+    
   },
 
   onHide: function () {             //进入后台时缓存数据。
@@ -211,6 +214,7 @@ App({
         }else{
           wx.setStorage({key:"aData", data:that.aData});
           wx.setStorage({key:"mData", data:that.mData});
+          wx.setStorage({ key: 'roleData', data: that.roleData });
           wx.setStorage({key:"procedures", data:that.procedures});
         }
       }

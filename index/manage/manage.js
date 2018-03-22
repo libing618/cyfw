@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
-const { updateData } = require('../../model/initupdate');
-const {openWxLogin,fetchMenu,tabClick} = require('../../util/util');
+const { updateData,tabClick } = require('../../model/initupdate');
+const {openWxLogin,fetchMenu} = require('../../util/util');
 var app = getApp()
 Page({
   data: {
@@ -16,7 +16,7 @@ Page({
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
     pageCk: app.mData.pCk1,
     wWidth: app.globalData.sysinfo.windowWidth,
-    grids: app.roleData.iMenu.manage
+    grids: []
   },
 
   setPage: function(iu){
@@ -30,14 +30,19 @@ Page({
   },
 
   onReady: function(){
-    updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
+    updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据    
+    this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage,'manage');
+    this.grids[0].mIcon=app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
+    this.setData({ grids: this.grids })
   },
 
   userInfoHandler: function (e) {
     var that = this;
-    openWxLogin(that.data.userAuthorize).then( (mstate)=> {
+    openWxLogin(app).then( (mstate)=> {
       app.logData.push([Date.now(), '用户授权' + app.globalData.sysinfo.toString()]);                      //用户授权时间记入日志
-      that.setData({ userAuthorize: 0, grids: app.roleData.iMenu.manage })
+      that.grids = require('../libs/allmenu.js').iMenu(app.roleData.wmenu.manage,'manage');
+      that.grids[0].mIcon=app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
+      that.setData({ unAuthorize: false, grids: that.grids })
     }).catch( console.error );
   },
 

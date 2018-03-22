@@ -7,15 +7,12 @@ function unitData(cName,uId){
   if (app.mData[cName][unitId]) { app.mData[cName][unitId].forEach(cuId => { uData[cuId]=app.aData[cName][cuId]})};
   return uData;
 };
-module.exports = {
-unitData: unitData,
-
-integration: function (masterClass, slaveClass, unitId) {    //整合选择数组(主表，从表，单位Id)
+function integration(masterClass, slaveClass, unitId) {    //整合选择数组(主表，从表，单位Id)
   return new Promise((resolve, reject) => {
     return Promise.all([updateData(true, masterClass, unitId), updateData(true, slaveClass, unitId)]).then(([uMaster, uSlave]) => {
-      let allcargo = Promise.resolve(updateData(false, "cargo", unitId)).then(notEnd => {
+      let allslave = Promise.resolve(updateData(false, slaveClass, unitId)).then(notEnd => {
         if (notEnd) {
-          return allspecs();
+          return allslave();
         } else {
           app.mData[masterClass][unitId].forEach(masterId => {
             if (typeof app.aData[masterClass][masterId] != 'undefined') {
@@ -27,11 +24,16 @@ integration: function (masterClass, slaveClass, unitId) {    //整合选择数�
       });
     })
   }).catch(console.error);
-},
+};
+module.exports = {
+unitData: unitData,
+
+  integration: integration,
 
 readShowFormat: function(req, vData) {
   var unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;
   return new Promise((resolve, reject) => {
+    let promArr = [];                   //定义一个Promise数组
     let setPromise = new Set();
     var reqData=req.map(reqField=>{
       switch (reqField.t) {
@@ -41,11 +43,12 @@ readShowFormat: function(req, vData) {
         case 'sObject':
           if (reqField.gname == 'goodstype') {
             reqField.slave = require('../libs/goodstype').slave[vData.goodstype];
-          } else {setPromise.add(reqField.gname) };
+          } else {
+            promArr.push(integration('product', 'cargo', unitId));
+          };
           break;
         case 'specsel':                    //规格选择字段
-          setPromise.add('specs');
-          setPromise.add('cargo');
+          promArr.push(integration('specs', 'cargo', unitId));
           break;
         case 'sId':
           setPromise.add(reqField.gname);
@@ -53,7 +56,6 @@ readShowFormat: function(req, vData) {
       };
       return reqField;
     })
-    let promArr = [];                   //定义一个Promise数组
     setPromise.forEach(nPromise=> {promArr.push(updateData(true, nPromise, unitId))})
     return Promise.all(promArr).then(()=>{
       for (let i = 0; i < reqData.length; i++) {
@@ -100,10 +102,12 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             reqField.objarr = require('../libs/goodstype').droneId;
             reqField.master = require('../libs/goodstype').master;
             reqField.slave = require('../libs/goodstype').slave;
-          } else {setPromise.add(reqField.gname) };
+          } else {
+            promArr.push(integration('product', 'cargo', unitId));
+          };
           break;
         case 'specsel':                    //规格选择字段
-          setPromise.add('cargo');
+          promArr.push(integration('specs', 'cargo', unitId));
           break;
         case 'sId':
           setPromise.add(reqField.gname);
@@ -230,7 +234,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
           case 'sId':
             reqData[i].maData = app.mData[reqData[i].gname][unitId].map(mId=>{
               return {
-                objectId: mId, sName: app.aData[reqData[i].gname][mId].uName + ':' + app.aData[reqData[i].gname][mId].title }
+                objectId: mId, sName: app.aData[reqData[i].gname][mId].uName + ':  ' + app.aData[reqData[i].gname][mId].title }
             });
             reqData[i].mn = vifData ? 0 : app.mData[reqData[i].gname][unitId].indexOf(vData[reqData[i].gname]);
             break;

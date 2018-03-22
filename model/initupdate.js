@@ -23,6 +23,13 @@ module.exports = {
 
   isAllData: isAllData,
 
+  tabClick: function (e) {                                //点击tab
+    app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
+    this.setData({
+      pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
+    });
+  },
+
   updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown下拉刷新,pNo类定义序号, uId单位Id
     return new Promise((resolve, reject) => {
       let isAll = isAllData(pNo);            //是否读所有数据

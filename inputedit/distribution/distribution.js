@@ -11,7 +11,7 @@ Page({
     pageData: {}
   },
   onLoad:function(options){
-    if ( checkRols(9) ) {
+    if ( checkRols(9,app.globalData.user) ) {
       this.setPage(true);
     }
   },

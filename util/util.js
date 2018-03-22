@@ -1,6 +1,5 @@
 const AV = require('../libs/leancloud-storage.js');
 const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
-var app = getApp();
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
@@ -10,7 +9,7 @@ function exitPage(){
   setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
 }
 module.exports = {
-  openWxLogin: function() {            //注册登录（本机登录状态）
+  openWxLogin: function(app) {            //注册登录（本机登录状态）
     return new Promise((resolve, reject) => {
       wx.login({
         success: function(wxlogined) {
@@ -44,7 +43,7 @@ module.exports = {
     });
   },
 
-  fetchMenu: function(){
+  fetchMenu: function(app){
     return new Promise((resolve, reject) => {
       if (app.globalData.user.mobilePhoneVerified) {
         return new AV.Query('userInit')
@@ -66,7 +65,6 @@ module.exports = {
       };
     }).then(updateMenu=>{
       return new Promise((resolve, reject) => {
-        app.roleData.iMenu = require('../libs/allmenu.js').iMenu(app.roleData.wmenu);
         wx.getUserInfo({        //检查客户信息
           withCredentials: false,
           success: function ({ userInfo }) {
@@ -78,7 +76,6 @@ module.exports = {
                   app.globalData.user[iKey] = userInfo[iKey];
                 }
               };
-              app.roleData.iMenu.manage[0].mIcon=app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
               if (updateInfo){
                 AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
                   rLoginUser.set(userInfo).save().then(()=>{ resolve(true) });
@@ -97,7 +94,6 @@ module.exports = {
         .equalTo('objectId',app.globalData.user.unit).first().then( uRole =>{
           if (uRole) {                          //本单位信息在云端有变化
             app.roleData.uUnit = uRole.toJSON();
-            uMenu = true;
           };
           if (app.roleData.uUnit.sUnit != '0'){
             return new AV.Query('_Role')
@@ -105,23 +101,21 @@ module.exports = {
             .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
               if (sRole) {
                 app.roleData.sUnit = sRole.toJSON();
-                uMenu = true;
               };
             }).catch(console.error)
           }
         }).catch(console.error)
       };
-      if (uMenu) {wx.setStorage({ key: 'roleData', data: app.roleData });}
       app.imLogin(app.globalData.user.username);
     }).catch(error=> {return error} );
   },
 
-  checkRols: function(ouRole){
-    if (app.globalData.user.userRolName=='admin' && app.globalData.user.emailVerified){
+  checkRols: function(ouRole,user){
+    if (user.userRolName=='admin' && user.emailVerified){
       return true;
     } else {
-      let roleLine = parseInt(substring(app.globalData.user.userRolName,1,1));
-      if (roleLine==ouRole && app.globalData.user.emailVerified) {
+      let roleLine = parseInt(substring(user.userRolName,1,1));
+      if (roleLine==ouRole && user.emailVerified) {
         return true;
       } else {
         exitPage();
@@ -178,13 +172,6 @@ module.exports = {
 
   indexClick: function(e){                           //选择打开的索引数组本身id
     this.setData({ iClicked: e.currentTarget.id });
-  },
-
-  tabClick: function (e) {                                //点击tab
-    app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
-    this.setData({
-      pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
-    });
   },
 
   mClick: function (e) {                      //点击mClick
