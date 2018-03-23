@@ -27,11 +27,9 @@ Page({
     } else {
       var getSrc = that.prevPage.data.vData[options.reqName];
     };
-    
     wx.getImageInfo({
       src: getSrc,
       success: function (res){
-        console.log(res)
         ds = res.width/320;
         cScale = that.data.xImage / res.width;
         that.setData({ iscr: getSrc, yImage: res.height * cScale });//res.path
@@ -56,7 +54,6 @@ Page({
     }
     this.setData({ x: xm, y: ym });
     ctx.scale(ds*cScale / iScale, ds*cScale / iScale);
-    console.log(this.data.iscr)
     ctx.drawImage(this.data.iscr, 0 - xm/cScale/ds, 0 - ym/cScale/ds, 320, 272);
     ctx.draw();
   },

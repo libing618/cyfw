@@ -36,7 +36,11 @@ Page({
   },
 
   onLoad:function(options){
-    pClass.forEach( procedure=> { this.data.pClassName.push(procedure.pName)} )
+    let procedure;
+    for (procedure in pClass) {
+      this.data.pClassName.push(pClass[procedure].pName)
+      if (!app.mData.procedures[procedure]) { app.mData.procedures[procedure]=[] }
+    };
     this.setData({
       pClassName: this.data.pClassName,
       indexPage: ats(),

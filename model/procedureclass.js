@@ -266,7 +266,7 @@ module.exports = {
   "pModel": "wholesale"
 },
 "rawOperate":{
-  "oName": "原料采供",
+  "pName": "原料采供",
   "oprocess": ['采供下单', '原料供应', '原料入库'],
   "pSuccess": [
     {gname: "uName", p:'原料名称', t:"h3" },
@@ -286,7 +286,7 @@ module.exports = {
   "oModel": "rawOperate"
 },
 "packOperate":{
-  "oName": "加工入库",
+  "pName": "加工入库",
   "oprocess": ['安排生产', '生产加工', '成品入库'],
   "pSuccess": [
     {gname: "uName", p:'成品名称', t:"h3" },
@@ -306,7 +306,7 @@ module.exports = {
   "oModel": "packOperate"
 },
 "supplies":{
-  "oName": "订单处理",
+  "pName": "订单处理",
   "oprocess": ['订单确认', '成品出货', '到货确认'],
   "pSuccess": [
     {gname: "uName", p:'成品名称', t:"h3" },
