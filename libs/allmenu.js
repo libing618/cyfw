@@ -56,7 +56,7 @@ plan:{
 production:{
   N300:{"tourl": "/pages/lprocedures/lprocedures?pNo=asset", "mName": "固定资产" },
   N301:{"tourl": "/pages/lprocedures/lprocedures?pNo=prodesign", "mName": "生产计划" },
-  N302:{"tourl": "/pages/production/material/material", "mName": "原材料" },
+  N302:{"tourl": "/inputedit/material/material", "mName": "原材料" },
   N303:{"tourl": "/inputedit/packing/packing", "mName": "加工包装" },
   N304:{"tourl": "/pages/production/storage/storage", "mName": "成品入库" },
   N305:{"tourl": "/pages/production/stocks/stocks", "mName": "库存盘点" },

@@ -60,7 +60,7 @@
         "manage/workconnection/workconnection",
         "vprocedure/vprocedure",
         "lprocedures/lprocedures",
-        "production/material/material",
+
         "production/process/process",
         "production/storage/storage",
         "production/stocks/stocks",
@@ -81,6 +81,7 @@
         "adjustment/adjustment",
         "accounting/accounting",
         "myshare/myshare",
+        "material/material",
         "distributor/distributor",
         "distribution/distribution",
         "packing/packing",
