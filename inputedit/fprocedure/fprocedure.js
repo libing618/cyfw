@@ -44,7 +44,7 @@ Page({
           titleName += pClass.pName;
           break;
       }
-      if (typeof aaData == 'undefined') { aaData = app.aData[ops.pNo][that.data.dObjectId] || {} }
+      if (typeof aaData == 'undefined') { aaData = app.aData[ops.pNo][that.data.dObjectId] || require('../../test/goods0')[0] }//{}
       initData(pClass.pSuccess, aaData).then(({ reqData, vData, funcArr })=>{
         funcArr.forEach(functionName => {
           that[functionName] = wImpEdit[functionName];

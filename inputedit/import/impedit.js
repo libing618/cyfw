@@ -82,7 +82,8 @@ module.exports = {
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     let sIdValue = this.data.reqData[n].maData[Number(e.detail.value)].objectId;
-    let rvdSet = vdSet(this.data.reqData[n].gname, sIdValue);
+    let rvdSet = {};
+    rvdSet['vData.' + this.data.reqData[n].gname] = sIdValue;
     rvdSet['reqData[' + n + '].mn'] = Number(e.detail.value);
     let sIdNumber = -1, sIdName = 's_' + this.data.reqData[n].gname;
     for (let i=0;i<this.data.reqData.length;i++){
@@ -92,13 +93,13 @@ module.exports = {
       }
     }
     if (sIdNumber>=0){
-      if (this.data.reqData[n].sId != sIdValue){
+      if (this.data.reqData[sIdNumber].sId != sIdValue){
         rvdSet['reqData[' + sIdNumber + '].sId'] = sIdValue;
         rvdSet['reqData[' + sIdNumber + '].aVl'] = [0, 0, 0];
         rvdSet['vData.' + sIdName] = { code: 0, sName: '点此处进行选择' };
       }
-    this.setData(rvdSet);
     }
+    this.setData(rvdSet);
   },
 
   f_aslist: function (e) {                         //选择行业类型
@@ -165,7 +166,7 @@ module.exports = {
     let vdSet = {};
     if (isNaN(inNumber)){ inNumber = 0 };      //不能输入非数字
     vdSet['vData.'+this.data.reqData[n].gname] = inNumber ;
-    vdSet.vData.canSupply = inNumber;
+    vdSet['vData.canSupply'] = inNumber;
     this.setData( vdSet );
   },
 
@@ -292,6 +293,7 @@ module.exports = {
       sourceType: ['album', 'camera'],             // album 从相册选图，camera 使用相机，默认二者都有
       success: function (restem) {                     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         that.setData(vdSet(that.data.reqData[n].gname, restem.tempFilePaths[0]));
+        console.log(restem.tempFilePaths[0])
         wx.navigateTo({ url: '/util/ceimage/ceimage?reqName=' + that.data.reqData[n].gname })
       },
       fail: function () { wx.showToast({ title: '选取照片失败！' }) }
