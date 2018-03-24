@@ -80,19 +80,31 @@ Page({
 
   fSave: function () {
     var that = this;
-    wx.canvasToTempFilePath({
+    wx.canvasGetImageData({
       canvasId: 'cei',
-      destWidth: 640,
-      destHeight: 544,
-      success: function(resTem){
-        new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
-        }).save().then(	resfile => {
-          let reqset = {};
-          reqset[that.reqField] = resfile.url();
-          that.prevPage.setData(reqset);
-          wx.navigateBack({ delta: 1 });
-        }).catch(console.error);
+      x: 0,
+      y: 0,
+      width: 160,
+      height: 136,
+      success(res){
+       // let toStr = String.fromCharCode.apply(null,res.data)
+        let base64uri = 'data:image/jpeg;base64,' + wx.arrayBufferToBase64(res.data.buffer)
+        console.log(base64uri)
       }
     })
+    // wx.canvasToTempFilePath({
+    //   canvasId: 'cei',
+    //   destWidth: 640,
+    //   destHeight: 544,
+    //   success: function(resTem){
+    //     new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
+    //     }).save().then(	resfile => {
+    //       let reqset = {};
+    //       reqset[that.reqField] = resfile.url();
+    //       that.prevPage.setData(reqset);
+    //       wx.navigateBack({ delta: 1 });
+    //     }).catch(console.error);
+    //   }
+    // })
   }
 })
