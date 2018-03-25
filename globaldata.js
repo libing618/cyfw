@@ -46,7 +46,7 @@ module.exports={
     promotion: [[],[], []],              //已发布团购众筹分类缓存数组
     prodesign: [],              //已发布生产计划缓存数组
     procedures: {},              //流程分类缓存数组
-    proceduresCk: -1,
+    proceduresCk: '0',
     pAt:{}
   },
   aData:{"articles":{},"asset":{},"product":{},"service":{},"cargo":{},"goods":{},"specs":{},"promotion":{},"material":{},"content":{},"prodesign":{},"wholesale":{},"rawStock":{},"packing":{},"order":{}}

@@ -1,7 +1,6 @@
 //图片选取及简单编辑模块 util/ceimage/ceimage.js
 const { File } = require('../../libs/leancloud-storage.js');
-var iScale=1 , cScale ,ds;
-var ctx = wx.createCanvasContext('cei');
+
 var app = getApp();
 Page({
   data: {
@@ -15,6 +14,11 @@ Page({
   },
   reqField: '',
   prevPage: {},
+  iScale: 1,
+  cScale:1,
+  ds:1,
+  cOriginal: wx.createCanvasContext('cOriginal', this),
+  ctx: wx.createCanvasContext('cei',this),
 
   onLoad: function (options) {
     var that = this;
@@ -30,9 +34,9 @@ Page({
     wx.getImageInfo({
       src: getSrc,
       success: function (res){
-        ds = res.width/320;
-        cScale = that.data.xImage / res.width;
-        that.setData({ iscr: getSrc, yImage: res.height * cScale });//res.path
+        that.ds = res.width/320;
+        that.cScale = that.data.xImage / res.width;
+        that.setData({ iscr: getSrc, yImage: res.height * that.cScale });//res.path
         that.iDraw(that.data.xOff,that.data.yOff)
       }
     })
@@ -53,9 +57,9 @@ Page({
       else { ym = y - this.data.yOff }
     }
     this.setData({ x: xm, y: ym });
-    ctx.scale(ds*cScale / iScale, ds*cScale / iScale);
-    ctx.drawImage(this.data.iscr, 0 - xm/cScale/ds, 0 - ym/cScale/ds, 320, 272);
-    ctx.draw();
+    this.ctx.scale(this.ds*this.cScale / this.iScale, this.ds*this.cScale / this.iScale);
+    this.ctx.drawImage(this.data.iscr, 0 - xm/this.cScale/this.ds, 0 - ym/this.cScale/this.ds, 320, 272);
+    this.ctx.draw();
   },
 
   EventHandle: function (event) {
@@ -65,7 +69,7 @@ Page({
   fplus: function () {                   //扩大范围
     if (this.data.xOff<320) {
       this.setData({xOff:this.data.xOff+16,yOff:this.data.yOff+13.6});
-      iScale = iScale+0.1;
+      this.iScale = this.iScale+0.1;
       this.iDraw(this.data.xOff+this.data.x, this.data.yOff+this.data.y);
     }
   },
@@ -73,38 +77,26 @@ Page({
   freduce: function () {                   //缩小范围
     if (this.data.xOff>160) {
       this.setData({xOff:this.data.xOff-16,yOff:this.data.yOff-13.6});
-      iScale = iScale-0.1;
+      this.iScale = this.iScale-0.1;
       this.iDraw(this.data.xOff + this.data.x, this.data.yOff + this.data.y);
     }
   },
 
   fSave: function () {
     var that = this;
-    wx.canvasGetImageData({
+    wx.canvasToTempFilePath({
       canvasId: 'cei',
-      x: 0,
-      y: 0,
-      width: 160,
-      height: 136,
-      success(res){
-       // let toStr = String.fromCharCode.apply(null,res.data)
-        let base64uri = 'data:image/jpeg;base64,' + wx.arrayBufferToBase64(res.data.buffer)
-        console.log(base64uri)
+      destWidth: 640,
+      destHeight: 544,
+      success: function(resTem){
+        new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
+        }).save().then(	resfile => {
+          let reqset = {};
+          reqset[that.reqField] = resfile.url();
+          that.prevPage.setData(reqset);
+          wx.navigateBack({ delta: 1 });
+        }).catch(console.error);
       }
     })
-    // wx.canvasToTempFilePath({
-    //   canvasId: 'cei',
-    //   destWidth: 640,
-    //   destHeight: 544,
-    //   success: function(resTem){
-    //     new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
-    //     }).save().then(	resfile => {
-    //       let reqset = {};
-    //       reqset[that.reqField] = resfile.url();
-    //       that.prevPage.setData(reqset);
-    //       wx.navigateBack({ delta: 1 });
-    //     }).catch(console.error);
-    //   }
-    // })
   }
 })

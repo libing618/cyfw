@@ -18,8 +18,7 @@ Page({
 
   onLoad:function(options){
     var that = this;
-    let dProcedure = Number(app.procedures[options.approveId].dProcedure);
-    let procedureClass = require('../../model/procedureclass.js')[dProcedure];
+    let procedureClass = require('../../model/procedureclass.js')[app.procedures[options.approveId].dProcedure];
     app.procedures[options.approveId].dObject.unitId = app.procedures[options.approveId].unitId;
     readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].dObject).then(req=>{
       that.setData({
@@ -68,7 +67,7 @@ Page({
       return new Promise((resolve, reject) => {
         if ( nInstace==that.data.cmLength ){   //最后一个节点
           let sData = that.data.aValue.dObject;
-          if (that.data.aValue.dProcedure == 0) {                    //是否单位审批流程
+          if (that.data.aValue.dProcedure == '_Role') {                    //是否单位审批流程
             sData.uState = rResultId;
             AV.Cloud.run('setRole', { id: that.data.aValue.unitId, dObject: sData }).then((qRoleSet) => {
               wx.showToast({ title: '设置单位信息', duration: 2000 });

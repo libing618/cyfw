@@ -1,11 +1,10 @@
 //审批流程列表
 const AV = require('../../../libs/leancloud-storage.js');
 const pClass = require('../../../model/procedureclass.js');
-const pLength = pClass.length;
 var app = getApp();
 function ats(){
-  let rats = [new Array(pLength), new Array(pLength), new Array(pLength)];
-  for (let j = 0; j < pLength; j++) {
+  let rats = [{},{},{}], j;
+  for (j in pClass) {
     if (app.mData.procedures[j]) {
       app.mData.procedures[j].forEach(mpoId => {
         if (typeof rats[app.procedures[mpoId].apState][j] == 'undefined') { rats[app.procedures[mpoId].apState][j] = [] };
@@ -15,8 +14,8 @@ function ats(){
   };
   let atotal = [];
   for (let i = 0; i < 3; i++) {
-    let total = new Array(pLength);
-    for (let j = 0;j<pLength; j++){
+    let total = {};
+    for (j in rats[i]){
       total[j] = typeof rats[i][j] == 'undefined' ? 0 : rats[i][j].length
     }
     atotal.push({ ats: rats[i], total: total})
@@ -25,7 +24,7 @@ function ats(){
 }
 Page({
   data:{
-    pClassName: [],
+    pClassName: {},
     wWidth: app.globalData.sysinfo.windowWidth,
     fLength: 3,
     pageCk: 0,
@@ -38,7 +37,7 @@ Page({
   onLoad:function(options){
     let procedure;
     for (procedure in pClass) {
-      this.data.pClassName.push(pClass[procedure].pName)
+      this.data.pClassName[procedure] = pClass[procedure].pName;
       if (!app.mData.procedures[procedure]) { app.mData.procedures[procedure]=[] }
     };
     this.setData({
@@ -58,7 +57,7 @@ Page({
   tabClick: require('../../../model/initupdate').tabClick,
 
   anClick: function(e){                           //选择审批流程类型的数组下标
-    app.mData.proceduresCk = parseInt(e.currentTarget.id.substring(3));
+    app.mData.proceduresCk = e.currentTarget.id.substring(3);
     this.setData({ anClicked: app.mData.proceduresCk });
   },
 
