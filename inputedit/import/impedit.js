@@ -629,6 +629,9 @@ module.exports = {
                 that.data.vData.unitName = app.roleData.uUnit.uName;
                 acl.setWriteAccess(approvalRole.managers[0], true);
                 acl.setReadAccess(approvalRole.managers[0], true);
+                if (app.globalData.user.objectId != app.roleData.uUnit.name) {     //单位名不等于用户ID则不是创始人
+                  acl.setWriteAccess(app.roleData.uUnit.name, true);    //增加创始人写权限
+                }
                 sObject.setACL(acl);
                 sObject.set(that.data.vData).save().then((sd)=>{
                   wx.showToast({ title: '审批内容已发布', duration:2000 });
