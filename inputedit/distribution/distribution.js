@@ -1,13 +1,13 @@
 //货架管理
 const AV = require('../../libs/leancloud-storage.js');
-const { checkRols,indexClick } = require('../../util/util');
+const { checkRols } = require('../../util/util');
 const { updateData } = require('../../model/initupdate');
 const { unitData } = require('../../model/initForm.js');
 var app = getApp();
 
 Page({
   data:{
-    mPage: app.mData.goods[app.roleData.uUnit.objectId],
+    mPage: app.mData.goods[app.roleData.uUnit.objectId] || [],
     pageData: {}
   },
   onLoad:function(options){
@@ -32,7 +32,7 @@ Page({
     })
   },
 
-  fSave:function({currentTarget:{id}}){
+  clickSave:function({currentTarget:{id}}){
     var that = this;
     return new AV.Object.createWithoutData('goods',id).set({                  //选择商品的ID
       inSale:!app.aData.goods[id].inSale

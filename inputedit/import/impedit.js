@@ -657,6 +657,13 @@ module.exports = {
                 })
                 fcApproval.setACL(acl);         // 将 ACL 实例赋予fcApproval对象
                 fcApproval.save().then((resTarget) => {
+                  if (that.data.pNo=='_Role'){
+                    let suRoleAcl = new AV.ACL();
+                    let uRole = AV.Object.createWithoutData(AV.Role, app.roleData.uUnit.objectId);
+                    suRoleAcl.setRoleWriteAccess(app.roleData.uUnit.sUnit,true);
+                    uRole.setACL(suRoleAcl);
+                    uRole.save()
+                  };
                   wx.showToast({ title: '流程已提交,请查询审批结果。', icon:'none',duration: 2000 }) // 保存成功
                 }).catch(wx.showToast({ title: '提交保存失败!', icon:'loading',duration: 2000 })) // 保存失败
               }

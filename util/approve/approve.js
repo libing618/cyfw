@@ -87,6 +87,9 @@ Page({
             }
             sData.unitId = that.data.aValue.unitId;
             sData.unitName = that.data.aValue.unitName;
+            let unitRole = new AV.ACL();
+            unitRole.setRoleWriteAccess(that.data.aValue.unitId,true);  //为单位角色设置写权限
+            sObject.setACL(unitRole);
             sObject.set(sData).save().then((sd)=>{
               wx.showToast({ title: '审批内容已发布', duration:2000 });
               resolve(sd.objectId);
