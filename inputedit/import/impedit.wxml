@@ -324,13 +324,13 @@
       <button id="ac-{{n}}" data-ca="{{objarr[osv[0]].slaveId[osv[1]]}}" bindtap="f_objsel" size="mini">确定</button>
     </view>
   </view>
-  <view hidden="{{inclose}}">
+  <view hidden="{{inclose}}" class="weui-picker">
     <picker-view id="pa-{{n}}" class="weui-picker__view"  indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{osv}}" bindchange="f_objsel">
       <picker-view-column>
-          <view wx:for="{{objarr}}" wx:key="{{index}}" style="line-height: 36rpx">{{master[item.masterId].uName}}</view>
+        <view wx:for="{{objarr}}" wx:key="{{index}}" style="line-height: 36rpx">{{master[item.masterId].uName}}</view>
       </picker-view-column>
       <picker-view-column>
-          <view wx:for="{{objarr[osv[0]].slaveId}}" wx:key="{{index}}" style="line-height: 36rpx">{{slave[item].uName}}</view>
+        <view wx:for="{{objarr[osv[0]].slaveId}}" wx:key="{{index}}" style="line-height: 36rpx">{{slave[item].uName}}</view>
       </picker-view-column>
     </picker-view>
   </view>

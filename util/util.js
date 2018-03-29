@@ -7,107 +7,129 @@ function formatNumber(n) {
 function exitPage(){
   wx.showToast({ title: '权限不足请检查', duration: 2500 });
   setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
-}
-module.exports = {
-  openWxLogin: function(app) {            //注册登录（本机登录状态）
-    return new Promise((resolve, reject) => {
-      wx.login({
-        success: function(wxlogined) {
-          if ( wxlogined.code ) {
-            wx.getUserInfo({ withCredentials: true,
-            success: function(wxuserinfo) {
+};
+function openWxLogin(app) {            //注册登录（本机登录状态）
+  return new Promise((resolve, reject) => {
+    wx.login({
+      success: function (wxlogined) {
+        if (wxlogined.code) {
+          wx.getUserInfo({
+            withCredentials: true,
+            success: function (wxuserinfo) {
               if (wxuserinfo) {
-                AV.Cloud.run( 'wxLogin0',{ code:wxlogined.code, encryptedData:wxuserinfo.encryptedData, iv:wxuserinfo.iv } ).then( function(wxuid){
+                AV.Cloud.run('wxLogin0', { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
                   let signuser = {};
                   signuser['uid'] = wxuid.uId;
-                  AV.User.signUpOrlogInWithAuthData(signuser,'openWx').then((statuswx)=>{    //用户在云端注册登录
-                    if (statuswx.country){
+                  AV.User.signUpOrlogInWithAuthData(signuser, 'openWx').then((statuswx) => {    //用户在云端注册登录
+                    if (statuswx.country) {
                       app.globalData.user = statuswx.toJSON();
                       resolve(1);                        //客户已注册在本机初次登录成功
                     } else {                         //客户在本机授权登录则保存信息
                       let newUser = wxuserinfo.userInfo;
                       newUser['wxapp' + wxappNumber] = wxuid.oId;         //客户第一次登录时将openid保存到数据库且客户端不可见
-                      statuswx.set(newUser).save().then( (wxuser)=>{
+                      statuswx.set(newUser).save().then((wxuser) => {
                         app.globalData.user = wxuser.toJSON();
                         resolve(0);                //客户在本机刚注册，无菜单权限
-                      }).catch(err => { reject({ ec:0, ee:err}) });
+                      }).catch(err => { reject({ ec: 0, ee: err }) });
                     }
-                  }).catch((cerror)=> { reject( { ec: 2, ee: cerror }) });    //客户端登录失败
-                }).catch((error)=>{ reject( {ec:1,ee:error} ) });       //云端登录失败
+                  }).catch((cerror) => { reject({ ec: 2, ee: cerror }) });    //客户端登录失败
+                }).catch((error) => { reject({ ec: 1, ee: error }) });       //云端登录失败
               }
-            } })
-          } else { reject( {ec:3,ee:'微信用户登录返回code失败！'} )};
-        },
-        fail: function(err) { reject( {ec:4,ee:err.errMsg} ); }     //微信用户登录失败
-      })
-    });
-  },
+            }
+          })
+        } else { reject({ ec: 3, ee: '微信用户登录返回code失败！' }) };
+      },
+      fail: function (err) { reject({ ec: 4, ee: err.errMsg }); }     //微信用户登录失败
+    })
+  });
+};
 
-  fetchMenu: function(app){
-    return new Promise((resolve, reject) => {
-      if (app.globalData.user.mobilePhoneVerified) {
-        return new AV.Query('userInit')
-          .notEqualTo('updatedAt',new Date(app.roleData.wmenu.updatedAt))
-          .select(['manage', 'plan', 'production', 'customer'])
-          .equalTo('objectId',app.globalData.user.userRol.objectId).find().then( fetchMenu =>{
-          if (fetchMenu.length>0) {                          //菜单在云端有变化
+function fetchMenu(app) {
+  return new Promise((resolve, reject) => {
+    if (app.globalData.user.mobilePhoneVerified) {
+      return new AV.Query('userInit')
+        .notEqualTo('updatedAt', new Date(app.roleData.wmenu.updatedAt))
+        .select(['manage', 'plan', 'production', 'customer'])
+        .equalTo('objectId', app.globalData.user.userRol.objectId).find().then(fetchMenu => {
+          if (fetchMenu.length > 0) {                          //菜单在云端有变化
             app.roleData.wmenu = fetchMenu[0].toJSON();
             ['manage', 'plan', 'production', 'customer'].forEach(mname => {
-              app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn=>{return rn!=0});
+              app.roleData.wmenu[mname] = app.roleData.wmenu[mname].filter(rn => { return rn != 0 });
             });
             resolve(true);
           } else {
             resolve(false);
           };
         })
-      } else {
-        resolve(false);
-      };
-    }).then(updateMenu=>{
-      return new Promise((resolve, reject) => {
-        wx.getUserInfo({        //检查客户信息
-          withCredentials: false,
-          success: function ({ userInfo }) {
-            if (userInfo) {
-              let updateInfo = false;
-              for (var iKey in userInfo){
-                if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
-                  updateInfo = true;
-                  app.globalData.user[iKey] = userInfo[iKey];
-                }
-              };
-              if (updateInfo){
-                AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
-                  rLoginUser.set(userInfo).save().then(()=>{ resolve(true) });
-                })
-              } else {
-                resolve(updateMenu);
-              };
-            }
+    } else {
+      resolve(false);
+    };
+  }).then(updateMenu => {
+    return new Promise((resolve, reject) => {
+      wx.getUserInfo({        //检查客户信息
+        withCredentials: false,
+        success: function ({ userInfo }) {
+          if (userInfo) {
+            let updateInfo = false;
+            for (var iKey in userInfo) {
+              if (userInfo[iKey] != app.globalData.user[iKey]) {             //客户信息有变化
+                updateInfo = true;
+                app.globalData.user[iKey] = userInfo[iKey];
+              }
+            };
+            if (updateInfo) {
+              AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {
+                rLoginUser.set(userInfo).save().then(() => { resolve(true) });
+              })
+            } else {
+              resolve(updateMenu);
+            };
           }
-        });
+        }
       });
-    }).then(uMenu=>{
-      if (app.globalData.user.unit != '0') {
-        return new AV.Query('_Role')
+    });
+  }).then(uMenu => {
+    if (app.globalData.user.unit != '0') {
+      return new AV.Query('_Role')
         .notEqualTo('updatedAt', new Date(app.roleData.uUnit.updatedAt))
-        .equalTo('objectId',app.globalData.user.unit).first().then( uRole =>{
+        .equalTo('objectId', app.globalData.user.unit).first().then(uRole => {
           if (uRole) {                          //本单位信息在云端有变化
             app.roleData.uUnit = uRole.toJSON();
           };
-          if (app.roleData.uUnit.sUnit != '0'){
+          if (app.roleData.uUnit.sUnit != '0') {
             return new AV.Query('_Role')
-            .notEqualTo('updatedAt', new Date(app.roleData.sUnit.updatedAt))
-            .equalTo('objectId',app.roleData.uUnit.sUnit).first().then( sRole => {
-              if (sRole) {
-                app.roleData.sUnit = sRole.toJSON();
-              };
-            }).catch(console.error)
+              .notEqualTo('updatedAt', new Date(app.roleData.sUnit.updatedAt))
+              .equalTo('objectId', app.roleData.uUnit.sUnit).first().then(sRole => {
+                if (sRole) {
+                  app.roleData.sUnit = sRole.toJSON();
+                };
+              }).catch(console.error)
           }
         }).catch(console.error)
-      };
-      app.imLogin(app.globalData.user.username);
-    }).catch(error=> {return error} );
+    };
+    app.imLogin(app.globalData.user.username);
+  }).catch(error => { return error });
+};
+module.exports = {
+
+  loginAndMenu: function (app) {
+    return new Promise((resolve, reject) => {
+      if (app.globalData.user.objectId != '0') {             //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
+        fetchMenu(app).then(() => { resolve(true) });
+      } else {
+        wx.getSetting({
+          success(res) {
+            if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
+              openWxLogin(app).then(() => {
+                fetchMenu(app).then(() => { resolve(true) });
+              }).catch((loginErr) => { reject('系统登录失败:' + loginErr.toString()) });
+            } else { resolve(false) }
+          }
+        })
+      }
+    }).catch(lcuErr => {
+      app.logData.push([Date.now(), lcuErr]);
+    });
   },
 
   checkRols: function(ouRole,user){

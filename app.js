@@ -19,16 +19,29 @@ const realtime = new Realtime({
   plugins: [TypedMessagesPlugin],                    // 注册富媒体消息插件
   pushOfflineMessages: true                          //使用离线消息通知方式
 });
-const openWxLogin = require('./util/util').openWxLogin;
-const fetchMenu = require('./util/util').fetchMenu;
+const loginAndMenu = require('./util/util').loginAndMenu;
 let lcUser = AV.User.current();
+function onNet() {
+  return new Promise((resolve, reject) => {
+    wx.getNetworkType({
+      success: function (res) {
+        if (res.networkType == 'none') {
+          resolve(false);
+          wx.showToast({ title: '请检查网络！' });
+        } else {
+          resolve(true);
+        }
+      }
+    });
+  })
+};
 App({
   globalData: lcUser ? {user:lcUser.toJSON()} : require('globaldata.js').globalData,
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
   procedures: wx.getStorageSync('procedures') || {},              //读流程的缓存
-  netState: true,
+  netState: onNet(),
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
@@ -141,24 +154,27 @@ App({
     return rMessage;
   },
 
-  onLaunch: function () {
+  onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;            //调用应用实例的方法获取全局数据
-    wx.getNetworkType({
-      success: function (res) {
-        if (res.networkType == 'none') {
-          that.netState = false;
-          wx.showToast({ title: '请检查网络！' });
+    if (path != 'index/manage/manage') {
+      loginAndMenu(that).then(() => {
+        if (that.globalData.user.mobilePhoneVerified) {
+          wx.showTabBar()
         } else {
-          that.netState = true;
+          wx.hideTabBar();
         }
-      }
-    });
+      });
+    }
+  },
+
+  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
+    var that = this;
     wx.getSystemInfo({                     //读设备信息
-      success: function(res) {
+      success: function (res) {
         that.globalData.sysinfo = res;
         let sdkvc = res.SDKVersion.split('.');
-        let sdkVersion = parseFloat(sdkvc[0]+'.'+sdkvc[1]+sdkvc[2]);
-        if (sdkVersion<1.9) {
+        let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
+        if (sdkVersion < 1.9) {
           wx.showModal({
             title: '提示',
             content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。'
@@ -166,7 +182,7 @@ App({
         };
       }
     });
-    wx.onNetworkStatusChange(res=>{
+    wx.onNetworkStatusChange(res => {
       if (!res.isConnected) {
         that.netState = false;
         wx.showToast({ title: '请检查网络！' });
@@ -174,33 +190,6 @@ App({
         that.netState = true;
       }
     });
-    if (that.globalData.user.objectId != '0') {             //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
-      fetchMenu(that);
-    } else {
-      return Promise.resolve(
-        wx.getSetting({
-          success(res) {
-            if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
-              openWxLogin(that).then((loginOk) => {
-                fetchMenu(that).then(() => {
-                  resolve('系统登录:' + loginOk.toString());                      //本机初始化时间记入日志
-                });
-              }).catch((loginErr) => { reject('系统登录失败:' + loginErr.toString()) });
-            } else { wx.hideTabBar(); }
-          }
-        })
-      ).then(lclog => {
-        that.logData.push([Date.now(), lclog]);
-      }).catch(lcuErr => {
-        app.logData.push([Date.now(), lcuErr]);
-      })
-    }
-    console.log('onLaunch')
-  },
-
-  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
-    var that = this;
-    
   },
 
   onHide: function () {             //进入后台时缓存数据。

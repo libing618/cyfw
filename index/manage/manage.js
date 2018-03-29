@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData,tabClick } = require('../../model/initupdate');
-const {openWxLogin,fetchMenu} = require('../../util/util');
+const { loginAndMenu } = require('../../util/util');
 var app = getApp()
 Page({
   data: {
@@ -11,12 +11,31 @@ Page({
     unAuthorize: app.globalData.user.objectId=='0',
     mPage: [app.mData.articles[1],app.mData.articles[2],app.mData.articles[3]],
     pNo: 'articles',                       //文章类信息
-    pageData: app.aData.articles,
+    pageData: {},
     fLength:3,
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
     pageCk: app.mData.pCk1,
     wWidth: app.globalData.sysinfo.windowWidth,
     grids: []
+  },
+
+  onLoad: function () {
+    var that = this;
+    loginAndMenu(app).then(() => {
+      if (app.globalData.user.mobilePhoneVerified) {
+        wx.showTabBar()
+      } else {
+        wx.hideTabBar();
+      }
+      that.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage, 'manage');
+      that.grids[0].mIcon = app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
+      that.setData({
+        grids: that.grids,
+        mSwiper: app.mData.articles[0],
+        mPage: [app.mData.articles[1], app.mData.articles[2], app.mData.articles[3]],
+        pageData: app.aData.articles
+      })
+    });
   },
 
   setPage: function(iu){
@@ -31,9 +50,6 @@ Page({
 
   onReady: function(){
     updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据    
-    this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage,'manage');
-    this.grids[0].mIcon=app.globalData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
-    this.setData({ grids: this.grids })
   },
 
   userInfoHandler: function (e) {
