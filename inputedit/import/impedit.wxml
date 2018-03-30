@@ -325,6 +325,7 @@
     </view>
   </view>
   <view hidden="{{inclose}}" class="weui-picker">
+  <view class="close_icon" id="se*{{n}}" bindtap="f_objsel">×</view>
     <picker-view id="pa-{{n}}" class="weui-picker__view"  indicator-class="weui-picker__indicator" mask-class="weui-picker__mask" value="{{osv}}" bindchange="f_objsel">
       <picker-view-column>
         <view wx:for="{{objarr}}" wx:key="{{index}}" style="line-height: 36rpx">{{master[item.masterId].uName}}</view>

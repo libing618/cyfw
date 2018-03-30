@@ -704,7 +704,6 @@ icon {
 .weui-panel__hd:after {
   content: " ";
   position: absolute;
-  left: 0;
   bottom: 0;
   right: 0;
   height: 2rpx;
@@ -719,7 +718,6 @@ icon {
 .weui-media-box:before {
   content: " ";
   position: absolute;
-  left: 0;
   top: 0;
   right: 0;
   height: 2rpx;
@@ -1006,17 +1004,9 @@ icon {
 .weui-picker{
   position:fixed;
   width:100%;
-  left:0;
-  bottom:0;
-  z-index:5000;
-  -webkit-backface-visibility:hidden;
-          backface-visibility:hidden;
-  -webkit-transform:translate(0, 100%);
-          transform:translate(0, 100%);
-  -webkit-transition:-webkit-transform .3s;
-  transition:-webkit-transform .3s;
-  transition:transform .3s;
-  transition:transform .3s, -webkit-transform .3s;
+  flex-direction: column;
+  background: yellowgreen;
+	margin: 20rpx 20rpx;
 }
 .weui-picker__hd{
   display:-webkit-box;
@@ -1132,4 +1122,20 @@ icon {
 }
 .weui-picker__item_disabled{
   color:#999999;
+}
+
+.close_icon {
+  width: 25rpx;
+  height: 25rpx;
+  line-height: 20rpx;
+  font-size: 30rpx;
+  position: absolute;
+  right: 5rpx;
+  top:5rpx;
+  padding: 10rpx;
+  color: #ccc;
+  border: 1rpx solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  background: #fff;
 }
