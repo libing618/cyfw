@@ -876,7 +876,6 @@ icon {
 .weui-tab__panel {
   box-sizing: border-box;
   height: 100%;
-  padding-top: 100rpx;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1002,11 +1001,10 @@ icon {
 }
 
 .weui-picker{
-  position:fixed;
   width:100%;
-  flex-direction: column;
-  background: yellowgreen;
-	margin: 20rpx 20rpx;
+  background: #576b95;
+  border: 4rpx solid #ccc;
+  border-radius: 10rpx;
 }
 .weui-picker__hd{
   display:-webkit-box;
@@ -1050,7 +1048,7 @@ icon {
 }
 .weui-picker__view{
   width:100%;
-  height:380rpx;
+  height:500rpx;
 }
 .weui-picker__mask{
   position:absolute;
@@ -1059,7 +1057,6 @@ icon {
   width:100%;
   height:100%;
   margin:0 auto;
-  z-index:3;
   background:-webkit-linear-gradient(top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6)), -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6));
   background:linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6)), linear-gradient(0deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6));
   background-position:top, bottom;
@@ -1074,7 +1071,6 @@ icon {
   position:absolute;
   left:0;
   top:200rpx;
-  z-index:3;
 }
 .weui-picker__indicator:before{
   content:" ";
@@ -1122,20 +1118,4 @@ icon {
 }
 .weui-picker__item_disabled{
   color:#999999;
-}
-
-.close_icon {
-  width: 25rpx;
-  height: 25rpx;
-  line-height: 20rpx;
-  font-size: 30rpx;
-  position: absolute;
-  right: 5rpx;
-  top:5rpx;
-  padding: 10rpx;
-  color: #ccc;
-  border: 1rpx solid #ccc;
-  border-radius: 50%;
-  text-align: center;
-  background: #fff;
 }
