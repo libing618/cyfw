@@ -1002,7 +1002,7 @@ icon {
 
 .weui-picker{
   width:100%;
-  background: #576b95;
+  background: #F5F5F5;
   border: 4rpx solid #ccc;
   border-radius: 10rpx;
 }
