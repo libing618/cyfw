@@ -1,5 +1,6 @@
 const AV = require('../libs/leancloud-storage.js');
 const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
+const menuKeys=['manage', 'plan', 'production', 'customer'];
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
@@ -17,7 +18,7 @@ function openWxLogin(roleData) {            //注册登录（本机登录状态�
             withCredentials: true,
             success: function (wxuserinfo) {
               if (wxuserinfo) {
-                AV.Cloud.run('wxLogin0', { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
+                AV.Cloud.run('wxLogin'+wxappNumber, { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
                   let signuser = {};
                   signuser['uid'] = wxuid.uId;
                   AV.User.signUpOrlogInWithAuthData(signuser, 'openWx').then((statuswx) => {    //用户在云端注册登录
@@ -48,12 +49,12 @@ function fetchMenu(roleData) {
   return new Promise((resolve, reject) => {
     new AV.Query('userInit')
     .notEqualTo('updatedAt', new Date(roleData.wmenu.updatedAt))
-    .select(['manage', 'plan', 'production', 'customer'])
+    .select(menuKeys)
     .equalTo('objectId', roleData.user.userRol.objectId)
     .find().then(fetchMenu => {
       if (fetchMenu.length > 0) {                          //菜单在云端有变化
         roleData.wmenu = fetchMenu[0].toJSON();
-        ['manage', 'plan', 'production', 'customer'].forEach(mname => {
+        menuKeys.forEach(mname => {
           roleData.wmenu[mname] = roleData.wmenu[mname].filter(rn => { return rn != 0 });
         });
       };
@@ -115,15 +116,16 @@ module.exports = {
         } else { resolve(roleData) };
       } else {
         wx.getSetting({
-          success(res) {
+          success:(res)=> {
             if (res.authSetting['scope.userInfo']) {                   //用户已经同意小程序使用用户信息
-              openWxLogin(roleData).then((rlgData) => {
+              openWxLogin(roleData).then(rlgData => {
                 if (rlgData.user.mobilePhoneVerified) {
-                  fetchMenu(rlgData).then((rfmData) => { resolve(rfmData) });
+                  fetchMenu(rlgData).then(rfmData => { resolve(rfmData) });
                 } else { resolve(rlgData) }
               }).catch((loginErr) => { reject('系统登录失败:' + loginErr.toString()) });
             } else { resolve(roleData) }
-          }
+          },
+          fail: (resFail) => { resolve(roleData) }
         })
       }
     }).catch(console.error);
