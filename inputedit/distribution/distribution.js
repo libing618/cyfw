@@ -11,7 +11,7 @@ Page({
     pageData: {}
   },
   onLoad:function(options){
-    if ( checkRols(9,app.globalData.user) ) {
+    if ( checkRols(9,app.roleData.user) ) {
       this.setPage(true);
     }
   },
@@ -28,7 +28,7 @@ Page({
   onReady: function(){
     updateData(true,'goods').then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
     wx.setNavigationBarTitle({
-      title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的货架' : '用户体验货架管理',
+      title: app.roleData.user.emailVerified ? app.roleData.uUnit.uName+'的货架' : '用户体验货架管理',
     })
   },
 

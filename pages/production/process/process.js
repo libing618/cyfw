@@ -6,7 +6,7 @@ Page({
     fLength: 3,
     tabs: ['','今日工作',''],
     pageCk: app.mData.prodesign,
-    wWidth: app.globalData.sysinfo.windowWidth
+    wWidth: app.sysinfo.windowWidth
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数

@@ -15,7 +15,7 @@ Page({
 
   onLoad: function (options) {
     var that = this;
-    if (app.roleData.uUnit.name == app.globalData.user.objectId) {       //单位名等于用户ID则为创始人
+    if (app.roleData.uUnit.name == app.roleData.user.objectId) {       //单位名等于用户ID则为创始人
       let reqDatas = require('../../model/procedureclass.js')._Role.pSuccess;
       wx.setNavigationBarTitle({ title: app.roleData.uUnit.uName + '的信息', })
       new AV.Query('sengpi')
@@ -29,7 +29,7 @@ Page({
             that.data.vData = spdata.dObject;
             that.data.unEdit = spdata.cInstance > 0 && spdata.cInstance < spdata.cManagers.length;        //流程起点或已结束才能提交
           };
-          that.data.dObjectId = app.globalData.user.unit;
+          that.data.dObjectId = app.roleData.user.unit;
           initData(reqDatas, that.data.vData).then(({reqData, vData, funcArr})=>{
             funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] });
             that.data.reqData = reqData;

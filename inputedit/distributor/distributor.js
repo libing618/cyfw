@@ -17,7 +17,7 @@ Page({
   distributorLog:{},
   onLoad:function(options){
     var that = this;
-    if (checkRols(9,app.globalData.user)) {
+    if (checkRols(9,app.roleData.user)) {
       new AV.Query('manufactor').equalTo('unitId',app.roleData.uUnit.objectId).first().then(manufactor=>{
         if (manufactor) {
           that.setData({ vData: manufactor.toJSON() });
@@ -38,7 +38,7 @@ Page({
     };
     newmf.set('unitId',app.roleData.uUnit.objectId);
     newmf.set('uName',app.roleData.uUnit.uName);
-    newmf.set('adminPhone', app.globalData.user.mobilePhoneNumber);
+    newmf.set('adminPhone', app.roleData.user.mobilePhoneNumber);
     newmf.set('nick', app.roleData.uUnit.nick);
     newmf.set('title', app.roleData.uUnit.title);
     newmf.set('afamily', app.roleData.uUnit.afamily);

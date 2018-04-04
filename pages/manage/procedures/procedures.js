@@ -25,7 +25,7 @@ function ats(){
 Page({
   data:{
     pClassName: {},
-    wWidth: app.globalData.sysinfo.windowWidth,
+    wWidth: app.sysinfo.windowWidth,
     fLength: 3,
     pageCk: 0,
     pageData: {},
@@ -94,7 +94,7 @@ Page({
           if (aprove.cInstance==aprove.cManagers.length ){   //最后一个节点
             aprove.apState = 2;                 //将流程状态标注为‘已结束’
           } else {
-            if (aprove.cFlowStep.indexOf(app.globalData.user.objectId)>=0) {
+            if (aprove.cFlowStep.indexOf(app.roleData.user.objectId)>=0) {
               aprove.apState = 0;                 //将流程状态标注为‘待我审’
             } else {aprove.apState =1}                 //将流程状态标注为‘已处理’
           }

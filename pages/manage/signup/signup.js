@@ -4,9 +4,9 @@ var app = getApp()
 Page({
   data:{
     user: {},
-    sysheight: app.globalData.sysinfo.windowHeight-300,
+    sysheight: app.sysinfo.windowHeight-300,
     swcheck: true,
-    iName: app.globalData.user.uName,
+    iName: app.roleData.user.uName,
     uName: '',
     phonen: '',
     vcoden: '',
@@ -31,10 +31,10 @@ Page({
       this.setData({activeIndex: "0" });
       this.getLoginCode();
     } else {
-      if (!app.globalData.user.mobilePhoneVerified){
+      if (!app.roleData.user.mobilePhoneVerified){
         this.setData({ activeIndex: "0", cUnitInfo: '创建或加入单位(必须验证手机号)' });
       } else {
-        if (!app.globalData.user.uName) {
+        if (!app.roleData.user.uName) {
           this.setData({ cUnitInfo: '创建或加入单位(必须输入姓名)' });
         } else {
           this.setData({ activeIndex: "1"})
@@ -45,16 +45,16 @@ Page({
 
   onLoad: function () {
     var that = this;
-    if (app.globalData.user.unit!='0') {
-      if (app.roleData.uUnit.name == app.globalData.user.objectId) {
-        that.data.cUnitInfo = '您创建的单位' + (app.globalData.user.emailVerified ? '' : '正在审批中')
+    if (app.roleData.user.unit!='0') {
+      if (app.roleData.uUnit.name == app.roleData.user.objectId) {
+        that.data.cUnitInfo = '您创建的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
       } else {
-        that.data.cUnitInfo = '您工作的单位' + (app.globalData.user.emailVerified ? '' : '正在审批中')
+        that.data.cUnitInfo = '您工作的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
       }
     }
     that.setData({		    		// 获得当前用户
-      user: app.globalData.user,
-      activeIndex: app.globalData.user.mobilePhoneVerified ? "1" : "0",
+      user: app.roleData.user,
+      activeIndex: app.roleData.user.mobilePhoneVerified ? "1" : "0",
       cUnitInfo: that.data.cUnitInfo,
       vc: app.roleData.uUnit
     })
@@ -72,8 +72,8 @@ Page({
           wx.showToast({
             title: '微信绑定的手机号注册成功', duration: 2000
           })
-          app.globalData.user.mobilePhoneVerified = true;
-          that.setData({ 'user.mobilePhoneVerified':app.globalData.user.mobilePhoneVerified})
+          app.roleData.user.mobilePhoneVerified = true;
+          that.setData({ 'user.mobilePhoneVerified':app.roleData.user.mobilePhoneVerified})
         }).catch(console.error());
       } else {
         wx.showToast({
@@ -95,7 +95,7 @@ Page({
         .set({ "uName": e.detail.value.uName })  // 设置并保存用户姓名
 				.save()
 				.then((user)=> {
-          app.globalData.user['uName'] = e.detail.value.uName;
+          app.roleData.user['uName'] = e.detail.value.uName;
           this.setData({ iName: e.detail.value.uName})
 			}).catch((error)=>{console.log(error)
 				wx.showToast({title: '修改姓名出现问题,请重试。'})
@@ -135,16 +135,16 @@ Page({
 		if( vcode && /\d{6}$/.test(vcode) ) {           //结束输入后检查验证码格式
 			this.setData({vcoden : vcode})
 			AV.Cloud.run('vSmsCode',{mbn:this.data.phonen,mcode:this.data.vcoden}).then( (mVerfied) => {              // 用户填写收到的短信验证码
-				app.globalData.user.mobilePhoneNumber = this.data.phonen;
-				app.globalData.user.mobilePhoneVerified = true;
+				app.roleData.user.mobilePhoneNumber = this.data.phonen;
+				app.roleData.user.mobilePhoneVerified = true;
 				this.setData({
-					user: app.globalData.user,
+					user: app.roleData.user,
 					activeIndex : 1
 				});
 			}).catch( (error)=>{                 //验证失败将旧手机号保存（若有）
 				AV.User.current()
-					.set({ "mobilePhoneNumber": app.globalData.user.mobilePhoneVerified ? app.globalData.user.mobilePhoneNumber : "",
-                 "mobilePhoneVerified": app.globalData.user.mobilePhoneVerified ? true : false })
+					.set({ "mobilePhoneNumber": app.roleData.user.mobilePhoneVerified ? app.roleData.user.mobilePhoneNumber : "",
+                 "mobilePhoneVerified": app.roleData.user.mobilePhoneVerified ? true : false })
 					.save()
 			})
 		}else{
@@ -168,10 +168,10 @@ Page({
           crUnit.setWriteAccess(AV.User.current(), true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
           crUnit.setPublicReadAccess(true);
           crUnit.setPublicWriteAccess(false);
-          let unitRole = new AV.Role(app.globalData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
+          let unitRole = new AV.Role(app.roleData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
           unitRole.getUsers().add(AV.User.current());
           unitRole.set('uName',reqUnitName)
-          unitRole.set('unitUsers',[{"objectId":app.globalData.user.objectId, "userRolName":'admin', 'uName':app.globalData.user.uName, 'avatarUrl':app.globalData.user.avatarUrl,'nickName':app.globalData.user.nickName}] );
+          unitRole.set('unitUsers',[{"objectId":app.roleData.user.objectId, "userRolName":'admin', 'uName':app.roleData.user.uName, 'avatarUrl':app.roleData.user.avatarUrl,'nickName':app.roleData.user.nickName}] );
           unitRole.save().then((res)=>{
             app.roleData.uUnit = res.toJSON();
             let rQuery = AV.Object.createWithoutData('userInit', '598353adfe88c200571b8636')  //设定菜单为applyAdmin
@@ -198,8 +198,8 @@ Page({
                   .save()
                   .then(function(user) {
                     app.roleData.uUnit = resUnit;
-                    app.globalData.user.unit = resUnit.objectId;
-                    that.setData({user : app.globalData.user});
+                    app.roleData.user.unit = resUnit.objectId;
+                    that.setData({user : app.roleData.user});
                     wx.navigateTo({ url: '/pages/manage/structure/structure' });
                   })
               } else if (res.cancel) {        //用户点击取消

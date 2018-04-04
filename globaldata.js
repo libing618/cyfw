@@ -1,5 +1,5 @@
 module.exports={
-  globalData:{
+  roleData:{
     user: {                                     //用户的原始定义
       "userRolName": "0",
       "unit": "0",
@@ -7,6 +7,7 @@ module.exports={
       "uName": "0",
       "emailVerified": false,
       "nickName": "游客",
+      "username": "游客",
       "language": "zh_CN",
       "gender": 1,
       "province": "Shanxi",
@@ -15,10 +16,8 @@ module.exports={
       "userAuthorize": -1,
       "authData": {},
       "mobilePhoneVerified": false,
-      "objectId": "0"},
-    sysinfo: null
-  },
-  roleData:{
+      "objectId": "0"
+    },
     wmenu: {
       manage:[100,114],                         //用户未注册时的基础菜单
       plan:[],

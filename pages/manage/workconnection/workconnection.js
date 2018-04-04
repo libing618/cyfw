@@ -1,9 +1,9 @@
 var app = getApp()
 Page({
   data:{
-    sysheight:app.globalData.sysinfo.windowHeight-60,
-    syswidth:app.globalData.sysinfo.windowWidth-10,
-    user: app.globalData.user,
+    sysheight:app.sysinfo.windowHeight-60,
+    syswidth:app.sysinfo.windowWidth-10,
+    user: app.roleData.user,
     umessages: []
   },
   onLoad:function(options){
@@ -15,7 +15,7 @@ Page({
 
   onShow:function(){
     if (app.fwClient){
-      this.setData({umessages:app.getM(app.globalData.user.username+'0')})
+      this.setData({umessages:app.getM(app.roleData.user.username+'0')})
     }
   },
   onHide:function(){

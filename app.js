@@ -19,8 +19,6 @@ const realtime = new Realtime({
   plugins: [TypedMessagesPlugin],                    // 注册富媒体消息插件
   pushOfflineMessages: true                          //使用离线消息通知方式
 });
-const loginAndMenu = require('./util/util').loginAndMenu;
-let lcUser = AV.User.current();
 function onNet() {
   return new Promise((resolve, reject) => {
     wx.getNetworkType({
@@ -36,7 +34,6 @@ function onNet() {
   })
 };
 App({
-  globalData: lcUser ? {user:lcUser.toJSON()} : require('globaldata.js').globalData,
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
@@ -90,8 +87,8 @@ App({
         return;
     };
     sendMessage.setAttributes({                                 //发送者呢称和头像
-      avatarUrl: this.globalData.user.avatarUrl,
-      nickName: this.globalData.user.nickName
+      avatarUrl: this.roleData.user.avatarUrl,
+      nickName: this.roleData.user.nickName
     });
     return new Promise((resolve, reject) => {
       this.fwClient.getConversation(conversationId).then(function(conversation) {
@@ -156,22 +153,20 @@ App({
 
   onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;            //调用应用实例的方法获取全局数据
-    if (path != 'index/manage/manage') {
-      loginAndMenu(that).then(() => {
-        if (that.globalData.user.mobilePhoneVerified) {
+    if (path != 'index/manage/manage' && that.netState) {
+      require('./util/util').loginAndMenu(AV.User.current(),that.roleData).then((rData) => {
+        that.roleData = rData;
+        that.imLogin(that.roleData.user.username);
+        if (that.roleData.user.mobilePhoneVerified) {
           wx.showTabBar()
         } else {
           wx.hideTabBar();
         }
       });
     }
-  },
-
-  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
-    var that = this;
     wx.getSystemInfo({                     //读设备信息
       success: function (res) {
-        that.globalData.sysinfo = res;
+        that.sysinfo = res;
         let sdkvc = res.SDKVersion.split('.');
         let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
         if (sdkVersion < 1.9) {
@@ -182,6 +177,10 @@ App({
         };
       }
     });
+  },
+
+  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
+    var that = this;
     wx.onNetworkStatusChange(res => {
       if (!res.isConnected) {
         that.netState = false;
@@ -217,7 +216,7 @@ App({
           }else{
             let loguser = AV.Object.extend('userlog');       //有网络则上传操作日志
             let userlog = new loguser();
-            userlog.set('userObjectId',that.globalData.user.objectId);
+            userlog.set('userObjectId',that.roleData.user.objectId);
             userlog.set('workRecord',logData);
             userlog.save().then( resok =>{
               wx.removeStorageSync('loguser');              //上传成功清空日志缓存

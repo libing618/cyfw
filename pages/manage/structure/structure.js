@@ -20,13 +20,13 @@ Page({
 
   onLoad: function () {
     var that = this;
-    if (app.globalData.user.mobilePhoneNumber && app.roleData.uUnit.length>0) {			// 当前用户已注册且已有单位
+    if (app.roleData.user.mobilePhoneNumber && app.roleData.uUnit.length>0) {			// 当前用户已注册且已有单位
       if (app.roleData.uUnit.afamily>2) {
         wx.showToast({ title: '非机构类单位,没有下级员工设置。', duration: 7500 })
         wx.navigateBack({ delta: 1 })                // 回退前1 页面
       } else {
-        if (app.roleData.uUnit.name == app.globalData.user.objectId) {                //创建人读取单位员工信息
-          new AV.Query('reqUnit').equalTo('rUnit', app.globalData.user.unit).find().then((applyUser) => {
+        if (app.roleData.uUnit.name == app.roleData.user.objectId) {                //创建人读取单位员工信息
+          new AV.Query('reqUnit').equalTo('rUnit', app.roleData.user.unit).find().then((applyUser) => {
             that.setData({ applyUser: applyUser });
           }).catch(console.error);
           let crole = {};
@@ -36,15 +36,15 @@ Page({
             uUnitUsers: app.roleData.uUnit.unitUsers
           })
         } else {
-          new AV.Query('reqUnit').equalTo('userId', app.globalData.user.objectId).find().then((resus) => {
+          new AV.Query('reqUnit').equalTo('userId', app.roleData.user.objectId).find().then((resus) => {
             if (resus.length == 0) {
               let reso = AV.Object.extend('reqUnit');
               that.aUser = new reso();
-              that.aUser.set('userId', app.globalData.user.objectId);
-              that.aUser.set('uName', app.globalData.user.uName);
-              that.aUser.set('avatarUrl', app.globalData.user.avatarUrl);
-              that.aUser.set('nickName', app.globalData.user.nickName);
-              that.aUser.set('rUnit', app.globalData.user.unit);
+              that.aUser.set('userId', app.roleData.user.objectId);
+              that.aUser.set('uName', app.roleData.user.uName);
+              that.aUser.set('avatarUrl', app.roleData.user.avatarUrl);
+              that.aUser.set('nickName', app.roleData.user.nickName);
+              that.aUser.set('rUnit', app.roleData.user.unit);
               that.aUser.set('rRolArray', [4, 4]);
             } else {
               that.setData({ reqstate: 1, reqrole: resus[0].get('rRolArray') });
@@ -59,7 +59,7 @@ Page({
       wx.showToast({ title: '没有注册用户或申请单位,请在个人信息菜单注册。', duration: 7500 })
       wx.navigateBack({ delta: 1 })                // 回退前1 页面
     };
-    that.setData({ userRolName: app.globalData.user.userRolName })
+    that.setData({ userRolName: app.roleData.user.userRolName })
   },
 
 	fSpicker: function(e) {                         //选择岗位和条线
@@ -142,7 +142,7 @@ Page({
 			mReqACL.setPublicWriteAccess(false);
 			mReqACL.setRoleWriteAccess(mReqUnit,true);
 			mReqACL.setRoleReadAccess(mReqUnit,true);
-			mReqACL.setReadAccess(app.globalData.user.objectId,true)
+			mReqACL.setReadAccess(app.roleData.user.objectId,true)
 			this.aUser.setACL(mReqACL);
 	    this.aUser.save().then((suser)=>{
 				wx.showToast({title: '岗位申请已提交,请等待审批。',duration: 3500});

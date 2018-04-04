@@ -34,7 +34,7 @@ Page({
     var that = this;
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
     wx.setNavigationBarTitle({
-      title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
+      title: app.roleData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
     });
     this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.production, 'production');
     this.setData({ grids: this.grids })

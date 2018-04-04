@@ -33,7 +33,7 @@ Page({
   onReady:function(){
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{ this.setPage(isupdated) });
     wx.setNavigationBarTitle({
-      title: app.globalData.user.emailVerified ? app.roleData.uUnit.uName+'的销售管理' : '用户体验产品销售',
+      title: app.roleData.user.emailVerified ? app.roleData.uUnit.uName+'的销售管理' : '用户体验产品销售',
     });
     this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.customer, 'customer');
     this.setData({ grids: this.grids })
