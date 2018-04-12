@@ -1,15 +1,18 @@
 {
   "pages": [
-    "index/manage/manage",
-    "index/plan/plan",
-    "index/production/production",
-    "index/customer/customer",
-    "util/wxchat/wxchat",
-    "util/approve/approve",
-    "util/goodssct/goodssct",
-    "util/mapsunit/mapsunit",
-    "util/ceimage/ceimage",
-    "util/filesct/filesct"
+    "pages/manage/manage",
+    "pages/plan/plan",
+    "pages/production/production",
+    "pages/customer/customer",
+    "signup/signup",
+    "pages/vprocedure/vprocedure",
+    "pages/lprocedures/lprocedures",
+    "pages/wxchat/wxchat",
+    "pages/approve/approve",
+    "pages/goodssct/goodssct",
+    "pages/mapsunit/mapsunit",
+    "pages/ceimage/ceimage",
+    "pages/filesct/filesct"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -23,25 +26,25 @@
     "selectedColor": "#FF0033",
     "list": [
       {
-        "pagePath": "index/manage/manage",
+        "pagePath": "pages/manage/manage",
         "text": "管理",
         "iconPath": "images/index.png",
         "selectedIconPath": "images/index-1.png"
       },
       {
-        "pagePath": "index/plan/plan",
+        "pagePath": "pages/plan/plan",
         "text": "计划",
         "iconPath": "images/shops.png",
         "selectedIconPath": "images/shops-1.png"
       },
       {
-        "pagePath": "index/production/production",
+        "pagePath": "pages/production/production",
         "text": "生产",
         "iconPath": "images/marketing.png",
         "selectedIconPath": "images/marketing-1.png"
       },
       {
-        "pagePath": "index/customer/customer",
+        "pagePath": "pages/customer/customer",
         "text": "销售",
         "iconPath": "images/customer.png",
         "selectedIconPath": "images/customer-1.png"
@@ -50,23 +53,19 @@
   },
   "subPackages": [
     {
-      "root": "pages",
+      "root": "index",
       "pages": [
-        "manage/signup/signup",
-        "manage/structure/structure",
-        "manage/procedures/procedures",
-        "manage/rcustomer/rcustomer",
-        "manage/addresslist/addresslist",
-        "manage/workconnection/workconnection",
-        "vprocedure/vprocedure",
-        "lprocedures/lprocedures",
-
-        "production/process/process",
-        "production/storage/storage",
-        "production/stocks/stocks",
-        "production/live/live",
-        "production/capital/capital",
-        "customer/returns/returns",
+        "structure/structure",
+        "procedures/procedures",
+        "rcustomer/rcustomer",
+        "addresslist/addresslist",
+        "workconnection/workconnection",
+        "process/process",
+        "storage/storage",
+        "stocks/stocks",
+        "live/live",
+        "capital/capital",
+        "returns/returns",
         "customer/logistics/logistics",
         "customer/evaluate/evaluate",
         "customer/communication/communication",

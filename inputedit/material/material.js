@@ -2,7 +2,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
 const oClass = require('../../model/procedureclass.js').rawOperate;
-const { checkRols,indexClick,binddata } = require('../../util/util.js');
+const { checkRols,indexClick,binddata } = require('../../libs/util.js');
 const { integration,unitData } = require('../../model/initForm.js');
 var app = getApp()
 Page({
@@ -116,7 +116,7 @@ Page({
     return {
       title: '侠客岛创业服务平台', // 分享标题
       desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/index/manage/manage' // 分享路径
+      path: '/pages/manage/manage' // 分享路径
     }
   }
 })

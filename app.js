@@ -153,8 +153,8 @@ App({
 
   onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;            //调用应用实例的方法获取全局数据
-    if (path != 'index/manage/manage' && that.netState) {
-      require('./util/util').loginAndMenu(AV.User.current(),that.roleData).then((rData) => {
+    if (path != 'pages/manage/manage' && that.netState) {
+      require('./libs/util').loginAndMenu(AV.User.current(),that.roleData).then((rData) => {
         that.roleData = rData;
         that.imLogin(that.roleData.user.username);
         if (that.roleData.user.mobilePhoneVerified) {

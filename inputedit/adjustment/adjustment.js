@@ -1,6 +1,6 @@
 //调整当日成品生产计划
 const AV = require('../../libs/leancloud-storage.js');
-const weutil = require('../../util/util.js');
+const weutil = require('../../libs/util.js');
 var app = getApp();
 
 Page({
@@ -43,7 +43,7 @@ Page({
     return {
       title: '侠客岛创业服务平台', // 分享标题
       desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/index/manage/manage' // 分享路径
+      path: '/pages/manage/manage' // 分享路径
     }
   }
 })

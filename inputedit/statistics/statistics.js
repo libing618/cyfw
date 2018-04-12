@@ -1,7 +1,7 @@
 //订单统计
 const AV = require('../../libs/leancloud-storage.js');
 const orders = require('../../model/supplies');
-const { checkRols,formatTime,indexClick } = require('../../util/util.js');
+const { checkRols,formatTime,indexClick } = require('../../libs/util.js');
 const { updateData } = require('../../model/initupdate');
 const { i_sedate } = require('../import/impedit');
 var app = getApp();
