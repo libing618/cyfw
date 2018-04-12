@@ -1,6 +1,5 @@
 //帐务中心
 const AV = require('../../libs/leancloud-storage.js');
-const orders = require('../../model/supplies');
 const { checkRols,formatTime,indexClick } = require('../../libs/util.js');
 const { updateData } = require('../../model/initupdate');
 const { i_sedate } = require('../import/impedit');
@@ -42,7 +41,7 @@ Page({
   indexClick: indexClick,
   sumOrders:function(){
     var that = this;
-    new AV.Query(orders)
+    new AV.Query('orderlist')
     .equalTo('unitId', app.roleData.uUnit.objectId)
     .greaterThan('updatedAt', new Date(that.data.vData.seDate[0]))
     .lessThan('updatedAt', new Date(that.data.vData.seDate[1])+86400000)
