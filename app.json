@@ -4,7 +4,7 @@
     "pages/plan/plan",
     "pages/production/production",
     "pages/customer/customer",
-    "signup/signup",
+    "pages/signup/signup",
     "pages/vprocedure/vprocedure",
     "pages/lprocedures/lprocedures",
     "pages/wxchat/wxchat",
@@ -66,10 +66,10 @@
         "live/live",
         "capital/capital",
         "returns/returns",
-        "customer/logistics/logistics",
-        "customer/evaluate/evaluate",
-        "customer/communication/communication",
-        "customer/statement/statement"
+        "logistics/logistics",
+        "evaluate/evaluate",
+        "communication/communication",
+        "statement/statement"
       ]
     },
     {

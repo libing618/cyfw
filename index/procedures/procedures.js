@@ -1,6 +1,6 @@
 //审批流程列表
-const AV = require('../../../libs/leancloud-storage.js');
-const pClass = require('../../../model/procedureclass.js');
+const AV = require('../../libs/leancloud-storage.js');
+const pClass = require('../../model/procedureclass.js');
 var app = getApp();
 function ats(){
   let rats = [{},{},{}], j;

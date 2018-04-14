@@ -1,4 +1,4 @@
-<import src="../../../libs/wedetail.wxml"/>
+<import src="../../libs/wedetail.wxml"/>
 <view class="page">
   <block wx:for="{{vData}}" wx:key="{{index}}" wx:for-item="uu" wx:for-index="i">
     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="{{uu.objectId}}" bindtap="indexClick">

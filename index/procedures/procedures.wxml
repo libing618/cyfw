@@ -1,5 +1,5 @@
-<import src="../../../libs/weimport.wxml"/>
-<import src="../../../libs/wedetail.wxml"/>
+<import src="../../libs/weimport.wxml"/>
+<import src="../../libs/wedetail.wxml"/>
 <view class="page">
   <view class="page__hd weui-tab">
     <template is="tabsCk" data="{{ fLength , pageCk , tabs ,wWidth }}"/>

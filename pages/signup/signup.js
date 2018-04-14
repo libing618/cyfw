@@ -1,4 +1,4 @@
-const AV = require('../../../libs/leancloud-storage.js');
+const AV = require('../../libs/leancloud-storage.js');
 
 var app = getApp()
 Page({

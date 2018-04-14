@@ -1,5 +1,5 @@
 //单位（机构类）组织架构管理
-const AV = require('../../../libs/leancloud-storage.js');
+const AV = require('../../libs/leancloud-storage.js');
 var app = getApp()          //设置组织架构
 Page({
 	data:{

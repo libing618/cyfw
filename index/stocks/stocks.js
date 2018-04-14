@@ -1,4 +1,4 @@
-// pages/shops/stocks/stocks.js库存盘点
+// 库存盘点
 Page({
   data:{},
   onLoad:function(options){

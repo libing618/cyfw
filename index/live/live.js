@@ -1,4 +1,4 @@
-// pages/customer/live/live.js
+// 直播
 Page({
   data:{},
   onLoad:function(options){

@@ -22,7 +22,7 @@ function openWxLogin(roleData) {            //注册登录（本机登录状态�
                   let signuser = {};
                   signuser['uid'] = wxuid.uId;
                   AV.User.signUpOrlogInWithAuthData(signuser, 'openWx').then((statuswx) => {    //用户在云端注册登录
-                    if (statuswx.country) {
+                    if (statuswx.createdAt!=statuswx.updatedAt) {
                       roleData.user = statuswx.toJSON();
                       resolve(roleData);                        //客户已注册在本机初次登录成功
                     } else {                         //客户在本机授权登录则保存信息

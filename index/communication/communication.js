@@ -1,4 +1,4 @@
-// pages/customer/communication/communication.js
+// communication.js
 Page({
   data:{},
   onLoad:function(options){

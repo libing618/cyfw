@@ -153,17 +153,7 @@ App({
 
   onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;            //调用应用实例的方法获取全局数据
-    if (path != 'pages/manage/manage' && that.netState) {
-      require('./libs/util').loginAndMenu(AV.User.current(),that.roleData).then((rData) => {
-        that.roleData = rData;
-        that.imLogin(that.roleData.user.username);
-        if (that.roleData.user.mobilePhoneVerified) {
-          wx.showTabBar()
-        } else {
-          wx.hideTabBar();
-        }
-      });
-    }
+    AV.Cloud.run('writers',).then(myip=>{console.log(myip)})
     wx.getSystemInfo({                     //读设备信息
       success: function (res) {
         that.sysinfo = res;

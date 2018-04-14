@@ -1,4 +1,4 @@
-libs/util//通讯录
+//通讯录
 const app=getApp();
 Page({
   data:{

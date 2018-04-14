@@ -1,4 +1,4 @@
-// pages/shops/storage/storage.js货品入库
+// 货品入库
 Page({
   data:{},
   onLoad:function(options){
