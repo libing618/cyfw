@@ -7,7 +7,7 @@
 <template name="s_industrytype">
 <view class="weui-cell">
   <view class="weui-cell__hd">{{p}}:</view>
-  <view class="weui-cell__bd">
+  <view class="weui-cell__bd weui-flex">
     <view wx:for="{{c.sName}}" wx:key="{{index}}">{{item}}{{mDot(index,c.sName)}}</view>
   </view>
 </view>
@@ -43,12 +43,12 @@
 
 <template name="s_sObject">
   <view class="weui-cell">{{p}}:</view>
-  <view class="weui-cell" id="{{c}}">
+  <view class="weui-cell" id="{{c}}" data-pNo="{{gname}}" bingtap="f_modalFieldView">
     <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+      <view class="weui-media-box__hd_in-appmsg">
         <image class="weui-media-box__thumb" src="{{slave.thumbnail}}" background-size="cover"></image>
       </view>
-      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+      <view class="weui-media-box__bd_in-appmsg">
         <view class="weui-media-box__title">{{slave.uName}}</view>
         <view class="weui-media-box__desc">{{slave.title}}</view>
       </view>
@@ -58,12 +58,12 @@
 
 <template name="s_sId">
   <view class="weui-cell">{{p}}:</view>
-  <view class="weui-cell" id="{{c}}">
+  <view class="weui-cell" id="{{c}}" data-pNo="{{gname}}" bingtap="f_modalFieldView">
     <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-      <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+      <view class="weui-media-box__hd_in-appmsg">
         <image class="weui-media-box__thumb" src="{{thumbnail}}" background-size="cover"></image>
       </view>
-      <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+      <view class="weui-media-box__bd_in-appmsg">
         <view class="weui-media-box__title">{{uName}}</view>
         <view class="weui-media-box__desc">{{title}}</view>
       </view>
@@ -87,11 +87,11 @@
   <view class="weui-cell">{{p}}:</view>
   <view class="weui-cells">
     <block wx:for="{{c}}" wx:key="{{index}}" wx:for-item="specsId">
-      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+      <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active" id="{{specsId}}" data-pNo="{{gname}}" bingtap="f_modalFieldView">
+        <view class="weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{master[specsId].thumbnail}}" background-size="cover"></image>
         </view>
-        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+        <view wx:if="{{slave[specsId] && master[specsId]}}"class="weui-media-box__bd_in-appmsg">
           <view class="weui-media-box__title">{{slave[specsId].uName}}/{{master[specsId].package}}份装/{{master[specsId].price}}元</view>
           <view class="weui-media-box__desc">{{master[specsId].title}}</view>
           <view class="weui-media-box__desc">已售{{sstock.scale(slave[specsId],master[specsId].package)}},库存{{sstock.csupply(slave[specsId],maste[specsId].package)}}</view>
@@ -165,7 +165,7 @@
   <map longitude="{{c.longitude}}" latitude="{{c.latitude}}" scale="28" show-location style="width: 100%; height: 300px;"></map>
 </template>
 
-<template name="s_ed">
+<template name="s_modalEditAddress">
   <view class="weui-cell__hd">{{p}}:</view>
   <view class="weui-cell__bd">{{c.sName}}</view>
 </template>
@@ -259,7 +259,7 @@
       <view class="weui-navbar__title">{{item}}</view>
     </view>
   </block>
-  <view class="weui-navbar__slider" style="left:{{(wWidth/fLength-72)/2}}px; transform: translateX(0px); -webkit-transform: translateX({{pageCk*wWidth/fLength}}px)"></view>
+  <view class="weui-navbar__slider" style="left:{{375/fLength-72}}rpx; transform: translateX(0px); -webkit-transform: translateX({{pageCk*750/fLength}}rpx)"></view>
 </view>
 </template>
 
@@ -268,15 +268,75 @@
   <block wx:for="{{tPage}}" wx:key="{{index}}">
     <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-        <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+        <view class="weui-media-box__hd_in-appmsg">
           <image class="weui-media-box__thumb" src="{{pageData[item].thumbnail}}" background-size="cover"></image>
         </view>
-        <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+        <view class="weui-media-box__bd_in-appmsg">
           <view class="weui-media-box__title">{{pageData[item].uName}}</view>
           <view class="weui-media-box__desc">{{pageData[item].title}}</view>
         </view>
       </view>
     </navigator>
+  </block>
+</view>
+</template>
+
+<template name="personConversation">
+<view class="chat-box__left" hover="true" hover-class="weui-cell_active">
+  <navigator url="/pages/vprocedure/vprocedure?pNo={{pNo}}&artId={{item}}">
+    <view class="chat-box__hd">
+      <image class="weui-media-box__thumb" src="{{avatarUrl}}" background-size="cover"></image>
+      <view>uName</view>
+    </view>
+  </navigator>
+  <view class="chat-box__bd">
+    <view class="weui-media-box__title">{{wtext}}</view>
+    <view wx:if="{{wcontent}}" class="weui-media-box__desc">
+      <template is="{{mtype}}" data="{{c: wcontent}}" />
+    </view>
+  </view>
+</view>
+</template>
+
+<template name="ownConversation">
+<view class="chat-box__right" hover="true" hover-class="weui-cell_active">
+  <view class="chat-box__bd">
+    <view class="weui-media-box__title">{{wtext}}</view>
+    <view wx:if="{{wcontent}}" class="weui-media-box__desc">
+      <template is="{{mtype}}" data="{{c: wcontent}}" />
+    </view>
+  </view>
+  <view class="chat-box__hd">
+    <image class="weui-media-box__thumb" src="{{avatarUrl}}" background-size="cover"></image>
+    <view>uName</view>
+  </view>
+</view>
+</template>
+
+<template name="msgEditSend">
+<form bindsubmit="i_msgEditSend">
+  <view class="page__ft">
+    <view class="weui-cell weui-cell_input weui-cell_vcode">
+      <view class="weui-cell__hd" id="fMultimedia" bindtap="i_msgEditSend">
+        <image class="weui-grid__icon" src="../../images/Multimedia.png"></image>
+        <input hidden="{{true}}" name="mtype" value="{{mtype}}"/>
+        <input hidden="{{true}}" name="wcontent" value="{{wcontent}}"/>
+      </view>
+      <view class="weui-cell__bd">
+        <input name="mtext" value="{{mtext}}" placeholder="请输入文字" />
+      </view>
+      <view class="weui-cell__ft">
+        <button class="weui-btn" formType="submit" id="sendMsg">＞</button>
+      </view>
+    </view>
+  </view>
+</form>
+<view class="weui-grids" hidden="{{enMultimedia}}">
+  <block wx:for="{{reqData}}" wx:key="{{index}}">
+    <view class="weui-grid" data-n="{{index+1}}" hover-class="weui-grid_active" id="iMultimedia" bindtap="i_msgEditSend">
+      <image class="weui-grid__icon" src="../../images/{{index+1}}.png"></image>
+      <view class="weui-grid__label">{{item.p}}</view>
+    </view>
   </block>
 </view>
 </template>

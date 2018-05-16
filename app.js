@@ -37,30 +37,46 @@ App({
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
+  aCount : wx.getStorageSync('aCount') || require('globaldata.js').aData,
   procedures: wx.getStorageSync('procedures') || {},              //读流程的缓存
   netState: onNet(),
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
-  urM: [],                           //未读信息
+  fwUnreads: {},                      //客户端的未读对话实例
+  conMsg: {},                           //对话信息记录
+  nowOpenChat:{},      //当前打开的对话
 
-  imLogin: function(username){                               //实时通信客户端登录
-    realtime.createIMClient(username+wxappNumber).then( (im)=> {
+  imLogin: function(){                               //实时通信客户端登录
+    var that = this;
+    realtime.createIMClient(that.roleData.user.objectId).then( (im)=> {
       that.fwClient = im;
-      im.getQuery().containsMembers([username+wxappNumber]).find().then( (conversations)=> {  // 默认按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
-        conversations.map( (conversation)=> { that.fwCs.push(conversation); });
+      that.fwClient.getQuery().containsMembers([that.roleData.user.objectId]).find().then( (conversations)=> {  // 默认按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
+        that.fwCs = conversations.map( (conversation)=> {
+          if (!that.conMsg[conversation.id]){that.conMsg[conversation.id]=[]};
+          conversation.on('message', function messageEventHandler(message) {
+            that.conMsg[conversation.id].push(that.mParse(message))
+            if (conversation.id==that.nowOpenChat.data.cId){                               //当前打开的对话修改消息数据
+              that.nowOpenChat.setData({message:that.conMsg[conversation.id]})
+            }
+          });
+          return conversation;
+        });
       });
-      im.on('unreadmessagescountupdate', function unreadmessagescountupdate(conversations) { that.urM = conversations; });
+      that.fwClient.on('unreadmessagescountupdate', function unreadmessagescountupdate(unreadconversations) {
+        unreadconversations.forEach(urcst=> { that.fwUnreads[urcst.id]=urcst });
+      });
     });
   },
 
   sendM: function(sMessage,conversationId){
+    var that = this;
     var sendMessage;
     switch (sMessage.mtype) {
       case -1:
         sendMessage = new TextMessage(sMessage.mtext);
         if (sMessage.wcontent){
-          sendMessage.setAttributes({ product: sMessage.wcontent })  //如有产品信息则发送之
+          sendMessage.setAttributes({ mcontent:sMessage.wcontent })  //如有产品、订单等附加信息信息则发送之
         };
         break;
       case -2:
@@ -87,24 +103,29 @@ App({
         return;
     };
     sendMessage.setAttributes({                                 //发送者呢称和头像
-      avatarUrl: this.roleData.user.avatarUrl,
-      nickName: this.roleData.user.nickName
+      avatarUrl: that.roleData.user.avatarUrl,
+      uName: that.roleData.user.uName
     });
     return new Promise((resolve, reject) => {
-      this.fwClient.getConversation(conversationId).then(function(conversation) {
+      that.fwClient.getConversation(conversationId).then(function(conversation) {
         conversation.send(sendMessage).then(function(){
-          return resolve(true);
+          that.conMsg[conversationId].push(sMessage);
+          resolve(true);
         });
       });
-    }).catch((error)=>{ return reject(error) });
+    }).catch((error)=>{ reject(error) });
   },
 
-  getM: function(conversationId){                   //接收消息内容
+  getM: function(conversationId){                   //接收未读消息内容
     var that = this;
-    that.fwClient.getConversation(conversationId).then(function(conversation) {
-      conversation.queryMessages({ limit: 10, }).then(function(messages) {    //取limit条消息，取值范围 1~1000，默认 20
-        const gMesssages = messages.map((message)=>{ return that.mParse(message) });     //解析最新的limit条消息，按时间增序排列
-        Promise.all(gMesssages).then( (gM)=>{ return gMesssages });
+    return new Promise((resolve, reject) => {
+      that.fwClient.getConversation(conversationId).then(function(conversation) {
+        if (conversation.unreadMessagesCount>0){
+          conversation.queryMessages({ limit: conversation.unreadMessagesCount }).then(function(messages) {    //取limit条消息，取值范围 1~1000，默认 20
+            messages.forEach((message)=>{ that.conMsg[conversationId].push(that.mParse(message)) });     //解析最新的limit条消息，按时间增序排列
+            resolve(true);
+          });
+        } else { resolve(false) }
       }).catch(console.error.bind(console));
     })
   },
@@ -119,7 +140,7 @@ App({
     switch (message.type) {
       case TextMessage.TYPE:
         if (typeof message.getAttributes() != 'undefined'){
-          if (message.getAttributes().product){ rMessage.product = message.getAttributes().product;}
+          if (message.getAttributes().mcontent){ rMessage.wcontent = message.getAttributes().mcontent;}
         }
         break;
       case FileMessage.TYPE:
@@ -145,7 +166,7 @@ App({
         console.warn('收到未知类型消息');
     }
     if (typeof message.getAttributes() != 'undefined'){
-      rMessage.nickName = message.getAttributes().nickName;
+      rMessage.uName = message.getAttributes().uName;
       rMessage.avatarUrl = message.getAttributes().avatarUrl;
     }
     return rMessage;
@@ -193,6 +214,7 @@ App({
           wx.setStorage({key:"aData", data:that.aData});
           wx.setStorage({key:"mData", data:that.mData});
           wx.setStorage({ key: 'roleData', data: that.roleData });
+          wx.setStorage({ key: 'aCount', data: that.aCount });
           wx.setStorage({key:"procedures", data:that.procedures});
         }
       }

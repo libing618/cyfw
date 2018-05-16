@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData,tabClick } = require('../../model/initupdate');
-const { loginAndMenu } = require('../../libs/util');
+const { loginAndMenu, shareMessage } = require('../../libs/util');
 var app = getApp()
 Page({
   data: {
@@ -63,14 +63,11 @@ Page({
   onPullDownRefresh:function(){
     updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
+
   onReachBottom:function(){
     updateData(false,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
-  onShareAppMessage: function() {    // 用户点击右上角分享
-    return {
-      title: '侠客岛创业服务平台', // 分享标题
-      desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/manage/manage' // 分享路径
-    }
-  }
+
+  onShareAppMessage: shareMessage    // 用户点击右上角分享
+
 })

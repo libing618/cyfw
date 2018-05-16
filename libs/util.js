@@ -11,36 +11,47 @@ function exitPage(){
 };
 function openWxLogin(roleData) {            //注册登录（本机登录状态）
   return new Promise((resolve, reject) => {
-    wx.login({
-      success: function (wxlogined) {
-        if (wxlogined.code) {
-          wx.getUserInfo({
-            withCredentials: true,
-            success: function (wxuserinfo) {
-              if (wxuserinfo) {
-                AV.Cloud.run('wxLogin'+wxappNumber, { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
-                  let signuser = {};
-                  signuser['uid'] = wxuid.uId;
-                  AV.User.signUpOrlogInWithAuthData(signuser, 'openWx').then((statuswx) => {    //用户在云端注册登录
-                    if (statuswx.createdAt!=statuswx.updatedAt) {
-                      roleData.user = statuswx.toJSON();
-                      resolve(roleData);                        //客户已注册在本机初次登录成功
-                    } else {                         //客户在本机授权登录则保存信息
-                      let newUser = wxuserinfo.userInfo;
-                      newUser['wxapp' + wxappNumber] = wxuid.oId;         //客户第一次登录时将openid保存到数据库且客户端不可见
-                      statuswx.set(newUser).save().then((wxuser) => {
-                        roleData.user = wxuser.toJSON();
-                        resolve(roleData);                //客户在本机刚注册，无菜单权限
-                      }).catch(err => { reject({ ec: 0, ee: err }) });
+    wx.getSetting({
+      success: ({authSetting})=> {
+        if (authSetting['scope.userInfo']) {
+          wx.login({
+            success: function (wxlogined) {
+              if (wxlogined.code) {
+                wx.getUserInfo({
+                  withCredentials: true,
+                  success: function (wxuserinfo) {
+                    if (wxuserinfo) {
+                      AV.Cloud.run('wxLogin' + wxappNumber, { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
+                        let signuser = {};
+                        signuser['uid'+ wxappNumber] = wxuid.oId;
+                        AV.User.loginWithAuthDataAndUnionId(signuser,'weapp_union', wxuid.uId, {
+                          unionIdPlatform: 'weixin', // 指定为 weixin 即可通过 unionid 与其他 weixin 平台的帐号打通
+                          asMainAccount: true,
+                        }).then((statuswx) => {    //用户在云端注册登录
+                          if (statuswx.createdAt != statuswx.updatedAt) {
+                            roleData.user = statuswx.toJSON();
+                            resolve(roleData);                        //客户已注册在本机初次登录成功
+                          } else {                         //客户在本机授权登录则保存信息
+                            let newUser = wxuserinfo.userInfo;
+                            newUser['wxapp' + wxappNumber] = wxuid.oId;         //客户第一次登录时将openid保存到数据库且客户端不可见
+                            statuswx.set(newUser).save().then((wxuser) => {
+                              roleData.user = wxuser.toJSON();
+                              resolve(roleData);                //客户在本机刚注册，无菜单权限
+                            }).catch(err => { reject({ ec: 0, ee: err }) });
+                          }
+                        }).catch((cerror) => { reject({ ec: 2, ee: cerror }) });    //客户端登录失败
+                      }).catch((error) => { reject({ ec: 1, ee: error }) });       //云端登录失败
                     }
-                  }).catch((cerror) => { reject({ ec: 2, ee: cerror }) });    //客户端登录失败
-                }).catch((error) => { reject({ ec: 1, ee: error }) });       //云端登录失败
-              }
-            }
+                  }
+                })
+              } else { reject({ ec: 3, ee: '微信用户登录返回code失败！' }) };
+            },
+            fail: function (err) { reject({ ec: 4, ee: err.errMsg }); }     //微信用户登录失败
           })
-        } else { reject({ ec: 3, ee: '微信用户登录返回code失败！' }) };
+        } else { reject({ ec: 4, ee: '微信用户未授权！' }) };
       },
-      fail: function (err) { reject({ ec: 4, ee: err.errMsg }); }     //微信用户登录失败
+      fail: function (err) {
+        reject({ ec: 5, ee: err.errMsg }); }     //获取微信用户权限失败
     })
   });
 };
@@ -145,6 +156,40 @@ module.exports = {
     }
   },
 
+  hTabClick: function (e) {                                //点击头部tab
+    this.setData({
+      "ht.pageCk": Number(e.currentTarget.id)
+    });
+  },
+
+  indexRecordFamily: function(requery,indexField,aFamilyLength) {             //按索引字段和类型整理已读数据
+    return new Promise((resolve, reject) => {
+      let aData = {}, indexList = new Array(aFamilyLength), aPlace = -1, iField, aFamily, fieldFamily, mData = {};
+      indexList.fill([]);
+      requery.forEach(onedata => {
+        aData[onedata.id] = onedata;
+        iField = onedata.get(indexField);                  //索引字段读数据数
+        aFamily = onedata.get('afamily');
+        fieldFamily = iField+''+aFamily;
+        if (indexList[aFamily].indexOf(iField)<0) {
+          indexList[aFamily].push(iField);
+          mData[fieldFamily] = {
+            uName:onedata.get('uName'),
+            indexFieldId:[onedata.id]
+          };                   //分类ID数组增加对应ID
+        } else {
+          mData[fieldFamily].indexFieldId.push(onedata.id);
+        };
+      });
+      let cPage = indexList.map((tId,family)=>{
+        return tId.map(fi=>{
+          return {indexId:fi,...mData[fi+family],iCount:mData[fi+family].indexFieldId.length}
+        })
+      })
+      resolve({indexList,aData}) ;
+    }).catch( error=> {reject(error)} );
+  },
+
   fetchRecord: function(requery,indexField,sumField) {                     //同步云端数据到本机
     return new Promise((resolve, reject) => {
       let aData = {}, mData = {}, indexList = [], aPlace = -1, iField, iSum = {}, mChecked = {};
@@ -188,6 +233,14 @@ module.exports = {
     subscription.off('enter', upsert)
     subscription.off('leave', remove)
     subscription.off('delete', remove)
+    }
+  },
+
+  shareMessage: function () {
+    return {
+      title: '侠客岛创业服务平台', // 分享标题
+      desc: '扶贫济困，共享良品。', // 分享描述
+      path: '/pages/manage/manage' // 分享路径
     }
   },
 

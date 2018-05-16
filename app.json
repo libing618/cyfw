@@ -75,7 +75,7 @@
     {
       "root": "inputedit",
       "pages": [
-        "import/addressedit",
+        "import/statistics",
         "f_Role/f_Role",
         "adjustment/adjustment",
         "accounting/accounting",
@@ -85,8 +85,7 @@
         "distribution/distribution",
         "packing/packing",
         "fprocedure/fprocedure",
-        "supply/supply",
-        "statistics/statistics"
+        "supply/supply"
       ]
     }
   ],
