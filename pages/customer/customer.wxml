@@ -1,6 +1,8 @@
 <import src="../../libs/wedetail.wxml"/>
 <import src="../../libs/weimport.wxml" />
+<import src="../../libs/wepage.wxml" />
 <view class="page">
+  <template is="p_navBar__switchTab" data="{{...pw,navBarTitle:' 创业服务平台--营销管理'}}"/>
   <view class="page__hd">
     <view class="page__title">销售情况总览</view>
     <view class="page__desc">销量{{pandect[0]}}，预定未付款{{pandect[1]}}件，付款未发货{{pandect[2]}}件，发货未收到{{pandect[3]}}件，交货且签收{{pandect[4]}}件。</view>

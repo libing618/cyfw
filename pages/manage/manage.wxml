@@ -1,5 +1,7 @@
 <import src="../../libs/weimport.wxml" />
+<import src="../../libs/wepage.wxml" />
 <view class="page">
+  <template is="p_navBar__switchTab" data="{{...pw,navBarTitle:' 创业服务平台--综合管理'}}"/>
   <view class="page__hd">
     <swiper class="swiper_box" indicator-dots="{{false}}" autoplay="{{true}}">
       <block wx:for="{{mSwiper}}" wx:key="{{index}}">

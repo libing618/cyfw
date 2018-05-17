@@ -20,41 +20,60 @@ function getdate(idate) {
   var day = rdate.getDate();
   return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
 };
-function setRole(puRoles){
+function setRole(puRoles,suRoles){
   let cUserName = {};
   let cManagers = [[app.roleData.user.objectId]];
   cUserName[app.roleData.user.objectId] = app.roleData.user.uName;
-  if (puRoles) {          //有本单位审批设置
+  if (app.roleData.uUnit.afamily > 2 && puRoles) {          //单位类型为企业且有本单位审批设置
     let pRolesNum = 0, pRoleUser;
-    new AV.Query('_User')
-    .notEqualTo('userRolName','channel')
-    .equalTo('emailVerified',true)
-    .select(['emailVerified','uName','nickName','avatarUrl','userRolName','channelid'])
-    .find().then(shopUsers => {
-      shopUsers=shopUsers.map(sUser=>{return sUser.toJSON()});
-      for (let i = 0; i < puRoles.length; i++) {
-        pRoleUser = [];
-        shopUsers.forEach((pUser) => {
-          if (pUser.userRolName == puRoles[i]) {
-            pRoleUser.push(pUser.objectId);
-            cUserName[pUser.objectId] = pUser.uName;
-          }
-        })
-        if (pRoleUser.length != 0) {
-          pRolesNum = pRolesNum + 1;
-          cManagers.push(pRoleUser);
+    for (let i = 0; i < puRoles.length; i++) {
+      pRoleUser = [];
+      app.roleData.uUnit.unitUsers.forEach((pUser) => {
+        if (pUser.userRolName == puRoles[i]) {
+          pRoleUser.push(pUser.objectId);
+          cUserName[pUser.objectId] = pUser.uName;
         }
-      };
-      if (pRolesNum == 0 && app.roleData.user.userRolName != 'admin') {
-        shopUsers.forEach((pUser) => {
-          if (pUser.userRolName == 'admin') {
-            cManagers.push([pUser.objectId]);
-            cUserName[pUser.objectId] = pUser.uName;
-          }
-        })
+      })
+      if (pRoleUser.length != 0) {
+        pRolesNum = pRolesNum + 1;
+        cManagers.push(pRoleUser);
       }
-    }).catch(console.error)
+    };
+    if (pRolesNum == 0 && app.roleData.user.userRolName != 'admin') {
+      app.roleData.uUnit.unitUsers.forEach((pUser) => {
+        if (pUser.userRolName == 'admin') {
+          cManagers.push([pUser.objectId]);
+          cUserName[pUser.objectId] = pUser.uName;
+        }
+      })
+    }
   }
+  if (suRoles) {                 //上级单位类型有审批设置
+    let sRolesNum = 0, sRoleUser;
+    if (app.roleData.sUnit.afamily>2) {     //单位类型为企业
+      for (let i = 0; i < suRoles.length; i++) {
+        sRoleUser = [];
+        app.roleData.sUnit.unitUsers.forEach((sUser) => {
+          if (sUser.userRolName == suRoles[i]) {
+            sRoleUser.push(sUser.objectId);
+            cUserName[sUser.objectId] = sUser.uName;
+          }
+        });
+        if (sRoleUser.length != 0) {
+          sRolesNum = sRolesNum + 1;
+          cManagers.push(sRoleUser);
+        }
+      }
+    }
+    if (sRolesNum == 0) {
+      app.roleData.sUnit.unitUsers.forEach((sUser) => {
+        if (sUser.userRolName == 'admin') {
+          cManagers.push([sUser.objectId]);;
+          cUserName[sUser.objectId] = sUser.uName;
+        }
+      })
+    }
+  };
   let managers = [];
   cManagers.forEach((manger) => { manger.forEach((mUser) => { managers.push(mUser) }) });
   return { cManagers,cUserName,managers}
@@ -453,7 +472,7 @@ module.exports = {
     var approvalClass = require('../../model/procedureclass.js')[approvalID];       //流程定义和数据结构
     var subData = e.detail.value;
     let cNumber = ['fg','dg','listsel'];       //数字类型定义
-    let cObject = ['assettype','producttype','arrplus','ed'];       //对象类型定义
+    let cObject = ['assettype','producttype','arrplus','modalEditAddress'];       //对象类型定义
     if (Array.isArray(that.data.vData.details)) {
       for (let i = 0; i < that.data.vData.details.length; i++) {
         that.data.vData.details[i].e = subData['ade' + i];
@@ -603,14 +622,14 @@ module.exports = {
             })
           }).then((sFiles) => {
             if (that.data.targetId == '0') {                    //新建流程的提交
-              let approvalRole = setRole(approvalClass.puRoles);
+              let approvalRole = setRole(approvalClass.puRoles,approvalClass.suRoles);
               var acl = new AV.ACL();      // 新建一个 ACL 实例
               if (approvalRole.cManagers.length==1){                  //流程无后续审批人
                 let dObject = AV.Object.extend(approvalClass.pModel);
                 let sObject = new dObject();
-                that.data.vData.shopId = app.roleData.shopId;
-                that.data.vData.shopName = app.roleData.shopName;
-                acl.setPublicReadAccess(true);
+                that.data.vData.unitId = app.roleData.uUnit.objectId;
+                that.data.vData.unitName = app.roleData.uUnit.uName;
+                acl.setReadAccess(approvalRole.managers[0], true);
                 acl.setWriteAccess(approvalRole.managers[0], true);
                 sObject.setACL(acl);
                 sObject.set(that.data.vData).save().then((sd)=>{
@@ -632,8 +651,8 @@ module.exports = {
                 fcApproval.set('cInstance', 1);             //下一处理节点
                 fcApproval.set('cFlowStep', approvalRole.cManagers[1]);              //下一流程审批人
                 fcApproval.set('dObject', that.data.vData);            //流程审批内容
-                acl.setRoleReadAccess(app.roleData.shopId, true);
-                acl.setRoleReadAccess(app.roleData.shopId, true);
+                acl.setRoleReadAccess(app.roleData.uUnit.objectId, true);
+                acl.setRoleReadAccess(app.roleData.sUnit.objectId, true);
                 approvalRole.managers.forEach(mUser => {
                   acl.setWriteAccess(mUser, true);
                   acl.setReadAccess(mUser, true);

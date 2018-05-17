@@ -7,7 +7,7 @@ Page({
     autoplay: true,
     scrollTop : 0,
     mSwiper: app.mData.articles[0],
-    scrollHeight: app.sysinfo.windowHeight-80,
+    pw: app.sysinfo.pw,
     unAuthorize: app.roleData.user.objectId=='0',
     mPage: [app.mData.articles[1],app.mData.articles[2],app.mData.articles[3]],
     pNo: 'articles',                       //文章类信息

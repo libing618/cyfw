@@ -1,11 +1,12 @@
 const { cargoSum, updateData } = require('../../model/initupdate.js');
 const { integration,unitData } = require('../../model/initForm.js');
-const {indexClick} = require('../../libs/util.js');
+const {indexClick, shareMessage} = require('../../libs/util.js');
 
 var app = getApp()
 Page({
   data:{
     mPage: app.mData.product[app.roleData.uUnit.objectId],
+    pw: app.sysinfo.pw,
     pNo: "cargo",                       //流程的序号5为成品信息
     pageData: unitData('cargo'),
     iClicked: '0',
@@ -47,12 +48,5 @@ Page({
   onReachBottom: function() {
     updateData(false,'cargo').then(isupdated=>{ this.setPage(isupdated) });
   },
-  onShareAppMessage: function() {
-    // 用户点击右上角分享
-    return {
-      title: '侠客岛创业服务平台', // 分享标题
-      desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/manage/manage' // 分享路径
-    }
-  }
+  onShareAppMessage: shareMessage
 })

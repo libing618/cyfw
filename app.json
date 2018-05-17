@@ -16,9 +16,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "创业服务平台",
-    "navigationBarTextStyle": "black",
+    "navigationStyle":"custom",
     "backgroundColor": "#f8f8f8",
     "enablePullDownRefresh": true
   },
