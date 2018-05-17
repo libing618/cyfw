@@ -183,7 +183,7 @@ App({
         if (sdkVersion < 1.9) {
           wx.showModal({
             title: '提示',
-            content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。'
+            content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。',
             compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
           })
         } else {
