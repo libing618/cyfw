@@ -45,6 +45,6 @@ Page({
     }
   },
 
-  fSubmit: wImpEdit.fSubmit
+  fSubmit: require('../import/unitEdit').fSubmit
 
 })
