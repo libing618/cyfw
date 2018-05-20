@@ -174,7 +174,6 @@ App({
 
   onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;            //调用应用实例的方法获取全局数据
-    AV.Cloud.run('writers',).then(myip=>{console.log(myip)})
     wx.getSystemInfo({                     //读设备信息
       success: function (res) {
         that.sysinfo = res;
@@ -187,6 +186,7 @@ App({
             compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
           })
         } else {
+          AV.Cloud.run('writers', ).then(myip => { that.sysinfo.userip=myip; })
           that.sysinfo.pw={
             statusBar: res.statusBarHeight,
             capsule: res.screenHeight - res.windowHeight-8,

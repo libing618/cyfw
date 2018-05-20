@@ -1,6 +1,6 @@
 const AV = require('../../libs/leancloud-storage.js');
+const {i_cutImageThumbnail,i_modalEditAddress} = require('../../model/controlModal.js');
 var app = getApp();
-const nt = ['-1', '-6'];
 const vdSet = function (sname, sVal) {
   let reqset = {};
   reqset['vData.' + sname] = sVal;
@@ -21,7 +21,8 @@ function getdate(idate) {
   return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
 };
 module.exports = {
-  i_modalEditAddress: require('../../model/controlModal.js').i_modalEditAddress,
+  i_modalEditAddress: i_modalEditAddress,
+  i_cutImageThumbnail: i_cutImageThumbnail,
 
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
@@ -392,18 +393,46 @@ module.exports = {
         artArray.splice(that.data.selectd, instif, { t: sIndex, e: mgrids[sI] });
       };
       that.setData({ 'vData.details': artArray, enIns: true });
-      if (nt.indexOf(sIndex) >= 0) {
-        let nts;
+      if (['-1', '-6'].indexOf(sIndex) >= 0) {
+        let showPage = {};;
         switch (sIndex) {
           case '-1':
-            nts = '/pages/goodssct/goodssct';
+            if (!that.f_modalSelectPanel) {that.f_modalSelectPanel = require('../../model/controlModal').f_modalSelectPanel}
+            showPage.pageData = app.aData.goods;
+            showPage.tPage = app.mData.goods;
+            showPage.idClicked = '0';
+            that.data.sPages.push({ pageName: 'modalSelectPanel', pNo: 'goods', n: 0 });
+            showPage.sPages = that.data.sPages;
+            that.setData(showPage);
+            popModal(that);
+            resolve(true);
             break;
           case '-6':
-            nts = '/pages/filesct/filesct';
+            if (!that.f_modalSelectFile) { that.f_modalSelectFile = require('../../model/controlModal').f_modalSelectFile };
+            wx.getSavedFileList({
+              success: function(res) {
+                let index,filetype,fileData={},cOpenFile=['doc', 'xls', 'ppt', 'pdf', 'docx', 'xlsx', 'pptx'];
+                var sFiles=res.fileList.map(({filePath,createTime,size})=>{
+                  index = filePath.indexOf(".");                   //得到"."在第几位
+                  filetype = filePath.substring(index+1);          //得到后缀
+                  if ( cOpenFile.indexOf(filetype)>=0 ){
+                    fileData[filePath] = {"fType":filetype,"cTime":formatTime(createTime,false),"fLen":size/1024};
+                    return (fileList.filePath);
+                  }
+                })
+                showPage.pageData = fileData;
+                showPage.tPage = sFiles;
+                showPage.idClicked = '0';
+                that.data.sPages.push({ pageName: 'modalSelectFile', pNo: 'files', n: 5 });
+                showPage.sPages = that.data.sPages;
+                that.setData(showPage);
+                popModal(that);
+                resolve(true);
+              }
+            })
             break;
           default: break;
         }
-        wx.navigateTo({ url: nts + '?reqName="details"' })
       }
     }).catch(console.error);
   }

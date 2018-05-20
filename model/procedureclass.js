@@ -14,7 +14,7 @@ module.exports = {
     {gname:"nick", p:'单位简称',t:"h2" },
     {gname: "title", p:'单位简介', t:"h3"},
     {gname: "desc", p: '单位描述', t: "p"},
-    {gname: "thumbnail", p: '图片简介', t: "thumb" },
+    {gname: "thumbnail", p: '图片简介', t: "cutImageThumbnail" },
     {gname: "aGeoPoint", p: '选择地理位置', t: "chooseAd" },
     {gname: "address", p: '地址', t: "modalEditAddress"},
     {gname: "sUnit", p: '服务单位', t: "MS", indTypes: 620406 },
@@ -36,7 +36,7 @@ module.exports = {
   "pSuccess": [
     {gname:"uName", t:"h1", p:"名称" },
     {gname:"title",t:"h2", p:"标题" },
-    {gname:"thumbnail", p: '上传用于缩略图的图片',t: "thumb" },
+    {gname:"thumbnail", p: '上传用于缩略图的图片',t: "cutImageThumbnail" },
     {gname:"desc", t:"p", p:"摘要" },
     {gname:"details", p:'详情',t:"eDetail" }
   ],
@@ -60,7 +60,7 @@ module.exports = {
     {gname:"desc", p:'固定资产描述',t:"p" },
     {gname:"aGeoPoint", p:'地理位置',t:"chooseAd" },
     {gname:"address", p: '详细地址', t: "modalEditAddress"},
-    {gname:"thumbnail", p: '图片简介',t: "thumb" },
+    {gname:"thumbnail", p: '图片简介',t: "cutImageThumbnail" },
     {gname:"fcode", p: '编号',t: "inScan"  }
   ],
   "pBewrite": "综合条线提出固定资产设置或修改申请，由条线负责人进行审批。",
@@ -76,7 +76,7 @@ module.exports = {
     {gname: "uName", p:'名称', t:"h2" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype",  csc:"arrsel" },
     {gname:"title", p:'简介',t:"h4" },
-    {gname:"thumbnail", p:'图片简介',t:"thumb" },
+    {gname:"thumbnail", p:'图片简介',t:"cutImageThumbnail" },
     {gname:"aGeoPoint", p:'出厂位置', t: "chooseAd" },
     {gname:"address", p:'产地', t: "modalEditAddress" },
     {gname:"PARM_content", p:'内容', t:"h4" },
@@ -122,7 +122,7 @@ module.exports = {
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
     {gname:"uName", p:'成品名称', t:"h2" },
     {gname:"title", p:'成品简介',t:"h4" },
-    {gname:"thumbnail", p:'图片简介',t: "thumb" },
+    {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
     {gname:"cargoStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
@@ -143,7 +143,7 @@ module.exports = {
     {gname:"title", p:'简介',t:"h3" },
     {gname:"desc", p:'描述',t:"p" },
     {gname:"specstype", p:'规格类型', inclose:false,t:"listsel", aList:['单品','套餐']},
-    {gname:"thumbnail", p:'图片简介',t:"thumb" },
+    {gname:"thumbnail", p:'图片简介',t:"cutImageThumbnail" },
     {gname:"pics", p:'图片集',t:"pics"},
     {gname:"tvidio", p:'视频简介',t: "vidio" },
     {gname: "channel", p:'渠道分成比例%',t:"dg",itype:"digit",csc:"mCost"},
@@ -167,7 +167,7 @@ module.exports = {
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"serFamily", p:'服务类型', inclose:false,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
-    {gname:"thumbnail", p:'图片简介',t:"thumb" },
+    {gname:"thumbnail", p:'图片简介',t:"cutImageThumbnail" },
     {gname:"package", p:'含成品数量', t:"dg",csc:"number" },
     {gname:"price", p:'零售价', t:"dg",csc:"digit" }
   ],
@@ -202,7 +202,7 @@ module.exports = {
     {gname:"uName", p:'材料名称', t:"h3" },
     {gname:"title", p:'材料简述',t:"p" },
     {gname:"dafamily", p:'材料类型',inclose:false,t:"listsel", aList:['自产原料','外购原料','包装'] },
-    {gname:"thumbnail", p:'图片',t: "thumb" },
+    {gname:"thumbnail", p:'图片',t: "cutImageThumbnail" },
     {gname:"rawStocks", p:'原材料库存', t:"dg",csc:"number" }
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
@@ -234,7 +234,7 @@ module.exports = {
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"title", p:'计划简述',t:"h3" },
     {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
-    {gname:"thumbnail", p:'图片',t: "thumb" },
+    {gname:"thumbnail", p:'图片',t: "cutImageThumbnail" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
     {gname:"rawStart", p:'原材料供应起点时间', t:"datetime" },
     {gname:"packStart", p:'包装加工起点时间', t:"datetime" }
@@ -252,7 +252,7 @@ module.exports = {
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
     {gname:"uName", p:'批发品名称', t:"h2" },
     {gname:"title", p:'批发品简介',t:"h4" },
-    {gname:"thumbnail", p:'图片简介',t: "thumb" },
+    {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"whole_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
     {gname:"wholeStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
@@ -271,7 +271,7 @@ module.exports = {
   "pSuccess": [
     {gname: "uName", p:'原料名称', t:"h3" },
     {gname:"material", p:'原料(包装)', t:"sId",csc:"idsel" },
-    { gname: "thumbnail", p: '图片', t: "thumb" },
+    { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '供货商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],
@@ -291,7 +291,7 @@ module.exports = {
   "pSuccess": [
     {gname: "uName", p:'成品名称', t:"h3" },
     {gname:"cargo", p:'成品',t:"sObject", csc:"objsel" },
-    { gname: "thumbnail", p: '图片', t: "thumb" },
+    { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '加工商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],
@@ -311,7 +311,7 @@ module.exports = {
   "pSuccess": [
     {gname: "uName", p:'成品名称', t:"h3" },
     {gname:"cargo", p:'成品',t:"sObject", csc:"objsel" },
-    { gname: "thumbnail", p: '图片', t: "thumb" },
+    { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '物流商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],

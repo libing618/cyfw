@@ -190,7 +190,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
           case 'arrplus':
             vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
-          case 'ed':
+          case 'modalEditAddress':
             vData[reqField.gname] = { code: 0, sName: '点此处进入编辑' };
             break;
           case 'listsel':

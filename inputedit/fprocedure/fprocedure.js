@@ -4,11 +4,18 @@ const { initData } = require('../../model/initForm');
 var app = getApp()
 Page({
   data: {
+    navBarTitle: '编辑--',              //申请项目名称
+    pw: app.sysinfo.pw,
+    sPages: [{
+      pageName: 'editFields'
+    }],
     selectd: -1,                       //详情项选中字段序号
     enMenu: 'none',                  //‘插入、删除、替换’菜单栏关闭
     enIns: true,                  //插入grid菜单组关闭
     targetId: '0',              //流程申请表的ID
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
+    showModalBox: false,
+    animationData: {},              //弹出动画
     vData: {},
     reqData: []
   },
@@ -29,25 +36,19 @@ Page({
       }
     }).then(ops=>{
       var pClass = require('../../model/procedureclass.js')[ops.pNo];
-      let titleName = '的'               //申请项目名称
       switch (typeof ops.pId){
         case 'number':           //传入参数为一位数字的代表该类型新建数据或读缓存数据
           that.data.dObjectId = pClass.pModel + ops.pId;      //根据类型建缓存KEY
-          titleName += pClass.afamily[ops.pId]
+          that.data.navBarTitle += pClass.afamily[ops.pId]
           break;
         case 'string':                   //传入参数为已发布ID，重新编辑已发布的数据
           that.data.dObjectId = ops.pId;
-          titleName += pClass.pName;
+          that.data.navBarTitle += pClass.pName;
           break;
         case 'undefined':               //未提交或新建的数据KEY为审批流程pModel的值
           that.data.dObjectId = pClass.pModel;
-          titleName += pClass.pName;
+          that.data.navBarTitle += pClass.pName;
           break;
-      }
-      if (typeof app.aData[ops.pNo] == 'undefined') {
-        let crData = {};
-        crData[that.data.dObjectId] = {}
-        app.aData[ops.pNo] = crData;
       }
       if (typeof aaData == 'undefined') { aaData = app.aData[ops.pNo][that.data.dObjectId] || {} }//require('../../test/goods0')[0]
       initData(pClass.pSuccess, aaData).then(({ reqData, vData, funcArr })=>{
@@ -58,12 +59,12 @@ Page({
             that.i_insdata = wImpEdit.i_insdata;
           }
         });
-        that.data.pNo = ops.pNo;
-        that.data.reqData = reqData;
-        that.data.vData = vData;
-        that.setData(that.data);
-        titleName = (typeof options.tgId == 'string') ? app.procedures[that.data.targetId].unitName : (app.roleData.user.emailVerified ? app.roleData.uUnit.nick : '体验用户') + titleName;
-        wx.setNavigationBarTitle({ title: titleName });
+        that.setData({
+          pNo: ops.pNo,
+          navBarTitle: that.data.navBarTitle,
+          reqData: reqData,
+          vData: vData
+        });
       })
     }).catch((error)=>{
       console.log(error)

@@ -1,4 +1,4 @@
-unitconst AV = require('../../libs/leancloud-storage.js');
+const AV = require('../../libs/leancloud-storage.js');
 var app = getApp();
 function setRole(puRoles,suRoles){
   let cUserName = {};
@@ -235,9 +235,9 @@ module.exports = {
                 var fcApproval = new nApproval();
                 fcApproval.set('dProcedure', approvalID);                //流程类型
                 fcApproval.set('dResult', 0);                //流程处理结果0为提交
-                fcApproval.set("shopName", app.roleData.shopName);                 //申请单位
+                fcApproval.set("unitName", app.roleData.uUnit.uName);                 //申请单位
                 fcApproval.set("sponsorName", app.roleData.user.uName);         //申请人
-                fcApproval.set("unitId", uUnit.objectId);        //申请单位的ID
+                fcApproval.set("unitId", app.roleData.uUnit.objectId);        //申请单位的ID
                 fcApproval.set('dIdear', [{ un: app.roleData.user.uName, dt: new Date(), di: '提交流程', dIdear: '发起审批流程' }]);       //流程处理意见
                 fcApproval.set('cManagers', approvalRole.cManagers);             //处理人数组
                 fcApproval.set('cUserName', approvalRole.cUserName);             //处理人姓名JSON

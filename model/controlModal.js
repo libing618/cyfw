@@ -69,9 +69,8 @@ module.exports = {
         downModal(that,hidePage);
         break;
       default:                  //打开弹出页
-        let showPage = {};
-        showPage.sPages = that.data.sPages.push({pageName:'modalRecordView',targetId:id});
-        that.setData(showPage);
+        that.data.sPages.push({pageName:'modalRecordView',targetId:id});
+        that.setData({ showPage: that.data.sPages});
         popModal(that)
         break;
     }
@@ -87,7 +86,8 @@ module.exports = {
       default:                  //打开弹出页
         let showPage = {};
         showPage['pageData.'+id] = app.aData[dataset.pNo][id];
-        showPage.sPages = that.data.sPages.push({pageName:'modalFieldView',targetId:id, rFormat: require('procedureclass.js')[dataset.pNo].pSuccess});
+        that.data.sPages.push({pageName:'modalFieldView',targetId:id, rFormat: require('procedureclass.js')[dataset.pNo].pSuccess});
+        showPage.sPages = that.data.sPages;
         that.setData(showPage);
         popModal(that)
         break;
@@ -111,7 +111,8 @@ module.exports = {
         showPage.pageData = app.aData[dataset.pNo];
         showPage.tPage = app.mData[dataset.pNo];
         showPage.idClicked = '0';
-        showPage.sPages = that.data.sPages.push({pageName:'modalSelectPanel',vData:that.data.vData});
+        that.data.sPages.push({pageName:'modalSelectPanel',vData:that.data.vData});
+        showPage.sPages = that.data.sPages;
         that.setData(showPage);
         popModal(that)
         break;
@@ -146,42 +147,47 @@ module.exports = {
 
   i_modalEditAddress: function ({ currentTarget:{id,dataset},detail:{value} }) {      //地址编辑弹出页
     var that = this;
-    let hidePage = {};
+    let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
+    let spmKey = 'sPages[' + pageNumber +'].';
+    let nowPage = that.data.sPages[pageNumber];
     switch (id) {
       case 'fSave':                  //确认返回数据
-        let nowPage = that.data.sPages[that.data.sPages.length-1];
-        hidePage['vData.'+that.data.reqData[nowPage.n].gname] =  { code: that.data.saddv, sName: value.address1 };
+        hidePage['vData.' + that.data.reqData[nowPage.n].gname] = { code: nowPage.saddv, sName: value.address1 };
         downModal(that,hidePage)
         break;
       case 'fBack':                  //返回
         downModal(that,hidePage)
         break;
       case 'faddclass':                  //选择行政区划
-        showPage.saddv = 0;
-        if (that.data.adcvalue[0] == value[0]){
-          if (that.data.adcvalue[1] == value[1]) {
-            showPage.saddv = that.data.adclist[value[0]].st[value[1]].ct[value[2]].c;
-            showPage.address1 = that.data.adclist[val[0]].n + that.data.adclist[val[0]].st[val[1]].n + that.data.adclist[val[0]].st[val[1]].ct[val[2]].n;
+        showPage[spmKey +'saddv'] = 0;
+        if (nowPage.adcvalue[0] == value[0]){
+          if (nowPage.adcvalue[1] == value[1]) {
+            showPage[spmKey + 'saddv'] = nowPage.adclist[value[0]].st[value[1]].ct[value[2]].c;
+            showPage[spmKey + 'address1'] = nowPage.adclist[value[0]].n + nowPage.adclist[value[0]].st[value[1]].n + nowPage.adclist[value[0]].st[value[1]].ct[value[2]].n;
           } else { value[2]=0 }
         } else { value[1]=0 }
-        showPage.adcvalue = value;
+        showPage[spmKey + 'adcvalue'] = value;
         that.setData(showPage);
         break;
       case 'raddgroup':                  //读村镇区划数据
-        if (that.data.saddv != 0) {
+        if (nowPage.saddv != 0) {
           return new AV.Query('ssq4')
-          .equalTo('tncode', that.data.saddv)
+          .equalTo('tncode', nowPage.saddv)
           .first()
-          .then(result => {
-            let adgroup = result.toJSON() ;
-            that.setData({ adglist: adgroup.tn });
+          .then(results => {
+            if (results){
+              let adgroup = results.toJSON();
+              console.log(adgroup)
+              showPage[spmKey + 'adglist'] = adgroup.tn
+              that.setData(showPage);
+            };
           }).catch( console.error );
         };
         break;
       case 'saddgroup':                  //选择村镇
-        showPage.adgvalue = value;
-        if (that.data.adgvalue[0] == value[0]) {
-          showPage.address1 = that.data.address1 + that.data.adglist[value[0]].n + that.data.adglist[value[0]].cm[value[1]].n;
+        showPage[spmKey + 'adgvalue'] = value;
+        if (nowPage.adgvalue[0] == value[0]) {
+          showPage[spmKey + 'address1'] = nowPage.address1 + nowPage.adglist[value[0]].n + nowPage.adglist[value[0]].cm[value[1]].n;
         }
         that.setData(showPage);
         break;
@@ -195,8 +201,109 @@ module.exports = {
           adgvalue: [0, 0]
         };
         newPage.n = parseInt(dataset.n)      //数组下标;
-        that.setData({sPages: that.data.sPages.push(newPage)});
+        that.data.sPages.push(newPage);
+        that.setData({sPages: that.data.sPages});
         popModal(that);
+        break;
+    }
+  },
+
+  i_cutImageThumbnail: function ({ currentTarget:{id,dataset},touches:[] }) {      //地址编辑弹出页
+    var that = this;
+    let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
+    let spmKey = 'sPages[' + pageNumber +'].';
+    let nowPage = that.data.sPages[pageNumber];
+    function iDraw(x,y){
+      var xm ,ym;
+      if (x < this.data.xOff) {
+        xm = 0;
+      } else {
+        if (x > nowPage.xImage) { xm = nowPage.xImage - nowPage.xOff }
+        else { xm = x - nowPage.xOff }
+      }
+      if (y < nowPage.yOff) {
+        ym = 0;
+      } else {
+        if (y > nowPage.yImage) { ym = nowPage.yImage - nowPage.yOff }
+        else { ym = y - nowPage.yOff }
+      }
+      showPage[spmKey + 'x'] = xm;
+      showPage[spmKey + 'y'] = ym;
+      this.setData(showPage);
+      that.ctx.scale(nowPage.ds*nowPage.cScale / nowPage.iScale, nowPage.ds*nowPage.cScale / nowPage.iScale);
+      that.ctx.drawImage(nowPage.iscr, 0 - xm/nowPage.cScale/nowPage.ds, 0 - ym/nowPage.cScale/nowPage.ds, 320, 272);
+      that.ctx.draw();
+    },
+    switch (id) {
+      case 'fSave':                  //确认返回数据
+        wx.canvasToTempFilePath({
+          canvasId: 'cei',
+          destWidth: 640,
+          destHeight: 544,
+          success: function(resTem){
+            new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
+            hidePage['vData.' + that.data.reqData[nowPage.n].gname] = { code: nowPage.saddv, sName: value.address1 };
+            downModal(that,hidePage)
+            }).catch(console.error);
+          }
+        })
+        break;
+      case 'fBack':                  //返回
+        downModal(that,hidePage)
+        break;
+      case 'fHandle':                  //触摸
+        iDraw(event.touches[0].pageX, event.touches[0].pageY);
+        break;
+      case 'fplus':                  //扩大范围
+        if (nowPage.xOff<320) {
+          showPage[spmKey + 'xOff'] = nowPage.xOff+16;
+          showPage[spmKey + 'yOff'] = nowPage.yOff+13.6;
+          showPage[spmKey + 'iScale'] = nowPage.iScale+0.1;
+          that.setData(showPage);
+          this.iDraw(nowPage.xOff+nowPage.x, nowPage.yOff+nowPage.y);
+        };
+        break;
+      case 'freduce':                  //缩小范围
+        if (nowPage.xOff>160) {
+          showPage[spmKey + 'xOff'] = nowPage.xOff-16;
+          showPage[spmKey + 'yOff'] = nowPage.yOff-13.6;
+          showPage[spmKey + 'iScale'] = nowPage.iScale-0.1;
+          that.setData(showPage);
+          that.iDraw(nowPage.xOff+nowPage.x, nowPage.yOff+nowPage.y);
+        }
+        break;
+      case 'cutImageThumbnail':                  //打开弹出页
+        wx.chooseImage({
+          count: 1,                                     // 最多可以选择的图片张数，默认9
+          sizeType: ['compressed'],         // original 原图，compressed 压缩图，默认二者都有
+          sourceType: ['album', 'camera'],             // album 从相册选图，camera 使用相机，默认二者都有
+          success: function (restem) {                     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            wx.getImageInfo({
+              src: restem.tempFilePaths[0],
+              success: function (res){
+                let newPage = {
+                  pageName: 'cutImageThumbnail',
+                  iscr:restem.tempFilePaths[0],
+                  xImage: app.sysinfo.windowWidth,
+                  yImage: res.height *app.sysinfo.windowWidth/ res.width,
+                  ds: res.width/320;
+                  cScale: app.sysinfo.windowWidth/ res.width;
+                  iScale: 1,
+                  xOff: 320,
+                  yOff: 272,
+                  x:100,
+                  y:100
+                };
+                newPage.n = parseInt(dataset.n)      //数组下标;
+                that.data.sPages.push(newPage);
+                that.setData({sPages: that.data.sPages});
+                popModal(that);
+                that.ctx = wx.createCanvasContext('cei',that),
+              }
+            })
+          },
+          fail: function () { wx.showToast({ title: '选取照片失败！' }) }
+        })
         break;
     }
   },
@@ -227,7 +334,8 @@ module.exports = {
               showPage.pageData = app.aData.goods;
               showPage.tPage = app.mData.goods;
               showPage.idClicked = '0';
-              showPage.sPages = that.data.sPages.push({pageName:'modalSelectPanel',pNo:'goods',n:0});
+              that.data.sPages.push({ pageName: 'modalSelectPanel', pNo: 'goods', n: 0 });
+              showPage.sPages = that.data.sPages;
               that.setData(showPage);
               popModal(that);
               resolve(true);
@@ -278,7 +386,8 @@ module.exports = {
                   showPage.pageData = fileData;
                   showPage.tPage = sFiles;
                   showPage.idClicked = '0';
-                  showPage.sPages = that.data.sPages.push({pageName:'modalSelectFile',pNo:'files',n:5});
+                  that.data.sPages.push({ pageName: 'modalSelectFile', pNo: 'files', n: 5 });
+                  showPage.sPages = that.data.sPages;
                   that.setData(showPage);
                   popModal(that);
                   resolve(true);
