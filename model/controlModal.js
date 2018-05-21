@@ -70,7 +70,7 @@ module.exports = {
         break;
       default:                  //打开弹出页
         that.data.sPages.push({pageName:'modalRecordView',targetId:id});
-        that.setData({ showPage: that.data.sPages});
+        that.setData({ sPages: that.data.sPages });
         popModal(that)
         break;
     }
@@ -84,11 +84,8 @@ module.exports = {
         downModal(that,hidePage);
         break;
       default:                  //打开弹出页
-        let showPage = {};
-        showPage['pageData.'+id] = app.aData[dataset.pNo][id];
-        that.data.sPages.push({pageName:'modalFieldView',targetId:id, rFormat: require('procedureclass.js')[dataset.pNo].pSuccess});
-        showPage.sPages = that.data.sPages;
-        that.setData(showPage);
+        that.data.sPages.push({pageName:'modalFieldView', rFormat: require('procedureclass.js')[dataset.pNo].pSuccess});
+        that.setData({ sPages: that.data.sPages });
         popModal(that)
         break;
     }
@@ -103,18 +100,12 @@ module.exports = {
         break;
       case 'fSelect':                  //选定返回
         let nowPage = that.data.sPages[that.data.sPages.length-1];
-        hidePage['vData.'+that.data.reqData[nowPage.n].gname] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+        if (that.data.selectd<0){
+          hidePage['vData.'+nowPage.gname] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+        } else {
+          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+        }
         downModal(that,hidePage);
-        break;
-      case 'fPop':                  //打开弹出页
-        let showPage = {};
-        showPage.pageData = app.aData[dataset.pNo];
-        showPage.tPage = app.mData[dataset.pNo];
-        showPage.idClicked = '0';
-        that.data.sPages.push({pageName:'modalSelectPanel',vData:that.data.vData});
-        showPage.sPages = that.data.sPages;
-        that.setData(showPage);
-        popModal(that)
         break;
       default:                  //确认ID
         that.setData({idClicked:id});
@@ -131,7 +122,12 @@ module.exports = {
         break;
       case 'fSelect':                  //选定返回
         let nowPage = that.data.sPages[that.data.sPages.length-1];
-        hidePage['vData.'+that.data.reqData[nowPage.n].gname] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+        hidePage['vData.'+that.data.reqData[nowPage.n].gname] =  { ...that.data.pageData[that.data.idClicked };
+        if (that.data.selectd<0){
+          hidePage['vData.'+nowPage.gname] =  { ...that.data.pageData[that.data.idClicked] };
+        } else {
+          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] =  { ...that.data.pageData[that.data.idClicked] };
+        }
         downModal(that,hidePage);
         break;
       case 'fOpen':                  //打开文件
@@ -208,7 +204,7 @@ module.exports = {
     }
   },
 
-  i_cutImageThumbnail: function ({ currentTarget:{id,dataset},touches:[] }) {      //地址编辑弹出页
+  i_cutImageThumbnail: function ({ currentTarget:{id,dataset},touches:[] }) {      //图片编辑弹出页
     var that = this;
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
