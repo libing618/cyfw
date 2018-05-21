@@ -122,7 +122,6 @@ module.exports = {
         break;
       case 'fSelect':                  //选定返回
         let nowPage = that.data.sPages[that.data.sPages.length-1];
-        hidePage['vData.'+that.data.reqData[nowPage.n].gname] =  { ...that.data.pageData[that.data.idClicked };
         if (that.data.selectd<0){
           hidePage['vData.'+nowPage.gname] =  { ...that.data.pageData[that.data.idClicked] };
         } else {
@@ -187,7 +186,7 @@ module.exports = {
         }
         that.setData(showPage);
         break;
-      case 'modalEditAddress':                  //打开弹出页
+      default:                  //打开弹出页
         let newPage = {
           pageName: 'modalEditAddress',
           adclist: require('addresclass.js'),   //读取行政区划分类数据
@@ -196,7 +195,7 @@ module.exports = {
           adcvalue: [3, 9, 15],
           adgvalue: [0, 0]
         };
-        newPage.n = parseInt(dataset.n)      //数组下标;
+        newPage.n = parseInt(id.substring(3))      //数组下标;
         that.data.sPages.push(newPage);
         that.setData({sPages: that.data.sPages});
         popModal(that);
@@ -229,7 +228,7 @@ module.exports = {
       that.ctx.scale(nowPage.ds*nowPage.cScale / nowPage.iScale, nowPage.ds*nowPage.cScale / nowPage.iScale);
       that.ctx.drawImage(nowPage.iscr, 0 - xm/nowPage.cScale/nowPage.ds, 0 - ym/nowPage.cScale/nowPage.ds, 320, 272);
       that.ctx.draw();
-    },
+    };
     switch (id) {
       case 'fSave':                  //确认返回数据
         wx.canvasToTempFilePath({
@@ -237,10 +236,8 @@ module.exports = {
           destWidth: 640,
           destHeight: 544,
           success: function(resTem){
-            new File('file-name', {	blob: {	uri: resTem.tempFilePath, },
             hidePage['vData.' + that.data.reqData[nowPage.n].gname] = { code: nowPage.saddv, sName: value.address1 };
-            downModal(that,hidePage)
-            }).catch(console.error);
+            downModal(that,hidePage);
           }
         })
         break;
@@ -268,7 +265,7 @@ module.exports = {
           that.iDraw(nowPage.xOff+nowPage.x, nowPage.yOff+nowPage.y);
         }
         break;
-      case 'cutImageThumbnail':                  //打开弹出页
+      default:                  //打开弹出页
         wx.chooseImage({
           count: 1,                                     // 最多可以选择的图片张数，默认9
           sizeType: ['compressed'],         // original 原图，compressed 压缩图，默认二者都有
@@ -282,136 +279,25 @@ module.exports = {
                   iscr:restem.tempFilePaths[0],
                   xImage: app.sysinfo.windowWidth,
                   yImage: res.height *app.sysinfo.windowWidth/ res.width,
-                  ds: res.width/320;
-                  cScale: app.sysinfo.windowWidth/ res.width;
+                  ds: res.width/320,
+                  cScale: app.sysinfo.windowWidth/ res.width,
                   iScale: 1,
                   xOff: 320,
                   yOff: 272,
                   x:100,
                   y:100
                 };
-                newPage.n = parseInt(dataset.n)      //数组下标;
+                newPage.n = parseInt(id.substring(3))      //数组下标;
                 that.data.sPages.push(newPage);
                 that.setData({sPages: that.data.sPages});
                 popModal(that);
-                that.ctx = wx.createCanvasContext('cei',that),
+                that.ctx = wx.createCanvasContext('cei',that);
               }
             })
           },
           fail: function () { wx.showToast({ title: '选取照片失败！' }) }
         })
         break;
-    }
-  },
-
-  i_msgEditSend:function(e){            //消息编辑发送框
-    var that = this;
-    switch (e.currentTarget.id) {
-      case 'sendMsg':
-        app.sendM(e.detail.value,that.data.cId).then( (rsm)=>{
-          if (rsm){
-            that.setData({
-              vData: {mtype:-1,mtext:'',wcontent},
-              messages: app.conMsg[that.data.cId]
-            })
-          }
-        });
-        break;
-      case 'fMultimedia':
-        that.setData({enMultimedia: !that.data.enMultimedia});
-        break;
-      case 'iMultimedia':
-        var sIndex = parseInt(e.currentTarget.dataset.n);      //选择的菜单id;
-        return new Promise( (resolve, reject) =>{
-          let showPage = {};
-          switch (sIndex){
-            case 1:             //选择产品
-              if (!that.f_modalSelectPanel) {that.f_modalSelectPanel = require('../../model/controlModal').f_modalSelectPanel}
-              showPage.pageData = app.aData.goods;
-              showPage.tPage = app.mData.goods;
-              showPage.idClicked = '0';
-              that.data.sPages.push({ pageName: 'modalSelectPanel', pNo: 'goods', n: 0 });
-              showPage.sPages = that.data.sPages;
-              that.setData(showPage);
-              popModal(that);
-              resolve(true);
-              break;
-            case 2:               //选择相册图片或拍照
-              wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'],             //可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'],                 //可以指定来源是相册还是相机，默认二者都有
-                success: function (res) { resolve(res.tempFilePaths[0]) },               //返回选定照片的本地文件路径列表
-                fail: function(err){ reject(err) }
-              });
-              break;
-            case 3:               //录音
-              wx.startRecord({
-                success: function (res) { resolve( res.tempFilePath ); },
-                fail: function(err){ reject(err) }
-              });
-              break;
-            case 4:               //选择视频或拍摄
-              wx.chooseVideo({
-                sourceType: ['album','camera'],
-                maxDuration: 60,
-                camera: ['front','back'],
-                success: function(res) { resolve( res.tempFilePath ); },
-                fail: function(err){ reject(err) }
-              })
-              break;
-            case 5:                    //选择位置
-              wx.chooseLocation({
-                success: function(res){ resolve( { latitude: res.latitude, longitude: res.longitude } ); },
-                fail: function(err){ reject(err) }
-              })
-              break;
-            case 6:                     //选择文件
-              if (!that.f_modalSelectFile) { that.f_modalSelectFile = require('../../model/controlModal').f_modalSelectFile };
-              wx.getSavedFileList({
-                success: function(res) {
-                  let index,filetype,fileData={},cOpenFile=['doc', 'xls', 'ppt', 'pdf', 'docx', 'xlsx', 'pptx'];
-                  var sFiles=res.fileList.map(({filePath,createTime,size})=>{
-                    index = filePath.indexOf(".");                   //得到"."在第几位
-                    filetype = filePath.substring(index+1);          //得到后缀
-                    if ( cOpenFile.indexOf(filetype)>=0 ){
-                      fileData[filePath] = {"fType":filetype,"cTime":formatTime(createTime,false),"fLen":size/1024};
-                      return (fileList.filePath);
-                    }
-                  })
-                  showPage.pageData = fileData;
-                  showPage.tPage = sFiles;
-                  showPage.idClicked = '0';
-                  that.data.sPages.push({ pageName: 'modalSelectFile', pNo: 'files', n: 5 });
-                  showPage.sPages = that.data.sPages;
-                  that.setData(showPage);
-                  popModal(that);
-                  resolve(true);
-                }
-              })
-              break;
-            default:
-              resolve('输入文字');
-              break;
-          }
-        }).then( (wcontent)=>{
-          return new Promise( (resolve, reject) => {
-            if (sIndex>1 && sIndex<5){
-              wx.saveFile({
-                tempFilePath : icontent,
-                success: function(cres){ resolve(cres.savedFilePath); },
-                fail: function(cerr){ reject('媒体文件保存错误！') }
-              });
-            }else{
-              resolve(wcontent);
-            };
-          });
-        }).then( (content) =>{
-          that.setData({ mtype: -sIndex ,wcontent: content });
-        }).catch((error)=>{console.log(error)});
-      break;
-    default:
-      break;
     }
   }
 

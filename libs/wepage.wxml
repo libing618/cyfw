@@ -225,7 +225,7 @@
 <template name="p_modalSelectPanel">
   <view class="modal_box" id="fBack" bindtap="i_modalSelectPanel"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
-    <view class="page__title">选择{{reqData[n].p}}</view>
+    <view class="page__title">选择--{{p}}</view>
     <view class="close_icon" id="fBack" bindtap="i_modalSelectPanel">×</view>
     <view class="page__hd">
     <view class="weui-tab__panel">
@@ -253,7 +253,7 @@
 <template name="p_modalSelectFile">
   <view class="modal_box" id="fBack" bindtap="i_modalSelectFile"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
-    <view class="page__title">选择{{reqData[n].p}}</view>
+    <view class="page__title">选择{{p}}</view>
     <view class="close_icon" id="fBack" bindtap="i_modalSelectFile">×</view>
     <view class="page__hd">
     <view class="weui-tab__panel">
@@ -299,7 +299,7 @@
 <template name="p_mapSelectUnit">
   <view class="modal_box" id="fBack" bindtap="i_mapSelectUnit"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
-    <view class="page__title">选择{{reqData[n].p}}</view>
+    <view class="page__title">选择{{p}}</view>
     <view class="close_icon" id="fBack" bindtap="i_mapSelectUnit">×</view>
     <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" controls="{{controls}}" show-location style="width: 100%; height: {{Height}}px;"/>
     <view class="page__bd">

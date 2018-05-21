@@ -10,7 +10,7 @@
         </block>
       </view>
       <view style="padding-bottom:100rpx;"></view>
-      <view class="page__ft weui-footer_fixed-bottom" style="z-index:998;flex-direction:row;" id="{{dObjectId}}">
+      <view class="page__ft weui-footer_fixed-bottom" id="{{dObjectId}}">
         <button class="weui-btn" style="display:{{enMenu=='none' && uEV ? 'inline-block' : 'none'}}" type="primary" size="mini" formType="submit" id="fSave">提交</button>
         <button class="weui-btn" style="display:{{enMenu=='none' && targetId=='0' ? 'inline-block' : 'none'}}" type="primary" size="mini" formType="submit" id="fStorage">保存</button>
         <button class="weui-btn" style="display:{{ enMenu }}" type="warn" size="mini" formType="submit" id="fdeldata">删除</button>
