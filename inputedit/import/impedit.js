@@ -401,7 +401,7 @@ module.exports = {
             showPage.pageData = app.aData.goods;
             showPage.tPage = app.mData.goods;
             showPage.idClicked = '0';
-            that.data.sPages.push({ pageName: 'modalSelectPanel', pNo: 'goods', n: 0 });
+            that.data.sPages.push({ pageName:'modalSelectPanel', pNo:'goods', gname:'details' });
             showPage.sPages = that.data.sPages;
             that.setData(showPage);
             popModal(that);
@@ -423,7 +423,7 @@ module.exports = {
                 showPage.pageData = fileData;
                 showPage.tPage = sFiles;
                 showPage.idClicked = '0';
-                that.data.sPages.push({ pageName: 'modalSelectFile', pNo: 'files', n: 5 });
+                that.data.sPages.push({ pageName:'modalSelectFile', pNo:'files', gname:'details' });
                 showPage.sPages = that.data.sPages;
                 that.setData(showPage);
                 popModal(that);
