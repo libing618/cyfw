@@ -28,16 +28,6 @@ Page({
           height: 32
         },
         clickable: true
-      },
-      { id: 3,
-        iconPath: '/images/quedin.png',
-        position: {
-          left: 161,
-          top: app.sysinfo.windowHeight - 332,
-          width: 78,
-          height: 32
-        },
-        clickable: false
       }
     ],
     circles: [],

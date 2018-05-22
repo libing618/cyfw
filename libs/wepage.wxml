@@ -282,7 +282,7 @@
   <view class="modal_box" id="fBack" bindtap="i_cutImageThumbnail"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
     <view class="page__title" style="text-align: center;flex-direction:row;">
-      <view class="weui_cell__hd">缩小范围{{scall}}</view>
+      <view class="weui_cell__hd">缩放比例{{cScale}}</view>
       <button class="weui-btn" style="display:inline-block" type="primary" size="mini" id="fSave" bindtap="i_cutImageThumbnail">确定</button>
     </view>
     <view class="close_icon" id="fBack" bindtap="i_cutImageThumbnail">×</view>
@@ -298,9 +298,9 @@
 <template name="p_mapSelectUnit">
   <view class="modal_box" id="fBack" bindtap="i_mapSelectUnit"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
-    <view class="page__title">选择{{p}}</view>
+    <view class="page__title" id="fSave" bindtap="i_mapSelectUnit">选择{{unitArray[sId].uName}}</view>
     <view class="close_icon" id="fBack" bindtap="i_mapSelectUnit">×</view>
-    <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" controls="{{controls}}" show-location style="width: 100%; height: {{Height}}px;"/>
+    <map id="fMapSelect" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" bindcontroltap="i_mapSelectUnit" markers="{{markers}}" bindmarkertap="i_mapSelectUnit" controls="{{controls}}" show-location style="width: 100%; height: {{Height}}px;"/>
     <view class="page__bd">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">

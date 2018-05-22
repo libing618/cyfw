@@ -248,6 +248,7 @@ module.exports = {
                   let xMaxScall = app.sysinfo.windowWidth/res.width;
                   let yMaxScall = (app.sysinfo.pw.cwHeight-280)/res.height;
                   let imageScall = xMaxScall>yMaxScall ? yMaxScall : xMaxScall;
+                  let cutScallMax = xMaxScall>yMaxScall ? res.height/22.5 : res.width/30;
                   let newPage = {
                     pageName: 'cutImageThumbnail',
                     iscr:restem.tempFilePaths[0],
@@ -255,8 +256,8 @@ module.exports = {
                     yImage: res.height*imageScall,
                     cScale: 1,
                     iScale: imageScall,
-                    xOff: s300,
-                    yOff: s225,
+                    xOff: res.width/cutScallMax,
+                    yOff: res.height/cutScallMax,
                     x:0,
                     y:0
                   };
@@ -272,6 +273,129 @@ module.exports = {
           fail: function () { wx.showToast({ title: '选取照片失败！' }) }
         })
         break;
+    }
+  },
+
+  i_mapSelectUnit: function (e) {      //图片编辑弹出页
+    var that = this;
+    let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
+    let spmKey = 'sPages[' + pageNumber +'].';
+    let nowPage = that.data.sPages[pageNumber];
+    switch (e.currentTarget.id) {
+      case 'fSave':                  //确认返回数据
+        hidePage['reqData[' + nowPage.n + '].e'] = nowPage.unitArray[nowPage.sId].uName;
+        hidePage['vData.' + that.data.reqData[nowPage.n].gname] = nowPage.unitArray[nowPage.sId].objectId;
+        if (nowPage.reqProIsSuperior) {
+          app.roleData.uUnit.sUnit = nowPage.unitArray[nowPage.sId].objectId;
+          app.roleData.sUnit = nowPage.unitArray[nowPage.sId];
+          hidePage['dObjectId'] = app.roleData.uUnit.objectId;
+        };
+        break;
+      case 'fBack':                  //返回
+        downModal(that,hidePage)
+        break;
+      case 'fMapSelect':                  //触摸
+        if (e.markerId){      //点击merkers气泡
+          showPage[spmKey +'sId'] = e.markerId;
+        } else {
+          switch (e.controlId) {
+            case 1:
+              showPage[spmKey +'scale'] = nowPage.scale==18 ? 18 : nowPage.scale+1;
+              break;
+            case 2:
+              showPage[spmKey +'scale'] = : that.data.scale==5 ? 5 : that.data.scale-1  })
+              break;
+          }
+        }
+        that.setData(showPage);
+        break;
+      default:                  //打开弹出页
+        let n = parseInt(id.substring(3))      //数组下标;
+        let newPage = {
+          pageName: 'mapSelectUnit',
+          Height: app.sysinfo.windowHeight-300,
+          scale: 13,
+          controls: [
+            { id: 1,
+              iconPath: '/images/jia.png',
+              position: {
+                left: 84,
+                top: app.sysinfo.windowHeight - 332,
+                width: 32,
+                height: 32
+              },
+              clickable: true
+            },
+            { id: 2,
+              iconPath: '/images/jian.png',
+              position: {
+                left: 284,
+                top: app.sysinfo.windowHeight - 332,
+                width: 32,
+                height: 32
+              },
+              clickable: true
+            }
+          ],
+          sId: 0
+          reqProIsSuperior: typeof that.data.reqData[n].indTypes == 'number',
+          n: n,
+          selIndtypes:[]
+        } ;
+        if ( newPage.reqProIsSuperior ) {
+          newPage.selIndtypes.push(that.data.reqData[n].indTypes);
+          wx.showToast({title:'选择服务单位，请注意：选定后不能更改！',icon: 'none'});
+        } else {newPage.selIndtypes=that.data.reqData[n].indTypes}
+        wx.getLocation({
+          type: 'wgs84',
+          success: function(res){
+            let cadd = new AV.GeoPoint(that.reqProIsSuperior ? that.prevPage.data.vData.aGeoPoint : { latitude: res.latitude, longitude: res.longitude });
+            var query = new AV.Query('_Role');
+            query.withinKilometers('aGeoPoint', cadd, 200);
+            query.select(['uName','afamily','nick','title','aGeoPoint','indType','thumbnail','unitUsers'])
+            query.find().then( (results)=> {
+              if (results) {
+                let uM = {},unitArray=[],uMarkers=[]
+                let resJSON,badd,inInd;
+                results.forEach(result=>{
+                  resJSON = result.toJSON();
+                  inInd = true;     //先假设单位的类型在查找范围内
+                  that.selIndtypes.forEach(indType=>{
+                    if (resJSON.indType.indexOf(indTypes)>=0) {inInd=false}
+                  })
+                  if (inInd) {
+                    uM.id=i;
+                    uM.latitude=resJSON.aGeoPoint.latitude;
+                    uM.longitude=resJSON.aGeoPoint.longitude;
+                    uM.title=resJSON.nick;
+                    uM.iconPath= resJSON.afamily<3 ? '/images/icon-personal.png' : '/images/icon-company.png'; //单位是个人还是企业
+                    uMarkers.push(uM);
+                    badd = new AV.GeoPoint(resJSON.aGeoPoint);
+                    resJSON.distance = parseInt(badd.kilometersTo(cadd) * 1000 +0.5);
+                    unitArray.push( resJSON );
+                  }
+                });
+                if (uM){
+                  newPage.latitude = res.latitude;
+                  newPage.longitude = res.longitude;
+                  newPage.markers = uMarkers;
+                  newPage.circles = [{
+                      latitude: res.latitude,
+                      longitude: res.longitude,
+                      color: '#FF0000DD',
+                      fillColor: '#7cb5ec88',
+                      radius: 3000,
+                      strokeWidth: 1
+                    }];
+                  newPage.unitArray = unitArray
+                  that.data.sPages.push(newPage);
+                  that.setData({sPages: that.data.sPages});
+                  popModal(that);
+                }
+              } else { wx.showToast({ title: '未发现合适单位' }) }
+            }).catch( console.error );
+          }
+        })
     }
   }
 
