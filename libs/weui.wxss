@@ -564,7 +564,7 @@ icon {
   text-align: center;
 }
 .weui-footer_fixed-bottom {
-  position: absolute;
+  position: fixed; /*absolute; */
   z-index:998;
   background-color: rgba(109, 109, 109, 1);
   background-size: 100%;

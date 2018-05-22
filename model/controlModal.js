@@ -203,40 +203,17 @@ module.exports = {
     }
   },
 
-  i_cutImageThumbnail: function ({ currentTarget:{id,dataset},touches:[] }) {      //图片编辑弹出页
+  i_cutImageThumbnail: function ({ currentTarget:{id,dataset}},detail }) {      //图片编辑弹出页
     var that = this;
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
     let nowPage = that.data.sPages[pageNumber];
-    function iDraw(x,y){
-      var xm ,ym;
-      if (x < this.data.xOff) {
-        xm = 0;
-      } else {
-        if (x > nowPage.xImage) { xm = nowPage.xImage - nowPage.xOff }
-        else { xm = x - nowPage.xOff }
-      }
-      if (y < nowPage.yOff) {
-        ym = 0;
-      } else {
-        if (y > nowPage.yImage) { ym = nowPage.yImage - nowPage.yOff }
-        else { ym = y - nowPage.yOff }
-      }
-      showPage[spmKey + 'x'] = xm;
-      showPage[spmKey + 'y'] = ym;
-      this.setData(showPage);
-      that.ctx.scale(nowPage.ds*nowPage.cScale / nowPage.iScale, nowPage.ds*nowPage.cScale / nowPage.iScale);
-      that.ctx.drawImage(nowPage.iscr, 0 - xm/nowPage.cScale/nowPage.ds, 0 - ym/nowPage.cScale/nowPage.ds, 320, 272);
-      that.ctx.draw();
-    };
     switch (id) {
       case 'fSave':                  //确认返回数据
         wx.canvasToTempFilePath({
           canvasId: 'cei',
-          destWidth: 640,
-          destHeight: 544,
           success: function(resTem){
-            hidePage['vData.' + that.data.reqData[nowPage.n].gname] = { code: nowPage.saddv, sName: value.address1 };
+            hidePage['vData.' + that.data.reqData[nowPage.n].gname] = resTem.tempFilePath;
             downModal(that,hidePage);
           }
         })
@@ -245,25 +222,16 @@ module.exports = {
         downModal(that,hidePage)
         break;
       case 'fHandle':                  //触摸
-        iDraw(event.touches[0].pageX, event.touches[0].pageY);
-        break;
-      case 'fplus':                  //扩大范围
-        if (nowPage.xOff<320) {
-          showPage[spmKey + 'xOff'] = nowPage.xOff+16;
-          showPage[spmKey + 'yOff'] = nowPage.yOff+13.6;
-          showPage[spmKey + 'iScale'] = nowPage.iScale+0.1;
-          that.setData(showPage);
-          this.iDraw(nowPage.xOff+nowPage.x, nowPage.yOff+nowPage.y);
-        };
-        break;
-      case 'freduce':                  //缩小范围
-        if (nowPage.xOff>160) {
-          showPage[spmKey + 'xOff'] = nowPage.xOff-16;
-          showPage[spmKey + 'yOff'] = nowPage.yOff-13.6;
-          showPage[spmKey + 'iScale'] = nowPage.iScale-0.1;
-          that.setData(showPage);
-          that.iDraw(nowPage.xOff+nowPage.x, nowPage.yOff+nowPage.y);
+        if (detail.scale){
+          showPage[spmKey +'cScale'] = detail.scale;
+          that.ctx.drawImage(nowPage.iscr, 0-nowPage.x/detail.scale/nowPage.iScale, 0-nowPage.y/detail.scale/nowPage.iScale, 300, 225);
+        } else {
+          showPage[spmKey +'x'] = detail.x;
+          showPage[spmKey +'y'] = detail.y;
+          that.ctx.drawImage(nowPage.iscr, 0-detail.x/nowPage.cScale/nowPage.iScale, 0-detail.y/nowPage.cScale/nowPage.iScale, 300, 225);
         }
+        that.setData(showPage);
+        that.ctx.draw();
         break;
       default:                  //打开弹出页
         wx.chooseImage({
@@ -274,24 +242,30 @@ module.exports = {
             wx.getImageInfo({
               src: restem.tempFilePaths[0],
               success: function (res){
-                let newPage = {
-                  pageName: 'cutImageThumbnail',
-                  iscr:restem.tempFilePaths[0],
-                  xImage: app.sysinfo.windowWidth,
-                  yImage: res.height *app.sysinfo.windowWidth/ res.width,
-                  ds: res.width/320,
-                  cScale: app.sysinfo.windowWidth/ res.width,
-                  iScale: 1,
-                  xOff: 320,
-                  yOff: 272,
-                  x:100,
-                  y:100
+                if (res.width<320 || res.height<272){
+                  wx.showToast({ title: '照片尺寸太小！' })
+                } else {
+                  let xMaxScall = app.sysinfo.windowWidth/res.width;
+                  let yMaxScall = (app.sysinfo.pw.cwHeight-280)/res.height;
+                  let imageScall = xMaxScall>yMaxScall ? yMaxScall : xMaxScall;
+                  let newPage = {
+                    pageName: 'cutImageThumbnail',
+                    iscr:restem.tempFilePaths[0],
+                    xImage: res.width*imageScall,
+                    yImage: res.height*imageScall,
+                    cScale: 1,
+                    iScale: imageScall,
+                    xOff: s300,
+                    yOff: s225,
+                    x:0,
+                    y:0
+                  };
+                  newPage.n = parseInt(id.substring(3))      //数组下标;
+                  that.data.sPages.push(newPage);
+                  that.setData({sPages: that.data.sPages});
+                  that.ctx = wx.createCanvasContext('cei',that);
+                  popModal(that);
                 };
-                newPage.n = parseInt(id.substring(3))      //数组下标;
-                that.data.sPages.push(newPage);
-                that.setData({sPages: that.data.sPages});
-                popModal(that);
-                that.ctx = wx.createCanvasContext('cei',that);
               }
             })
           },

@@ -282,17 +282,16 @@
   <view class="modal_box" id="fBack" bindtap="i_cutImageThumbnail"></view>
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
     <view class="page__title" style="text-align: center;flex-direction:row;">
-      <button class="weui-btn" style="display:inline-block" type="warn" size="mini" id="fplus" bindtap="i_cutImageThumbnail">扩大范围</button>
+      <view class="weui_cell__hd">缩小范围{{scall}}</view>
       <button class="weui-btn" style="display:inline-block" type="primary" size="mini" id="fSave" bindtap="i_cutImageThumbnail">确定</button>
-      <button class="weui-btn" style="display:inline-block" type="default" size="mini" id="freduce" bindtap="i_cutImageThumbnail">缩小范围</button>
     </view>
     <view class="close_icon" id="fBack" bindtap="i_cutImageThumbnail">×</view>
     <movable-area style="height:{{yImage}}px;width: 750rpx; ">
-      <image  style="width:{{xImage}}px; height:{{yImage}}px;" mode="scaleToFill" src="{{iscr}}"></image>
-        <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" x="{{x}}" y="{{y}}" id="fHandle" bindtouchstart="i_cutImageThumbnail" bindtouchmove="i_cutImageThumbnail">
+      <image  style="width:{{xImage}}px; height:{{yImage}}px;" mode="scaleToFit" src="{{iscr}}"></image>
+        <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" direction="all" id="fHandle" bindchange="i_cutImageThumbnail" scale bindscale="i_cutImageThumbnail">
         </movable-view>
     </movable-area>
-    <canvas canvas-id="cei" disable-scroll="{{false}}" style="width:320px;height:272px;"/>
+    <canvas canvas-id="cei" disable-scroll="{{false}}"/>
   </view>
 </template>
 
