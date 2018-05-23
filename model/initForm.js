@@ -37,7 +37,7 @@ readShowFormat: function(req, vData) {
     let setPromise = new Set();
     var reqData=req.map(reqField=>{
       switch (reqField.t) {
-        case 'MS':
+        case 'mapSelectUnit':
           reqField.e = app.roleData.sUnit.uName;
           break;
         case 'sObject':
@@ -93,7 +93,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
     let setPromise = new Set();
     var reqData=req.map(reqField=>{
       switch (reqField.t) {
-        case 'MS':
+        case 'mapSelectUnit':
           reqField.e = vifData ? '点击选择服务单位' : app.roleData.sUnit.uName;
           break;
         case 'sObject':

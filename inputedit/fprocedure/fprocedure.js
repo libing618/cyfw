@@ -72,7 +72,9 @@ Page({
       setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     });
   },
-
+  onChange: function (e) {
+    console.log(e.detail)
+  },
   fSubmit: require('../import/unitEdit').fSubmit
 
 })

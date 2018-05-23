@@ -280,18 +280,18 @@
 
 <template name="p_cutImageThumbnail">
   <view class="modal_box" id="fBack" bindtap="i_cutImageThumbnail"></view>
-  <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
-    <view class="page__title" style="text-align: center;flex-direction:row;">
+  <view class="modal_attr_box">
+    <view class="weui_cell">
       <view class="weui_cell__hd">缩放比例{{cScale}}</view>
-      <button class="weui-btn" style="display:inline-block" type="primary" size="mini" id="fSave" bindtap="i_cutImageThumbnail">确定</button>
+      <button class="weui_cell__ft" size="mini" id="fSave" bindtap="i_cutImageThumbnail">确定</button>
     </view>
     <view class="close_icon" id="fBack" bindtap="i_cutImageThumbnail">×</view>
-    <movable-area style="height:{{yImage}}px;width: 750rpx; ">
+    <movable-area style="width:{{xImage}}px;height:{{yImage}}px">
       <image  style="width:{{xImage}}px; height:{{yImage}}px;" mode="scaleToFit" src="{{iscr}}"></image>
-        <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" direction="all" id="fHandle" bindchange="i_cutImageThumbnail" scale bindscale="i_cutImageThumbnail">
+        <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" direction="all" bindchange="onChange" bindscale="onScale" scale-min="0.5" scale-max="4" scale-value="{{cScale}}" id="fHandle">
         </movable-view>
     </movable-area>
-    <canvas canvas-id="cei" disable-scroll="{{false}}"/>
+    <canvas style="width:300px; height:225px;" canvas-id="cei" disable-scroll="{{false}}"></canvas>
   </view>
 </template>
 

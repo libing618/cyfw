@@ -334,14 +334,12 @@
   </view>
 </template>
 
-<template name="i_MS">
+<template name="i_mapSelectUnit">
   <view hidden="true"><input name="{{gname}}" value="{{c}}"/></view>
-  <navigator url="/pages/mapsunit/mapsunit?reqNumber={{n}}">
-    <view class="weui-cell weui-cell_input">
-      <view class="weui-cell__hd">{{p}}:</view>
-      <view class="weui-cell__bd">{{e}}</view>
-    </view>
-  </navigator>
+  <view class="weui-cell weui-cell_input" id="ac-{{n}}" bindtap="i_mapSelectUnit">
+    <view class="weui-cell__hd">{{p}}:</view>
+    <view class="weui-cell__bd">{{e}}</view>
+  </view>
 </template>
 
 <template name="i_table">

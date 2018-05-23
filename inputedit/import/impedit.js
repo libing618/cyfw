@@ -1,5 +1,5 @@
 const AV = require('../../libs/leancloud-storage.js');
-const {i_cutImageThumbnail,i_modalEditAddress} = require('../../model/controlModal.js');
+const {i_cutImageThumbnail,i_modalEditAddress,i_mapSelectUnit} = require('../../model/controlModal.js');
 var app = getApp();
 const vdSet = function (sname, sVal) {
   let reqset = {};
@@ -23,6 +23,7 @@ function getdate(idate) {
 module.exports = {
   i_modalEditAddress: i_modalEditAddress,
   i_cutImageThumbnail: i_cutImageThumbnail,
+  i_mapSelectUnit: i_mapSelectUnit,
 
   f_idsel: function (e) {                         //选择ID
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标

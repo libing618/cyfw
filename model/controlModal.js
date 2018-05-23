@@ -203,12 +203,13 @@ module.exports = {
     }
   },
 
-  i_cutImageThumbnail: function ({ currentTarget:{id,dataset}},detail }) {      //图片编辑弹出页
+  i_cutImageThumbnail: function (e) {      //图片编辑弹出页
     var that = this;
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
     let nowPage = that.data.sPages[pageNumber];
-    switch (id) {
+    console.log(e)
+    switch (e.currentTarget.id) {
       case 'fSave':                  //确认返回数据
         wx.canvasToTempFilePath({
           canvasId: 'cei',
@@ -219,16 +220,17 @@ module.exports = {
         })
         break;
       case 'fBack':                  //返回
-        downModal(that,hidePage)
+        downModal(that,hidePage);
         break;
       case 'fHandle':                  //触摸
+      console.log(e.detail)
         if (detail.scale){
           showPage[spmKey +'cScale'] = detail.scale;
-          that.ctx.drawImage(nowPage.iscr, 0-nowPage.x/detail.scale/nowPage.iScale, 0-nowPage.y/detail.scale/nowPage.iScale, 300, 225);
+          that.ctx.drawImage(nowPage.iscr, nowPage.x, nowPage.y,detail.scale*nowPage.xOff, detail.scale*nowPage.yOff,0,0, 300, 225);
         } else {
           showPage[spmKey +'x'] = detail.x;
           showPage[spmKey +'y'] = detail.y;
-          that.ctx.drawImage(nowPage.iscr, 0-detail.x/nowPage.cScale/nowPage.iScale, 0-detail.y/nowPage.cScale/nowPage.iScale, 300, 225);
+          that.ctx.drawImage(nowPage.iscr,detail.x,detail.y,nowPage.cScale*nowPage.xOff, nowPage.cScale*nowPage.yOff,0,0, 300, 225);
         }
         that.setData(showPage);
         that.ctx.draw();
@@ -248,24 +250,25 @@ module.exports = {
                   let xMaxScall = app.sysinfo.windowWidth/res.width;
                   let yMaxScall = (app.sysinfo.pw.cwHeight-280)/res.height;
                   let imageScall = xMaxScall>yMaxScall ? yMaxScall : xMaxScall;
-                  let cutScallMax = xMaxScall>yMaxScall ? res.height/22.5 : res.width/30;
+                  let cutScallMax = xMaxScall>yMaxScall ? res.height/225 : res.width/300;
                   let newPage = {
                     pageName: 'cutImageThumbnail',
                     iscr:restem.tempFilePaths[0],
                     xImage: res.width*imageScall,
                     yImage: res.height*imageScall,
-                    cScale: 1,
-                    iScale: imageScall,
-                    xOff: res.width/cutScallMax,
-                    yOff: res.height/cutScallMax,
+                    cScale: cutScallMax,
+                    xOff: res.width /imageScall/cutScallMax,
+                    yOff: res.height /imageScall/cutScallMax,
                     x:0,
                     y:0
                   };
-                  newPage.n = parseInt(id.substring(3))      //数组下标;
+                  newPage.n = parseInt(e.currentTarget.id.substring(3));      //数组下标
                   that.data.sPages.push(newPage);
                   that.setData({sPages: that.data.sPages});
+                  // popModal(that);
                   that.ctx = wx.createCanvasContext('cei',that);
-                  popModal(that);
+                  that.ctx.drawImage(restem.tempFilePaths[0], 0, 0, 300, 225, 0, 0, 300, 225);
+                  that.ctx.draw();
                 };
               }
             })
@@ -303,7 +306,7 @@ module.exports = {
               showPage[spmKey +'scale'] = nowPage.scale==18 ? 18 : nowPage.scale+1;
               break;
             case 2:
-              showPage[spmKey +'scale'] = : that.data.scale==5 ? 5 : that.data.scale-1  })
+              showPage[spmKey + 'scale'] = nowPage.scale==5 ? 5 : that.data.scale-1;
               break;
           }
         }
@@ -337,11 +340,11 @@ module.exports = {
               clickable: true
             }
           ],
-          sId: 0
+          sId: 0,
           reqProIsSuperior: typeof that.data.reqData[n].indTypes == 'number',
           n: n,
           selIndtypes:[]
-        } ;
+        };
         if ( newPage.reqProIsSuperior ) {
           newPage.selIndtypes.push(that.data.reqData[n].indTypes);
           wx.showToast({title:'选择服务单位，请注意：选定后不能更改！',icon: 'none'});
@@ -387,7 +390,7 @@ module.exports = {
                       radius: 3000,
                       strokeWidth: 1
                     }];
-                  newPage.unitArray = unitArray
+                  newPage.unitArray = unitArray;
                   that.data.sPages.push(newPage);
                   that.setData({sPages: that.data.sPages});
                   popModal(that);
