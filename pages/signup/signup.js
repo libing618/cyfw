@@ -4,6 +4,7 @@ var app = getApp()
 Page({
   data:{
     user: {},
+    pw: app.sysinfo.pw,
     sysheight: app.sysinfo.windowHeight-300,
     swcheck: true,
     iName: app.roleData.user.uName,

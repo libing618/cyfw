@@ -5,19 +5,26 @@ const wImpEdit = require('../import/impedit');
 var app = getApp()
 Page({
   data: {
-    pNo: 0,                       //流程的序号
+    pNo: '_Role',                       //流程的序号
+    navBarTitle: app.roleData.uUnit.uName,              //申请项目名称
+    pw: app.sysinfo.pw,
+    sPages: [{
+      pageName: 'editFields'
+    }],
     targetId: '0',              //流程申请表的ID
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
     vData: {},                 //编辑值的对象
     unEdit: false,           //新建信息页面,可以提交和保存
-    reqData: []
+    selectd: -1,                       //详情项选中字段序号
+    reqData: [],
+    showModalBox: false,
+    animationData: {}
   },
 
   onLoad: function (options) {
     var that = this;
     if (app.roleData.uUnit.name == app.roleData.user.objectId) {       //单位名等于用户ID则为创始人
       let reqDatas = require('../../model/procedureclass.js')._Role.pSuccess;
-      wx.setNavigationBarTitle({ title: app.roleData.uUnit.uName + '的信息', })
       new AV.Query('sengpi')
         .equalTo('unitId', app.roleData.uUnit.objectId)
         .equalTo('dProcedure', 0)

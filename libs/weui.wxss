@@ -981,9 +981,16 @@ icon {
   background: #CCCCCC;
   color: #fff;
 }
+.weui-footer__center{
+  position: fixed;
+  margin: 0 auto;
+  bottom: 0px;
+  width: 100%;
+}
 .weui-canvas{
-  width: 748px;
-  height: 600px;
+  margin: 0 auto;
+  width: 300 px;
+  height: 225 px;
 }
 .swiper_box {
   width: 100%;

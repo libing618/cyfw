@@ -280,18 +280,17 @@
 
 <template name="p_cutImageThumbnail">
   <view class="modal_box" id="fBack" bindtap="i_cutImageThumbnail"></view>
-  <view class="modal_attr_box">
-    <view class="weui_cell">
-      <view class="weui_cell__hd">缩放比例{{cScale}}</view>
-      <button class="weui_cell__ft" size="mini" id="fSave" bindtap="i_cutImageThumbnail">确定</button>
-    </view>
+  <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
+    <view class="page__title" id="fSave" bindtap="i_cutImageThumbnail">确定缩放比例{{cScale}}</view>
     <view class="close_icon" id="fBack" bindtap="i_cutImageThumbnail">×</view>
     <movable-area style="width:{{xImage}}px;height:{{yImage}}px">
       <image  style="width:{{xImage}}px; height:{{yImage}}px;" mode="scaleToFit" src="{{iscr}}"></image>
-        <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" direction="all" bindchange="onChange" bindscale="onScale" scale-min="0.5" scale-max="4" scale-value="{{cScale}}" id="fHandle">
-        </movable-view>
+      <movable-view style="height: {{yOff}}px; background-color: rgba(0,0,0,0.6); width: {{xOff}}px;" direction="all" bindchange="i_cutImageThumbnail" bindscale="i_cutImageThumbnail" scale-value="{{cScale}}" id="fHandle">
+      </movable-view>
     </movable-area>
-    <canvas style="width:300px; height:225px;" canvas-id="cei" disable-scroll="{{false}}"></canvas>
+    <view class="weui-footer__center">
+      <canvas class="weui-canvas" style="width:300px;height:225px;" canvas-id="cei" disable-scroll="{{false}}"></canvas>
+    </view>
   </view>
 </template>
 
@@ -311,7 +310,7 @@
           <view class="weui-media-box__desc">{{unitArray[sId].title}}</view>
         </view>
       </view>
-      <template is="c_aslist" data="{{p:'主营业务',c:unitArray[sId].indType}}" />
+      <template is="s_industrytype" data="{{p:'主营业务',c:unitArray[sId].indType}}" />
       <view>距离您现在的位置：{{unitArray[sId].distance}}米</view>
     </view>
   </view>

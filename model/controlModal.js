@@ -203,13 +203,12 @@ module.exports = {
     }
   },
 
-  i_cutImageThumbnail: function (e) {      //图片编辑弹出页
+  i_cutImageThumbnail: function ({ currentTarget: { id, dataset }, detail }) {      //图片编辑弹出页
     var that = this;
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
     let nowPage = that.data.sPages[pageNumber];
-    console.log(e)
-    switch (e.currentTarget.id) {
+    switch (id) {
       case 'fSave':                  //确认返回数据
         wx.canvasToTempFilePath({
           canvasId: 'cei',
@@ -223,7 +222,6 @@ module.exports = {
         downModal(that,hidePage);
         break;
       case 'fHandle':                  //触摸
-      console.log(e.detail)
         if (detail.scale){
           showPage[spmKey +'cScale'] = detail.scale;
           that.ctx.drawImage(nowPage.iscr, nowPage.x, nowPage.y,detail.scale*nowPage.xOff, detail.scale*nowPage.yOff,0,0, 300, 225);
@@ -244,11 +242,11 @@ module.exports = {
             wx.getImageInfo({
               src: restem.tempFilePaths[0],
               success: function (res){
-                if (res.width<320 || res.height<272){
+                if (res.width<300 || res.height<225){
                   wx.showToast({ title: '照片尺寸太小！' })
                 } else {
                   let xMaxScall = app.sysinfo.windowWidth/res.width;
-                  let yMaxScall = (app.sysinfo.pw.cwHeight-280)/res.height;
+                  let yMaxScall = (app.sysinfo.pw.cwHeight-260)/res.height;
                   let imageScall = xMaxScall>yMaxScall ? yMaxScall : xMaxScall;
                   let cutScallMax = xMaxScall>yMaxScall ? res.height/225 : res.width/300;
                   let newPage = {
@@ -257,15 +255,15 @@ module.exports = {
                     xImage: res.width*imageScall,
                     yImage: res.height*imageScall,
                     cScale: cutScallMax,
-                    xOff: res.width /imageScall/cutScallMax,
-                    yOff: res.height /imageScall/cutScallMax,
+                    xOff: 300 /(imageScall*cutScallMax),
+                    yOff: 225 / (imageScall * cutScallMax),
                     x:0,
                     y:0
                   };
-                  newPage.n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+                  newPage.n = parseInt(id.substring(3));      //数组下标
                   that.data.sPages.push(newPage);
                   that.setData({sPages: that.data.sPages});
-                  // popModal(that);
+                  popModal(that);
                   that.ctx = wx.createCanvasContext('cei',that);
                   that.ctx.drawImage(restem.tempFilePaths[0], 0, 0, 300, 225, 0, 0, 300, 225);
                   that.ctx.draw();
@@ -279,7 +277,7 @@ module.exports = {
     }
   },
 
-  i_mapSelectUnit: function (e) {      //图片编辑弹出页
+  i_mapSelectUnit: function (e) {      //地图选择单位弹出页
     var that = this;
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
@@ -313,11 +311,11 @@ module.exports = {
         that.setData(showPage);
         break;
       default:                  //打开弹出页
-        let n = parseInt(id.substring(3))      //数组下标;
+        let n = parseInt(e.currentTarget.id.substring(3))      //数组下标;
         let newPage = {
           pageName: 'mapSelectUnit',
           Height: app.sysinfo.windowHeight-300,
-          scale: 13,
+          scale: 16,
           controls: [
             { id: 1,
               iconPath: '/images/jia.png',
@@ -360,11 +358,11 @@ module.exports = {
               if (results) {
                 let uM = {},unitArray=[],uMarkers=[]
                 let resJSON,badd,inInd;
-                results.forEach(result=>{
+                results.forEach((result,i)=>{
                   resJSON = result.toJSON();
-                  inInd = true;     //先假设单位的类型在查找范围内
-                  that.selIndtypes.forEach(indType=>{
-                    if (resJSON.indType.indexOf(indTypes)>=0) {inInd=false}
+                  inInd = false;     //先假设单位的类型不在查找范围内
+                  newPage.selIndtypes.forEach(indType=>{
+                    if (resJSON.indType.code.indexOf(indType) >= 0) { inInd = true }
                   })
                   if (inInd) {
                     uM.id=i;
