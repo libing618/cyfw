@@ -254,9 +254,9 @@ module.exports = {
                     iscr:restem.tempFilePaths[0],
                     xImage: res.width*imageScall,
                     yImage: res.height*imageScall,
-                    cScale: cutScallMax,
-                    xOff: 300 /(imageScall*cutScallMax),
-                    yOff: 225 / (imageScall * cutScallMax),
+                    cScale: imageScall,
+                    xOff: 300 /imageScall,
+                    yOff: 225 /imageScall,
                     x:0,
                     y:0
                   };
@@ -295,22 +295,7 @@ module.exports = {
       case 'fBack':                  //返回
         downModal(that,hidePage)
         break;
-      case 'fMapSelect':                  //触摸
-        if (e.markerId){      //点击merkers气泡
-          showPage[spmKey +'sId'] = e.markerId;
-        } else {
-          switch (e.controlId) {
-            case 1:
-              showPage[spmKey +'scale'] = nowPage.scale==18 ? 18 : nowPage.scale+1;
-              break;
-            case 2:
-              showPage[spmKey + 'scale'] = nowPage.scale==5 ? 5 : that.data.scale-1;
-              break;
-          }
-        }
-        that.setData(showPage);
-        break;
-      default:                  //打开弹出页
+      case e.currentTarget.id.indexOf('ac-')>=0:                  //打开弹出页
         let n = parseInt(e.currentTarget.id.substring(3))      //数组下标;
         let newPage = {
           pageName: 'mapSelectUnit',
@@ -392,11 +377,29 @@ module.exports = {
                   that.data.sPages.push(newPage);
                   that.setData({sPages: that.data.sPages});
                   popModal(that);
+                  that.mapCtx = wx.createMapContext('mapSelect');
+                  that.mapCtx.moveToLocation();
                 }
               } else { wx.showToast({ title: '未发现合适单位' }) }
             }).catch( console.error );
           }
-        })
+        });
+        break;
+      default:                   //移动点击
+        if (e.markerId){      //点击merkers气泡
+          showPage[spmKey +'sId'] = e.markerId;
+        } else {
+          switch (e.controlId) {
+            case 1:
+              showPage[spmKey +'scale'] = nowPage.scale==18 ? 18 : nowPage.scale+1;
+              break;
+            case 2:
+              showPage[spmKey + 'scale'] = nowPage.scale==5 ? 5 : that.data.scale-1;
+              break;
+          }
+        }
+        that.setData(showPage);
+        break;
     }
   }
 

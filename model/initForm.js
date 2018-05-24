@@ -1,5 +1,7 @@
 const AV = require('../libs/leancloud-storage.js');
 const { updateData } = require('initupdate');
+const qqmap_wx = require('../libs/qqmap-wx-jssdk.min.js');   //微信地图
+var QQMapWX = new qqmap_wx({ key: '6JIBZ-CWPW4-SLJUB-DPPNI-4TWIZ-Q4FWY' });   //开发密钥（key）
 var app = getApp();
 function unitData(cName,uId){
   let uData = {};
@@ -146,7 +148,13 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
                   wx.getLocation({
                     type: 'wgs84',
                     success: function (res) {
-                      vData[reqField.gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude })
+                      vData[reqField.gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude });
+                      QQMapWX.reverseGeocoder({
+                        location: { latitude: res.latitude, longitude: res.longitude },
+                        success: function(res) {
+                          console.log(res);
+                        }
+                      });
                       resolve(true)
                     },
                     fail() { reject() }
