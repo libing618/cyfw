@@ -30,7 +30,7 @@ function integration(masterClass, slaveClass, unitId) {    //整合选择数组(
 module.exports = {
 unitData: unitData,
 
-  integration: integration,
+integration: integration,
 
 readShowFormat: function(req, vData) {
   var unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;
@@ -88,7 +88,7 @@ readShowFormat: function(req, vData) {
 initData: function(req, vData) {      //对数据录入或编辑的格式数组和数据对象进行初始化操作
   let vDataKeys = Object.keys(vData);            //数据对象是否为空
   let vifData = (vDataKeys.length == 0);
-  var funcArr = [];
+  var funcArr = [],getAddress;
   let unitId = vData.unitId ? vData.unitId : app.roleData.uUnit.objectId;  //数据中没有单位代码则用使用人的单位代码
   return new Promise((resolve, reject) => {
     let promArr = [];               //定义一个Promise数组
@@ -151,11 +151,11 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
                       vData[reqField.gname] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude });
                       QQMapWX.reverseGeocoder({
                         location: { latitude: res.latitude, longitude: res.longitude },
-                        success: function(res) {
-                          console.log(res);
+                        success: function ({ result: { ad_info, address } }) {
+                          getAddress = { code: ad_info.adcode, sName: address }
+                          resolve(true);
                         }
                       });
-                      resolve(true)
                     },
                     fail() { reject() }
                   })
@@ -199,7 +199,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
             vData[reqField.gname] = { code: 0, sName: '点此处进行选择' };
             break;
           case 'modalEditAddress':
-            vData[reqField.gname] = { code: 0, sName: '点此处进入编辑' };
+            if (typeof vData.aGeoPoint =='undefined') { vData[reqField.gname]= { code: 0, sName: '点此处进入编辑' } };
             break;
           case 'listsel':
             vData[reqField.gname] = 0;
@@ -238,6 +238,9 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
               reqData[i].master[specsId] = app.aData.specs[specsId];
               reqData[i].slave[specsId] = app.aData.cargo[app.aData.specs[specsId].cargo];
             });
+            break;
+          case 'chooseAd':
+            vData.address = getAddress;
             break;
           case 'sId':
             reqData[i].maData = app.mData[reqData[i].gname][unitId].map(mId=>{

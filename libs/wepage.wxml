@@ -299,7 +299,17 @@
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
     <view class="page__title" id="fSave" bindtap="i_mapSelectUnit">选择{{unitArray[sId].uName}}</view>
     <view class="close_icon" id="fBack" bindtap="i_mapSelectUnit">×</view>
-    <map id="mapSelect" longitude="{{longitude}}" latitude="{{latitude}}" scale="{{scale}}" bindcontroltap="i_mapSelectUnit" markers="{{markers}}" bindmarkertap="i_mapSelectUnit" controls="{{controls}}" show-location style="width: 100%; height: {{Height}}px;"/>
+    <view class="weui-map-box">
+      <map
+        id="mapSelect"
+        style="width: 100%; height: 300px;"
+        longitude="{{longitude}}"
+        latitude="{{latitude}}"
+        markers="{{markers}}"
+        bindmarkertap="i_mapSelectUnit"
+        show-location>
+      </map>
+    </view>
     <view class="page__bd">
       <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
         <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">

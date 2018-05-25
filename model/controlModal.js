@@ -282,8 +282,8 @@ module.exports = {
     let hidePage = {}, showPage = {}, pageNumber = that.data.sPages.length - 1;
     let spmKey = 'sPages[' + pageNumber +'].';
     let nowPage = that.data.sPages[pageNumber];
-    switch (e.currentTarget.id) {
-      case 'fSave':                  //确认返回数据
+    switch (e.currentTarget.id.substring(0,3)) {
+      case 'fSa':                  //确认返回数据
         hidePage['reqData[' + nowPage.n + '].e'] = nowPage.unitArray[nowPage.sId].uName;
         hidePage['vData.' + that.data.reqData[nowPage.n].gname] = nowPage.unitArray[nowPage.sId].objectId;
         if (nowPage.reqProIsSuperior) {
@@ -292,40 +292,19 @@ module.exports = {
           hidePage['dObjectId'] = app.roleData.uUnit.objectId;
         };
         break;
-      case 'fBack':                  //返回
+      case 'fBa':                  //返回
         downModal(that,hidePage)
         break;
-      case e.currentTarget.id.indexOf('ac-')>=0:                  //打开弹出页
-        let n = parseInt(e.currentTarget.id.substring(3))      //数组下标;
+      case 'ac-':                  //打开弹出页
         let newPage = {
           pageName: 'mapSelectUnit',
           Height: app.sysinfo.windowHeight-300,
           scale: 16,
-          controls: [
-            { id: 1,
-              iconPath: '/images/jia.png',
-              position: {
-                left: 84,
-                top: app.sysinfo.windowHeight - 332,
-                width: 32,
-                height: 32
-              },
-              clickable: true
-            },
-            { id: 2,
-              iconPath: '/images/jian.png',
-              position: {
-                left: 284,
-                top: app.sysinfo.windowHeight - 332,
-                width: 32,
-                height: 32
-              },
-              clickable: true
-            }
-          ],
           sId: 0,
+          markers:[],
+          unitArray: [],
           reqProIsSuperior: typeof that.data.reqData[n].indTypes == 'number',
-          n: n,
+          n: parseInt(e.currentTarget.id.substring(3)),      //数组下标
           selIndtypes:[]
         };
         if ( newPage.reqProIsSuperior ) {
@@ -341,7 +320,6 @@ module.exports = {
             query.select(['uName','afamily','nick','title','aGeoPoint','indType','thumbnail','unitUsers'])
             query.find().then( (results)=> {
               if (results) {
-                let uM = {},unitArray=[],uMarkers=[]
                 let resJSON,badd,inInd;
                 results.forEach((result,i)=>{
                   resJSON = result.toJSON();
@@ -350,36 +328,33 @@ module.exports = {
                     if (resJSON.indType.code.indexOf(indType) >= 0) { inInd = true }
                   })
                   if (inInd) {
-                    uM.id=i;
-                    uM.latitude=resJSON.aGeoPoint.latitude;
-                    uM.longitude=resJSON.aGeoPoint.longitude;
-                    uM.title=resJSON.nick;
-                    uM.iconPath= resJSON.afamily<3 ? '/images/icon-personal.png' : '/images/icon-company.png'; //单位是个人还是企业
-                    uMarkers.push(uM);
+                    newPage.markers.push({
+                      id:i,
+                      latitude:resJSON.aGeoPoint.latitude,
+                      longitude:resJSON.aGeoPoint.longitude,
+                      name:resJSON.nick,
+                      iconPath: resJSON.afamily<3 ? '/images/icon-personal.png' : '/images/icon-company.png',   //单位是个人还是企业
+                    });
                     badd = new AV.GeoPoint(resJSON.aGeoPoint);
                     resJSON.distance = parseInt(badd.kilometersTo(cadd) * 1000 +0.5);
-                    unitArray.push( resJSON );
+                    newPage.unitArray.push( resJSON );
                   }
                 });
-                if (uM){
-                  newPage.latitude = res.latitude;
-                  newPage.longitude = res.longitude;
-                  newPage.markers = uMarkers;
-                  newPage.circles = [{
-                      latitude: res.latitude,
-                      longitude: res.longitude,
-                      color: '#FF0000DD',
-                      fillColor: '#7cb5ec88',
-                      radius: 3000,
-                      strokeWidth: 1
-                    }];
-                  newPage.unitArray = unitArray;
-                  that.data.sPages.push(newPage);
-                  that.setData({sPages: that.data.sPages});
-                  popModal(that);
-                  that.mapCtx = wx.createMapContext('mapSelect');
-                  that.mapCtx.moveToLocation();
-                }
+                newPage.latitude = res.latitude;
+                newPage.longitude = res.longitude;
+                newPage.circles = [{
+                    latitude: res.latitude,
+                    longitude: res.longitude,
+                    color: '#FF0000DD',
+                    fillColor: '#7cb5ec88',
+                    radius: 3000,
+                    strokeWidth: 1
+                  }];
+                that.data.sPages.push(newPage);
+                that.setData({sPages: that.data.sPages});
+                popModal(that);
+                that.mapCtx = wx.createMapContext('mapSelect'.that);
+                that.mapCtx.moveToLocation();
               } else { wx.showToast({ title: '未发现合适单位' }) }
             }).catch( console.error );
           }
@@ -388,15 +363,6 @@ module.exports = {
       default:                   //移动点击
         if (e.markerId){      //点击merkers气泡
           showPage[spmKey +'sId'] = e.markerId;
-        } else {
-          switch (e.controlId) {
-            case 1:
-              showPage[spmKey +'scale'] = nowPage.scale==18 ? 18 : nowPage.scale+1;
-              break;
-            case 2:
-              showPage[spmKey + 'scale'] = nowPage.scale==5 ? 5 : that.data.scale-1;
-              break;
-          }
         }
         that.setData(showPage);
         break;

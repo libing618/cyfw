@@ -1137,3 +1137,7 @@ icon {
 .weui-picker__item_disabled{
   color:#999999;
 }
+.weui-map-box{
+  box-sizing: border-box;
+  padding: 0 10rpx;
+}

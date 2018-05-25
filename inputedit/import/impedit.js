@@ -1,5 +1,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const {i_cutImageThumbnail,i_modalEditAddress,i_mapSelectUnit} = require('../../model/controlModal.js');
+const qqmap_wx = require('../../libs/qqmap-wx-jssdk.min.js');   //微信地图
+var QQMapWX = new qqmap_wx({ key: '6JIBZ-CWPW4-SLJUB-DPPNI-4TWIZ-Q4FWY' });   //开发密钥（key）
 var app = getApp();
 const vdSet = function (sname, sVal) {
   let reqset = {};
@@ -280,8 +282,15 @@ module.exports = {
     let n = parseInt(e.currentTarget.id.substring(3))      //数组下标
     wx.chooseLocation({
       success: function (res) {
-        that.setData({ 'vData.aGeoPoint': new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude }) });
-        if (!that.data.vData.address.sName) { that.setData(vdSet('address', {code:res.name,sName:res.address})) }
+        QQMapWX.reverseGeocoder({
+          location: { latitude: res.latitude, longitude: res.longitude },
+          success: function ({ result: { ad_info, address } }) {
+            let setAd = {};
+            setAd['vData.aGeoPoint'] = new AV.GeoPoint({ latitude: res.latitude, longitude: res.longitude });
+            setAd['vData.address'] = { code: ad_info.adcode, sName: address };
+            that.setData(setAd);
+          }
+        });
       }
     })
   },
