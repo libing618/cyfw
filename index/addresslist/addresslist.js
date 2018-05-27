@@ -3,6 +3,8 @@ const app=getApp();
 Page({
   data:{
     vData:[],
+    pw: app.sysinfo.pw,
+    navBarTitle: app.roleData.uUnit.nick+'的通讯录',
     iClicked: '0'
   },
   onLoad:function(options){

@@ -8,11 +8,7 @@
     "pages/vprocedure/vprocedure",
     "pages/lprocedures/lprocedures",
     "pages/wxchat/wxchat",
-    "pages/approve/approve",
-    "pages/goodssct/goodssct",
-    "pages/mapsunit/mapsunit",
-    "pages/ceimage/ceimage",
-    "pages/filesct/filesct"
+    "pages/approve/approve"
   ],
   "window": {
     "backgroundTextStyle": "light",

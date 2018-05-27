@@ -1139,5 +1139,5 @@ icon {
 }
 .weui-map-box{
   box-sizing: border-box;
-  padding: 0 10rpx;
+  padding-top: 16rpx;
 }

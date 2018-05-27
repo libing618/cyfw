@@ -138,7 +138,14 @@
   <view id="ac-{{n}}" bindtap="i_chooseAd">
     <view class="weui-label">{{p}}:</view>
     <view class="weui-map-box">
-      <map id="chooseAd" longitude="{{c.longitude}}" latitude="{{c.latitude}}" scale="18" show-location></map>
+      <map
+        id="chooseAd"
+        style="width: 100%; height: 300px;"
+        latitude="{{c.latitude}}"
+        longitude="{{c.longitude}}"
+        covers="{{covers}}"
+        show-location
+      ></map>
     </view>
   </view>
 </template>

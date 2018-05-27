@@ -5,6 +5,7 @@ Page({
   data:{
     user: {},
     pw: app.sysinfo.pw,
+    navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender==1 ? '先生' :'女士'),
     sysheight: app.sysinfo.windowHeight-300,
     swcheck: true,
     iName: app.roleData.user.uName,

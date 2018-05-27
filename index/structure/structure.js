@@ -5,6 +5,8 @@ Page({
 	data:{
     userRolName: '',
 		uUnitUsers: {},
+		navBarTitle: app.roleData.uUnit.nick+'的组织架构',      //将页面标题设置成单位名称
+		pw: app.sysinfo.pw,
 		mRols: [
 			['办公','产品','营销','客服'],
 			['负责人','部门管理','员工']
@@ -51,15 +53,14 @@ Page({
             }
           }).catch(console.error())
         }
-        wx.setNavigationBarTitle({
-          title: app.roleData.uUnit.nick+'的组织架构'     //将页面标题设置成单位名称
-        })
       };
     } else {
       wx.showToast({ title: '没有注册用户或申请单位,请在个人信息菜单注册。', duration: 7500 })
       wx.navigateBack({ delta: 1 })                // 回退前1 页面
     };
-    that.setData({ userRolName: app.roleData.user.userRolName })
+    that.setData({
+			userRolName: app.roleData.user.userRolName
+		})
   },
 
 	fSpicker: function(e) {                         //选择岗位和条线

@@ -1,14 +1,15 @@
 <import src="../../libs/weimport.wxml" />
-<template is="navBarReturn" data="{{navBarTitle,rtUrl}}"/>
+<import src="../../libs/wepage.wxml" />
 <wxs src="signmsg.wxs" module="tk" />
 <view class="page">
+  <template is="p_navBar__back" data="{{...pw,navBarTitle,rtUrl:'pages/manage/manage'}}"/>
   <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active">
-    <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+    <view class="weui-media-box__hd_in-appmsg">
       <image class="weui-media-box__thumb" src="{{user.avatarUrl}}" background-size="cover"></image>
     </view>
-    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-      <view class="weui-media-box__title">尊敬的{{user.nickName}}{{user.gender==1 ? "先生":"女士"}}</view>
-      <view class="weui-media-box__desc">请检查或输入您的姓名、绑定手机号，查询单位名称（新建单位或加入已有单位），提交审核。</view>
+    <view class="weui-media-box__bd_in-appmsg">
+      <view class="weui-media-box__title">请检查或输入您的姓名、绑定手机号</view>
+      <view class="weui-media-box__desc">查询单位名称,新建单位或加入已有单位，提交审核。</view>
     </view>
   </view>
 

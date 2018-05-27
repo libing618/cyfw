@@ -296,6 +296,7 @@ module.exports = {
         downModal(that,hidePage)
         break;
       case 'ac-':                  //打开弹出页
+        let n = parseInt(e.currentTarget.id.substring(3));
         let newPage = {
           pageName: 'mapSelectUnit',
           Height: app.sysinfo.windowHeight-300,
@@ -304,7 +305,7 @@ module.exports = {
           markers:[],
           unitArray: [],
           reqProIsSuperior: typeof that.data.reqData[n].indTypes == 'number',
-          n: parseInt(e.currentTarget.id.substring(3)),      //数组下标
+          n: n,      //数组下标
           selIndtypes:[]
         };
         if ( newPage.reqProIsSuperior ) {
@@ -312,9 +313,10 @@ module.exports = {
           wx.showToast({title:'选择服务单位，请注意：选定后不能更改！',icon: 'none'});
         } else {newPage.selIndtypes=that.data.reqData[n].indTypes}
         wx.getLocation({
-          type: 'wgs84',
+          type: 'gcj02',//'wgs84',
           success: function(res){
             let cadd = new AV.GeoPoint(that.reqProIsSuperior ? that.prevPage.data.vData.aGeoPoint : { latitude: res.latitude, longitude: res.longitude });
+            let points = [{ latitude: res.latitude, longitude: res.longitude }]
             var query = new AV.Query('_Role');
             query.withinKilometers('aGeoPoint', cadd, 200);
             query.select(['uName','afamily','nick','title','aGeoPoint','indType','thumbnail','unitUsers'])
@@ -332,12 +334,13 @@ module.exports = {
                       id:i,
                       latitude:resJSON.aGeoPoint.latitude,
                       longitude:resJSON.aGeoPoint.longitude,
-                      name:resJSON.nick,
-                      iconPath: resJSON.afamily<3 ? '/images/icon-personal.png' : '/images/icon-company.png',   //单位是个人还是企业
+                      title:resJSON.nick,
+                      iconPath: resJSON.afamily < 3 ? '/images/icon-personal.png' : '/images/icon-company.png',   //单位是个人还是企业
                     });
                     badd = new AV.GeoPoint(resJSON.aGeoPoint);
                     resJSON.distance = parseInt(badd.kilometersTo(cadd) * 1000 +0.5);
                     newPage.unitArray.push( resJSON );
+                    points.push({ latitude: resJSON.aGeoPoint.latitude, longitude: resJSON.aGeoPoint.longitude})
                   }
                 });
                 newPage.latitude = res.latitude;
@@ -353,8 +356,8 @@ module.exports = {
                 that.data.sPages.push(newPage);
                 that.setData({sPages: that.data.sPages});
                 popModal(that);
-                that.mapCtx = wx.createMapContext('mapSelect'.that);
-                that.mapCtx.moveToLocation();
+                that.mapCtx = wx.createMapContext('mapSelect',that);
+                that.mapCtx.includePoints({points});
               } else { wx.showToast({ title: '未发现合适单位' }) }
             }).catch( console.error );
           }
@@ -363,8 +366,24 @@ module.exports = {
       default:                   //移动点击
         if (e.markerId){      //点击merkers气泡
           showPage[spmKey +'sId'] = e.markerId;
-        }
-        that.setData(showPage);
+          that.setData(showPage);
+        };
+        if (e.type){
+          switch (e.type){
+            case 'begin':
+              that.mapCtx.moveToLocation();
+              break;
+            case 'end':
+            that.mapCtx.getCenterLocation({
+              success: (res)=>{
+                showPage[spmKey + 'latitude'] = res.latitude;
+                showPage[spmKey + 'longitude'] = res.longitude;
+                that.setData(showPage);
+              }
+            });
+              break;
+          }
+        };
         break;
     }
   }
