@@ -1,6 +1,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { updateData,tabClick } = require('../../model/initupdate');
-const { loginAndMenu, shareMessage } = require('../../libs/util');
+const { loginAndMenu, shareMessage } = require('../../model/initForm');
+const { openWxLogin } = require('../../libs/util');
 var app = getApp()
 Page({
   data: {

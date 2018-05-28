@@ -5,7 +5,8 @@ const conversationRole = {
   "直播课堂":{participant:9,chairman:7},
   "客户服务":{participant:9,chairman:6}
 };
-const {checkRols,checkRole,i_msgEditSend} = require('../../libs/util.js');
+const {i_msgEditSend} = require('../../libs/util.js');
+const { checkRole,checkRols } =  require('../../model/initForm');
 var app = getApp()
 Page({
   data:{

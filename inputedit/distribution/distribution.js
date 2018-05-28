@@ -1,8 +1,7 @@
 //货架管理
 const AV = require('../../libs/leancloud-storage.js');
-const { checkRols } = require('../../libs/util');
+const { checkRols，unitData } =  require('../../model/initForm');
 const { updateData } = require('../../model/initupdate');
-const { unitData } = require('../../model/initForm.js');
 var app = getApp();
 
 Page({

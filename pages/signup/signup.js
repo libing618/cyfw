@@ -1,5 +1,5 @@
 const AV = require('../../libs/leancloud-storage.js');
-
+const { shareMessage } = require('../../model/initForm');
 var app = getApp()
 Page({
   data:{

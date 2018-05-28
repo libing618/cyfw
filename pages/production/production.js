@@ -1,6 +1,6 @@
 const { cargoSum, updateData } = require('../../model/initupdate.js');
-const { integration,unitData } = require('../../model/initForm.js');
-const {indexClick} = require('../../libs/util.js');
+const { unitData } = require('../../model/initForm.js');
+const {integration,indexClick} = require('../../libs/util.js');
 
 var app = getApp()
 Page({
@@ -49,5 +49,5 @@ Page({
   onReachBottom: function() {
     updateData(false,'cargo').then(isupdated=>{ this.setPage(isupdated) });
   },
-  onShareAppMessage: require('../../libs/util').shareMessage
+  onShareAppMessage: require('../../model/initForm').shareMessage
 })

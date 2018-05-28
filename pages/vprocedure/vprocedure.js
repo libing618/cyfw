@@ -1,26 +1,28 @@
 // 浏览pages
-const { readShowFormat } = require('../../model/initForm.js');
+const { readShowFormat } = require('../../libs/util');
 var app=getApp()
 Page({
   data:{
     uEV: app.roleData.user.emailVerified,
     enUpdate: false,
+    pNo: 'articles',
+    pw: app.sysinfo.pw,
+    sPages: ['viewRecord'],
     vData: {},
     reqData: []
   },
-  pno:'articles',
   inFamily:false,
 
   onLoad: function(options) {
     var that = this ;
-    let cUnitName = app.roleData.user.emailVerified ? app.roleData.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
-    that.pno = options.pNo;
+    that.data.navBarTitle = app.roleData.user.emailVerified ? app.roleData.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
+    that.data.pNo = options.pNo;
     let artid = Number(options.artId);
-    let pClass = require('../../model/procedureclass.js')[that.pno];
+    let pClass = require('../../model/procedureclass.js')[that.data.pNo];
     that.inFamily = (typeof pClass.afamily != 'undefined');
-    that.data.vData = app.aData[that.pno][options.artId];
+    that.data.vData = app.aData[that.data.pNo][options.artId];
     let showFormat = pClass.pSuccess;
-    switch (that.pno) {
+    switch (that.data.pNo) {
       case 'goods':
         showFormat = [
           {gname:"pics", p:'图片集',t:"pics"},
@@ -35,25 +37,23 @@ Page({
     };
     readShowFormat(showFormat, that.data.vData).then(req=>{
       that.data.reqData=req;
+      that.data.navBarTitle += '的' + (that.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName);
       that.data.enUpdate = that.data.vData.unitId==app.roleData.uUnit.objectId && typeof pClass.suRoles!='undefined';  //本单位信息且流程有上级审批的才允许修改
       that.setData(that.data);
     });
-    wx.setNavigationBarTitle({
-      title: cUnitName+ '的' + (that.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName) ,
-    })
   },
 
   fEditProcedure: function(e){
     var that = this;
-    var url='/inputedit/fprocedure/fprocedure?pNo='+that.pno;
+    var url='/inputedit/fprocedure/fprocedure?pNo='+that.data.pNo;
     switch (e.currentTarget.id){
       case 'fModify' :
         url += '&artId='+that.data.vData.objectId;
         break;
       case 'fTemplate' :
         url += that.inFamily ? '&artId='+that.data.vData.afamily : '';
-        let newRecord = that.inFamily ? that.pno+that.data.vData.afamily : that.pno;
-        app.aData[that.pno][newRecord] = that.data.vData;
+        let newRecord = that.inFamily ? that.data.pNo+that.data.vData.afamily : that.data.pNo;
+        app.aData[that.data.pNo][newRecord] = that.data.vData;
         break;
     };
     wx.navigateTo({ url: url});

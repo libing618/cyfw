@@ -1,6 +1,6 @@
 // 通用的内容编辑pages
 const wImpEdit = require('../import/impedit.js');
-const { initData } = require('../../model/initForm');
+const { initData，fSubmit } = require('../import/unitEdit');
 var app = getApp()
 Page({
   data: {
@@ -73,6 +73,6 @@ Page({
     });
   },
 
-  fSubmit: require('../import/unitEdit').fSubmit
+  fSubmit: fSubmit
 
 })

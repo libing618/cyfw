@@ -1,5 +1,6 @@
 const { updateData } = require('../../model/initupdate');
-const { integration,unitData } = require('../../model/initForm.js');
+const { unitData } = require('../../model/initForm.js');
+const { integration } = require('../../libs/util');
 var app = getApp();
 Page({
   data:{
@@ -41,5 +42,5 @@ Page({
     updateData(false,'goods').then(isupdated=>{ this.setPage(isupdated) });
   },
 
-  onShareAppMessage: require('../../libs/util').shareMessage
+  onShareAppMessage: require('../../model/initForm').shareMessage
 })

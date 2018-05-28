@@ -1,6 +1,7 @@
 //帐务中心
 const AV = require('../../libs/leancloud-storage.js');
-const { checkRols,formatTime,indexClick } = require('../../libs/util.js');
+const { formatTime,indexClick } = require('../../libs/util.js');
+const { checkRols } =  require('../../model/initForm');
 const { updateData } = require('../../model/initupdate');
 const { i_sedate } = require('../import/impedit');
 var app = getApp();

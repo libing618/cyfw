@@ -1,5 +1,5 @@
 //客户评价及统计
-const {checkRols,arrClose} = require('../../libs/util.js');
+const {checkRols} =  require('../../model/initForm');
 var app = getApp();
 Page({
   data:{
