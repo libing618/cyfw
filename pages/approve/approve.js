@@ -61,45 +61,47 @@ Page({
 
   fsave:function(e) {                         //保存审批意见，流向下一节点
     var that = this;
+    function setRole(){
+      return new Promise((resolve, reject) => {
+        if (that.data.aValue.dProcedure == '_Role') {                    //是否单位审批流程
+          let setUser = AV.Object.createWithoutData('_User',that.data.aValue.unitId);
+          setUser.set('emailVerified',true);
+          setUser.set('userRolName','admin');
+          setUser.save().then(()=>{ resolve(true) })
+        } else { resolve(false) }
+      }).catch(console.error);
+    };
     var nInstace = Number(that.data.aValue.cInstance);        //下一流程节点
     if (nInstace>=0) {
       var rResultId = Number(e.detail.value.dResult)+1;
       return new Promise((resolve, reject) => {
-        if ( nInstace==that.data.cmLength ){   //最后一个节点
+        if ( nInstace==that.data.cmLength && rResultId === 1 ){   //最后一个节点审批通过
           let sData = that.data.aValue.dObject;
-          if (that.data.aValue.dProcedure == '_Role') {                    //是否单位审批流程
-            sData.uState = rResultId;
-            AV.Cloud.run('setRole', { id: that.data.aValue.unitId, dObject: sData }).then((qRoleSet) => {
-              wx.showToast({ title: '设置单位信息', duration: 2000 });
-              console.log(qRoleSet);
-              resolve(0);
-            }).catch( err=>{
-              console.log(err);
-              reject(err);
-            })
-          } else if (rResultId === 1){
-            let sObject;
-            if (that.data.aValue.dObjectId=='0'){
-              let dObject = AV.Object.extend(that.data.pModel);
-              sObject = new dObject();
-            } else {
-              sObject = AV.Object.createWithoutData(that.data.pModel,that.data.aValue.dObjectId)
-            }
+          let sObject;
+          if (that.data.aValue.dObjectId=='0'){       //新建数据
+            let dObject = AV.Object.extend(that.data.pModel);
+            sObject = new dObject();
+          } else {       //修改数据
+            sObject = AV.Object.createWithoutData(that.data.pModel,that.data.aValue.dObjectId)
+          }
+          if (that.data.aValue.dProcedure !== '_Role') {
             sData.unitId = that.data.aValue.unitId;
             sData.unitName = that.data.aValue.unitName;
-            let unitRole = new AV.ACL();
-            unitRole.setPublicReadAccess(true);
-            unitRole.setRoleWriteAccess(that.data.aValue.unitId,true);  //为单位角色设置写权限
-            sObject.setACL(unitRole);
-            sObject.set(sData).save().then((sd)=>{
+          };
+          let unitRole = new AV.ACL();
+          unitRole.setPublicReadAccess(true);
+          unitRole.setRoleWriteAccess(that.data.aValue.unitId,true);  //为单位角色设置写权限
+          sObject.setACL(unitRole);
+          sObject.set(sData).save().then((sd)=>{
+            setRole().then(()=>{
               wx.showToast({ title: '审批内容已发布', duration:2000 });
               resolve(sd.objectId);
-            }).catch((error)=>{
-              wx.showToast({ title: '审批内容发布出现错误'+error.error, duration: 2000 });
-              reject(error);
             })
-          } else { resolve(0) };
-        } else { resolve(0) }
+          }).catch((error)=>{
+            wx.showToast({ title: '审批内容发布出现错误'+error.error, duration: 2000 });
+            reject(error);
+          })
+        } else { resolve(0) };
       }).then((sObjectId)=>{
         let cApproval = AV.Object.createWithoutData('sengpi', that.data.aValue.objectId);
         if (sObjectId) {cApproval.set('dObjectId',sObjectId);}

@@ -165,11 +165,11 @@ Page({
       var fSeatch = new AV.Query('_Role');
       fSeatch.equalTo('uName',reqUnitName);
       fSeatch.find().then((results)=>{
+        let crUnit = new AV.ACL();
+        crUnit.setWriteAccess(AV.User.current(), true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
+        crUnit.setPublicReadAccess(true);
+        crUnit.setPublicWriteAccess(false);
         if (results.length==0){                      //申请单位名称无重复
-          let crUnit = new AV.ACL();
-          crUnit.setWriteAccess(AV.User.current(), true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
-          crUnit.setPublicReadAccess(true);
-          crUnit.setPublicWriteAccess(false);
           let unitRole = new AV.Role(app.roleData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
           unitRole.getUsers().add(AV.User.current());
           unitRole.set('uName',reqUnitName)
@@ -194,9 +194,12 @@ Page({
             success: function(res) {
               if (res.confirm) {              //用户点击确定则申请加入该单位
                 let resUnit = results[0].toJSON();
+                crUnit.setRoleWriteAccess(resUnit.objectId,true);
+                crUnit.setRoleReadAccess(resUnit.objectId,true);
                 let rQuery = AV.Object.createWithoutData('userInit', '59af7119ac502e006abee06a')  //设定菜单为sessionuser
                 AV.User.current()
                   .set({ "unit": resUnit.objectId, "userRolName": 'sessionuser', "userRol": rQuery } )  // 设置并保存单位ID
+                  .setACL(crUnit)
                   .save()
                   .then(function(user) {
                     app.roleData.uUnit = resUnit;

@@ -4,7 +4,7 @@ const { integration } = require('../../model/initupdate');
 const qqmap_wx = require('../../libs/qqmap-wx-jssdk.min.js');   //微信地图
 var QQMapWX = new qqmap_wx({ key: '6JIBZ-CWPW4-SLJUB-DPPNI-4TWIZ-Q4FWY' });   //开发密钥（key）
 var app = getApp();
-function setRole(puRoles,suRoles){
+function setRole(puRoles,suRoles){      //流程审批权限列表
   let cUserName = {};
   let cManagers = [[app.roleData.user.objectId]];
   cUserName[app.roleData.user.objectId] = app.roleData.user.uName;
@@ -62,6 +62,21 @@ function setRole(puRoles,suRoles){
   cManagers.forEach((manger) => { manger.forEach((mUser) => { managers.push(mUser) }) });
   return { cManagers,cUserName,managers}
 };
+function roleAuthorization(){      //权限表和用户表授权
+  let roleAcl = new AV.ACL();
+  roleAcl.setWriteAccess(app.roleData.user.objectId, true)     // 当前用户是该角色的创建者，因此具备对该角色的写权限
+  roleAcl.setPublicReadAccess(true);
+  roleAcl.setPublicWriteAccess(false);
+  roleAcl.setRoleReadAccess(app.roleData.sUnit.objectId, true);
+  let unitRole = AV.Query(AV.Role);
+  unitRole.get(app.roleData.uUnit.objectId).then(uRole=>{           //得到单位的权限对象
+    uRole.setACL(roleAcl).save().then(()=>{
+      AV.User.current()
+      .setACL(roleAcl)
+      .save()
+    })
+  }).catch(wx.showToast({ title: '上级单位授权中发生错误,请联系客服人员。', icon:'none',duration: 2000 })   //保存错误
+}
 module.exports = {
 
 initData: function(req, vData) {      //对数据录入或编辑的格式数组和数据对象进行初始化操作
@@ -250,7 +265,7 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
 
 fSubmit: function (e) {
   var that = this;
-  let approvalID = parseInt(that.data.pNo);        //流程序号
+  let approvalID = that.data.pNo;        //流程
   var approvalClass = require('../../model/procedureclass.js')[approvalID];       //流程定义和数据结构
   var subData = e.detail.value;
   let cNumber = ['fg','dg','listsel'];       //数字类型定义
@@ -439,9 +454,10 @@ fSubmit: function (e) {
                 acl.setWriteAccess(mUser, true);
                 acl.setReadAccess(mUser, true);
               })
-              fcApproval.setACL(acl);         // 将 ACL 实例赋予fcApproval对象
+              fcApproval.setACL(acl);         // 将 ACL实例赋予fcApproval对象
               fcApproval.save().then((resTarget) => {
                 wx.showToast({ title: '流程已提交,请查询审批结果。', icon:'none',duration: 2000 }) // 保存成功
+                if (approvalID == '_Role') { roleAuthorization() };
               }).catch(wx.showToast({ title: '提交保存失败!', icon:'loading',duration: 2000 })) // 保存失败
             }
           } else {
