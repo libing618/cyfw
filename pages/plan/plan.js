@@ -1,6 +1,5 @@
-const { updateData } = require('../../model/initupdate');
+const { updateData,integration } = require('../../model/initupdate');
 const { unitData } = require('../../model/initForm.js');
-const { integration } = require('../../libs/util');
 var app = getApp();
 Page({
   data:{

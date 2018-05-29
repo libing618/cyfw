@@ -1,8 +1,8 @@
 let allMenu={
 manage:{
-  N100:{"tourl": "/pages/signup/signup", "mName": "我的信息" },
-  N101:{"tourl": "/inputedit/f_Role/f_Role", "mName": "单位信息" },
-  N102:{"tourl": "/index/structure/structure",  "mName": "组织架构" },
+  N100:{"tourl": "/pages/signup/signup","mName": "我的信息" },
+  N101:{"tourl": "/inputedit/f_Role/f_Role","mName": "单位信息" },
+  N102:{"tourl": "/index/structure/structure","mName": "组织架构" },
   N103:{"tourl": "/index/procedures/procedures","mName": "流程审批" },
   N104:{"tourl": "/inputedit/distributor/distributor", "mName": "分销招募" },
   N105:{"tourl": "/inputedit/distribution/distribution","mName": "货架管理" },

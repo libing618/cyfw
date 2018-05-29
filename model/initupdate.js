@@ -18,23 +18,11 @@ function appDataExist(dKey0, dKey1) {              //检查app.aData是否存在
     return false;
   };
 };
-module.exports = {
-appDataExist: appDataExist,
-
-isAllData: isAllData,
-
-tabClick: function (e) {                                //点击tab
-  app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
-  this.setData({
-    pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
-  });
-},
-
-updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown下拉刷新,pNo类定义序号, uId单位Id
+function updateData(isDown, pNo, uId) {    //更新页面显示数据,isDown下拉刷新,pNo类定义序号, uId单位Id
   return new Promise((resolve, reject) => {
     let isAll = isAllData(pNo);            //是否读所有数据
     let inFamily = typeof procedureclass[pNo].afamily != 'undefined';            //是否有分类数组
-    var umdata=[] ,updAt;
+    var umdata = [], updAt;
     var readProcedure = new AV.Query(pNo);                                      //进行数据库初始化操作
     if (isAll) {
       updAt = appDataExist(pNo) ? app.mData.pAt[pNo] : [0, 0];
@@ -44,8 +32,8 @@ updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown�
       readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
       updAt = appDataExist(pNo, unitId) ? app.mData.pAt[pNo][unitId] : [0, 0];
       if (typeof app.mData[pNo][unitId] == 'undefined') {       //添加以单位ID为Key的JSON初值
-        let umobj={};
-        if (typeof app.mData[pNo] != 'undefined') { umobj=app.mData[pNo] };
+        let umobj = {};
+        if (typeof app.mData[pNo] != 'undefined') { umobj = app.mData[pNo] };
         umobj[unitId] = [];
         app.mData[pNo] = umobj;
       } else {
@@ -63,7 +51,7 @@ updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown�
     readProcedure.find().then(results => {
       var lena = results.length;
       if (lena > 0) {
-        let aPlace = -1, aProcedure={};
+        let aPlace = -1, aProcedure = {};
         if (isDown) {
           updAt[1] = results[lena - 1].updatedAt;                          //更新本地最新时间
           updAt[0] = results[0].updatedAt; //若本地记录时间为空，则更新本地最后更新时间
@@ -104,6 +92,38 @@ updateData: function (isDown, pNo, uId) {    //更新页面显示数据,isDown�
     }).catch(error => {
       if (!that.netState) { wx.showToast({ title: '请检查网络！' }) }
     });
+  }).catch(console.error);
+};
+module.exports = {
+appDataExist: appDataExist,
+
+isAllData: isAllData,
+
+updateData: updateData,
+
+tabClick: function (e) {                                //点击tab
+  app.mData['pCk'+this.data.pNo] = Number(e.currentTarget.id)
+  this.setData({
+    pageCk: app.mData['pCk'+this.data.pNo]               //点击序号切换
+  });
+},
+
+integration: function(masterClass, slaveClass, unitId) {    //整合选择数组(主表，从表，单位Id)
+  return new Promise((resolve, reject) => {
+    return Promise.all([updateData(true, masterClass, unitId), updateData(true, slaveClass, unitId)]).then(([uMaster, uSlave]) => {
+      let allslave = Promise.resolve(updateData(false, slaveClass, unitId)).then(notEnd => {
+        if (notEnd) {
+          return allslave();
+        } else {
+          app.mData[masterClass][unitId].forEach(masterId => {
+            if (typeof app.aData[masterClass][masterId] != 'undefined') {
+              app.aData[masterClass][masterId][slaveClass] = app.mData[slaveClass][unitId].filter(slaveId => { return app.aData[slaveClass][slaveId][masterClass] == masterId });
+            }
+          })
+        }
+        resolve(uMaster || uSlave)
+      });
+    })
   }).catch(console.error);
 },
 

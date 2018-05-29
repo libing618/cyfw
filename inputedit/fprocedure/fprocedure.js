@@ -1,6 +1,6 @@
 // 通用的内容编辑pages
 const wImpEdit = require('../import/impedit.js');
-const { initData，fSubmit } = require('../import/unitEdit');
+const { initData,fSubmit } = require('../import/unitEdit');
 var app = getApp()
 Page({
   data: {
@@ -59,6 +59,7 @@ Page({
             that.i_insdata = wImpEdit.i_insdata;
           }
         });
+        reqData.unshift({gname:"uName", t:"h2", p:"名称" });
         that.setData({
           pNo: ops.pNo,
           navBarTitle: that.data.navBarTitle,

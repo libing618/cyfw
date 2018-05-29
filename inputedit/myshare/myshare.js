@@ -1,6 +1,6 @@
 //共享信息管理
 const AV = require('../../libs/leancloud-storage.js');
-const { initData，fSubmit } = require('../import/unitEdit');
+const { initData,fSubmit } = require('../import/unitEdit');
 const wImpEdit = require('../import/impedit');
 var app = getApp()
 Page({

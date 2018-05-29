@@ -1,27 +1,9 @@
 const AV = require('leancloud-storage.js');
+const { updateData,integration } = require('../model/initupdate');
 const wxappNumber = 0;    //本小程序在开放平台中自定义的序号
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
-};
-
-function integration(masterClass, slaveClass, unitId) {    //整合选择数组(主表，从表，单位Id)
-  return new Promise((resolve, reject) => {
-    return Promise.all([updateData(true, masterClass, unitId), updateData(true, slaveClass, unitId)]).then(([uMaster, uSlave]) => {
-      let allslave = Promise.resolve(updateData(false, slaveClass, unitId)).then(notEnd => {
-        if (notEnd) {
-          return allslave();
-        } else {
-          app.mData[masterClass][unitId].forEach(masterId => {
-            if (typeof app.aData[masterClass][masterId] != 'undefined') {
-              app.aData[masterClass][masterId][slaveClass] = app.mData[slaveClass][unitId].filter(slaveId => { return app.aData[slaveClass][slaveId][masterClass] == masterId });
-            }
-          })
-        }
-        resolve(uMaster || uSlave)
-      });
-    })
-  }).catch(console.error);
 };
 
 module.exports = {
@@ -71,8 +53,6 @@ openWxLogin: function(roleData) {            //注册登录（本机登录状态
     })
   });
 },
-
-integration: integration,
 
 readShowFormat: function(req, vData) {
   var unitId = vData.unitId;

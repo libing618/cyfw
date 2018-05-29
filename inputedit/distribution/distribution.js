@@ -1,12 +1,14 @@
 //货架管理
 const AV = require('../../libs/leancloud-storage.js');
-const { checkRols，unitData } =  require('../../model/initForm');
+const { checkRols,unitData } =  require('../../model/initForm');
 const { updateData } = require('../../model/initupdate');
 var app = getApp();
 
 Page({
   data:{
     mPage: app.mData.goods[app.roleData.uUnit.objectId] || [],
+    navBarTitle: app.roleData.uUnit.uName+'的货架',
+    pw: app.sysinfo.pw,
     pageData: {}
   },
   onLoad:function(options){
@@ -26,9 +28,6 @@ Page({
 
   onReady: function(){
     updateData(true,'goods').then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
-    wx.setNavigationBarTitle({
-      title: app.roleData.user.emailVerified ? app.roleData.uUnit.uName+'的货架' : '用户体验货架管理',
-    })
   },
 
   clickSave:function({currentTarget:{id}}){

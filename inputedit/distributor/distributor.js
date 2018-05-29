@@ -5,8 +5,10 @@ const { i_thumb,i_chooseAd } = require('../import/impedit');
 var app = getApp()
 Page({
   data:{
+    navBarTitle: app.roleData.uUnit.uName+'的分销商',
+    pw: app.sysinfo.pw,
     reqData:[
-      { gname: "agreement", p:'招募说明',t: "p"},
+      {gname: "agreement", p:'招募文件',t: "p"},
       {gname: "desc", p: '单位描述', t: "p"},
       {gname: "thumbnail", p: '图片简介', t: "thumb" },
       {gname: "aGeoPoint", p: '选择地理位置', t: "chooseAd" },

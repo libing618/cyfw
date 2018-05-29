@@ -34,7 +34,6 @@ module.exports = {
   "pName": "文章",
   "afamily": ['公告公示','品牌建设','扶持优惠','产品宣传','常见问题'],
   "pSuccess": [
-    {gname:"uName", t:"h1", p:"名称" },
     {gname:"title",t:"h2", p:"标题" },
     {gname:"thumbnail", p: '上传用于缩略图的图片',t: "cutImageThumbnail" },
     {gname:"desc", t:"p", p:"摘要" },
@@ -54,7 +53,6 @@ module.exports = {
 "asset":{
   "pName": "固定资产登记",
   "pSuccess": [
-    {gname:"uName", p:'固定资产名称', t:"h2" },
     {inclose:true, gname:"assetType", p:'固定资产类别',t:"assettype", csc:"arrsel"},
     {gname:"title", p:'固定资产简介',t:"h3" },
     {gname:"desc", p:'固定资产描述',t:"p" },
@@ -73,7 +71,6 @@ module.exports = {
 "product":{
   "pName": "产品",
   "pSuccess": [
-    {gname: "uName", p:'名称', t:"h2" },
     {inclose: true, gname:"protype", p:'产品类别',t:"producttype",  csc:"arrsel" },
     {gname:"title", p:'简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t:"cutImageThumbnail" },
@@ -99,7 +96,6 @@ module.exports = {
 "service":{
   "pName": "服务",
   "pSuccess": [
-    {gname:"uName", p:'名称', t:"h2" },
     {gname:"serFamily", p:'服务类型', inclose: true, t:"producttype",  csc:"arrsel"},
     {gname:"title", p:'简介',t:"h4" },
     {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
@@ -120,7 +116,6 @@ module.exports = {
   "pName": "成品",
   "pSuccess": [
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
-    {gname:"uName", p:'成品名称', t:"h2" },
     {gname:"title", p:'成品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
@@ -138,7 +133,6 @@ module.exports = {
 "goods":{
   "pName": "商品",
   "pSuccess": [
-    {gname: "uName", p:'名称', t:"h2" },
     {inclose: true, gname:"goodstype", p:'商品类别',t:"sObject",  csc:"objsel" },
     {gname:"title", p:'简介',t:"h3" },
     {gname:"desc", p:'描述',t:"p" },
@@ -163,7 +157,6 @@ module.exports = {
   "pName": "商品规格",
   "pSuccess": [
     {gname:"goods", p:'商品', t:"sId", csc:"idsel" },
-    {gname:"uName", p:'名称', t:"h3" },
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"serFamily", p:'服务类型', inclose:false,t:"listsel", aList:['快递送货','货运自提','柜台提货','店铺消费'] },
     {gname:"title", p:'简介',t:"h4" },
@@ -199,7 +192,6 @@ module.exports = {
 "material":{
   "pName": "原材料与包装",
   "pSuccess": [
-    {gname:"uName", p:'材料名称', t:"h3" },
     {gname:"title", p:'材料简述',t:"p" },
     {gname:"dafamily", p:'材料类型',inclose:false,t:"listsel", aList:['自产原料','外购原料','包装'] },
     {gname:"thumbnail", p:'图片',t: "cutImageThumbnail" },
@@ -230,7 +222,6 @@ module.exports = {
 "prodesign":{
   "pName": "生产计划",
   "pSuccess": [
-    {gname:"uName", p:'计划名称', t:"h3" },
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"title", p:'计划简述',t:"h3" },
     {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
@@ -250,7 +241,6 @@ module.exports = {
   "pName": "产品批发",
   "pSuccess": [
     {gname:"product", p:'产品', t:"sId", csc:"idsel" },
-    {gname:"uName", p:'批发品名称', t:"h2" },
     {gname:"title", p:'批发品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
@@ -269,7 +259,6 @@ module.exports = {
   "pName": "原料采供",
   "oprocess": ['采供下单', '原料供应', '原料入库'],
   "pSuccess": [
-    {gname: "uName", p:'原料名称', t:"h3" },
     {gname:"material", p:'原料(包装)', t:"sId",csc:"idsel" },
     { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '供货商', t: "h3", e: '单位名称' },
@@ -289,7 +278,6 @@ module.exports = {
   "pName": "加工入库",
   "oprocess": ['安排生产', '生产加工', '成品入库'],
   "pSuccess": [
-    {gname: "uName", p:'成品名称', t:"h3" },
     {gname:"cargo", p:'成品',t:"sObject", csc:"objsel" },
     { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '加工商', t: "h3", e: '单位名称' },
@@ -309,7 +297,6 @@ module.exports = {
   "pName": "订单处理",
   "oprocess": ['订单确认', '成品出货', '到货确认'],
   "pSuccess": [
-    {gname: "uName", p:'成品名称', t:"h3" },
     {gname:"cargo", p:'成品',t:"sObject", csc:"objsel" },
     { gname: "thumbnail", p: '图片', t: "cutImageThumbnail" },
     { gname: "vUnit", p: '物流商', t: "h3", e: '单位名称' },
