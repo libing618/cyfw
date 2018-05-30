@@ -4,6 +4,7 @@ const { readShowFormat } = require('../../libs/util');
 var app=getApp()
 Page({
   data:{
+    pw: app.sysinfo.pw,
     biType: [
       { gname:"unitName", p:'申请单位', t:"h3" },
       { gname:"sponsorName", p:'发起人姓名', t:"h3" }
@@ -23,6 +24,7 @@ Page({
     readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].dObject).then(req=>{
       that.setData({
         bsType: req,      //流程内容格式
+        navBarTitle: procedureClass.pName     //将页面标题设置成流程名称
         pBewrite: procedureClass.pBewrite,     //流程说明
         pModel: procedureClass.pModel,         //流程写入的数据表名
         aValue: app.procedures[options.approveId],        //流程缓存
@@ -32,9 +34,6 @@ Page({
         cmLength: app.procedures[options.approveId].cManagers.length    //流程审批节点长度
       });
     }).catch(console.error);
-    wx.setNavigationBarTitle({
-      title: procedureClass.pName     //将页面标题设置成流程名称
-    })
   },
 
   aprvClick: function(e){

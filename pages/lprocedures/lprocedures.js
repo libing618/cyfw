@@ -3,6 +3,7 @@ var app = getApp()
 Page ({
   data: {
     pNo: '',                       //流程
+    pw: app.sysinfo.pw,
     mPage: [],                 //页面管理数组
     artId: 0,             //已建数据的ID作为修改标志，则为新建
     pageData: []
@@ -53,11 +54,5 @@ Page ({
   onReachBottom: function () {
     updateData(false,this.data.pNo).then(isupdated=>{ this.setPage(isupdated)});
   },
-  onShareAppMessage: function () {    // 用户点击右上角分享
-    return {
-      title: '侠客岛创业服务平台', // 分享标题
-      desc: '扶贫济困，共享良品。', // 分享描述
-      path: '/pages/manage/manage' // 分享路径
-    }
-  }
+  onShareAppMessage:  require('../../model/initForm').shareMessage
 })

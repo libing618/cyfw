@@ -23,8 +23,8 @@ Page({
     reqData:[
       {gname: "agreement", p:'招募文件',t: "agreeFile"},
       {gname: "agreeState", p:'合同状态',inclose:false,t:"listsel", aList:['签约',' 解约']},
-      {gname: "shopName", p: '店铺名称', t: "thumb" },
-      {gname: "aGeoPoint", p: '店铺地理位置', t: "chooseAd" },
+      {gname: "shopName", p: '店铺名称', t: "h2" },
+      {gname: "shopLogo", p: '店铺标记', t: "thumb" },
       {gname: "address", p: '店铺详细地址', t: "ed"}
     ]
   },

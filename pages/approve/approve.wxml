@@ -6,7 +6,9 @@
   }
   module.exports.fsName=fsName;
 </wxs>
+<import src="../../libs/wepage.wxml" />
 <view class="page">
+  <template is="p_navBar__back" data="{{...pw,navBarTitle}}"/>
   <view class="page__hd">
     <view class="weui-cells__title">{{pBewrite}}</view>
   </view>
