@@ -4,7 +4,7 @@ manage:{
   N101:{"tourl": "/inputedit/f_Role/f_Role","mName": "单位信息" },
   N102:{"tourl": "/index/structure/structure","mName": "组织架构" },
   N103:{"tourl": "/index/procedures/procedures","mName": "流程审批" },
-  N104:{"tourl": "/inputedit/distributor/distributor", "mName": "分销招募" },
+  N104:{"tourl": "/inputedit/distributor/distributor", "mName": "分销商" },
   N105:{"tourl": "/inputedit/distribution/distribution","mName": "货架管理" },
   N106:{"tourl": "/inputedit/accounting/accounting", "mName": "账务中心" },
   N107:{"tourl": "/index/rcustomer/rcustomer","mName": "联系客服" },
