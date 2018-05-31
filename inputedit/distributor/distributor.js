@@ -25,10 +25,10 @@ Page({
       {gname: "agreeState", p:'合同状态',inclose:false,t:"listsel", aList:['签约',' 解约']},
       {gname: "shopName", p: '店铺名称', t: "h2" },
       {gname: "shopLogo", p: '店铺标记', t: "thumb" },
-      {gname: "address", p: '店铺详细地址', t: "ed"}
+      {gname: "address", p: '店铺详细地址', t:"ed"}
     ]
   },
-  distributorLog:{},
+
   onLoad:function(options){
     var that = this;
     if (checkRols(9,app.roleData.user)) {
@@ -40,8 +40,10 @@ Page({
             that.data.pageData[fc.shopId)] = fc;
             that.data.cPage[fc.agreeState].add(fc.shopId);
           })
-          that.setData({ vData: manufactor });
-          that.distributorLog = manufactor;
+          that.setData({
+            cPage:that.data.cPage,
+            pageData: that.data.pageData
+          });
         }
       }).catch( console.error);
     };

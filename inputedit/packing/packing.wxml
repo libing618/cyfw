@@ -1,2 +1,5 @@
-<!--inputedit/packing.wxml-->
-<text>inputedit/packing.wxml</text>
+<view class="container">
+    <view class="list">
+        <button type="primary" class="button" bindtap="simpleUpload">简单上传</button>
+    </view>
+</view>

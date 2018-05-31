@@ -1,4 +1,4 @@
-const { updateData,classInFamily ,isAllData } = require('../../model/initupdate');
+const { updateData,isAllData } = require('../../model/initupdate');
 var app = getApp()
 Page ({
   data: {
@@ -14,11 +14,13 @@ Page ({
   onLoad: function (ops) {        //传入参数为pNo,不得为空
     var that = this;
     that.artid = Number(ops.artId);
-    that.inFamily = classInFamily(ops.pNo);
+    let pClass = require('../../model/procedureclass.js')[ops.pNo];
+    that.inFamily = (typeof pClass.afamily != 'undefined');
     that.isAll = isAllData(ops.pNo);
     that.setData({
       pNo: ops.pNo,
-      artId: isNaN(that.artid) ? ops.pNo : that.artid
+      artId: isNaN(that.artid) ? ops.pNo : that.artid,
+      navBarTitle: isNaN(that.artid) ? pClass.pName : pClass.pName+'--'+pClass.afamily[that.artid]
     });
     that.setPage(true);
   },
@@ -54,5 +56,5 @@ Page ({
   onReachBottom: function () {
     updateData(false,this.data.pNo).then(isupdated=>{ this.setPage(isupdated)});
   },
-  onShareAppMessage:  require('../../model/initForm').shareMessage
+  onShareAppMessage: require('../../model/initForm').shareMessage
 })
