@@ -1,29 +1,11 @@
 // inputedit/packing.js
 var COS = require('../../libs/cos-wx-sdk-v5')
-var config = require('./config')
 
 var cos = new COS({
     getAuthorization: function (params, callback) {//获取签名 必填参数
-
-        // 方法一（推荐）服务器提供计算签名的接口
-        /*
-        wx.request({
-            url: 'SIGN_SERVER_URL',
-            data: {
-                Method: params.Method,
-                Key: params.Key
-            },
-            dataType: 'text',
-            success: function (result) {
-                callback(result.data);
-            }
-        });
-        */
-
-        // 方法二（适用于前端调试）
         var authorization = COS.getAuthorization({
-            SecretId: config.SecretId,
-            SecretKey: config.SecretKey,
+          SecretId: 'AKIDkJdhV4nUM2ThhTxukKflcDZfV5RXt5Ui',
+          SecretKey: 'A5lCRSFpEQN6aqsfDVYMuEI6f081g8LK',
             Method: params.Method,
             Key: params.Key
         });
@@ -44,7 +26,7 @@ var requestCallback =function (err, data) {
 
 var option = {
     data: {
-        list: [],
+      list: [],
     },
 };
 
@@ -55,17 +37,17 @@ option.simpleUpload = function () {
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function (res) {
-            var filePath = res.tempFilePaths[0]
+          var filePath = res.tempFilePaths[0];//wxfbbbc7b7f73ae7fb.o6zAJs41NybK0XgFbUrBA2VyNdVw.zOBxHczLQmQMe305f48099d94d4a82b3d2a27e43baf6.png
             var Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
 
             cos.postObject({
-                Bucket: config.Bucket,
-                Region: config.Region,
+              Bucket: 'lg-la2p7duw-1254249743',
+              Region: 'ap-shanghai',
                 Key: Key,
                 FilePath: filePath,
                 onProgress: function (info) {
                     console.log(JSON.stringify(info));
-                }
+                }//https://lg-la2p7duw-1254249743.cos.ap-shanghai.myqcloud.com/wxfbbbc7b7f73ae7fb.o6zAJs41NybK0XgFbUrBA2VyNdVw.zOBxHczLQmQMe305f48099d94d4a82b3d2a27e43baf6.png
             }, requestCallback);
         }
     })

@@ -37,7 +37,7 @@ Page({
           let fc;
           channel.forEach(csi=>{
             fc = csi.toJSON();
-            that.data.pageData[fc.shopId)] = fc;
+            that.data.pageData[fc.shopId] = fc;
             that.data.cPage[fc.agreeState].add(fc.shopId);
           })
           that.setData({

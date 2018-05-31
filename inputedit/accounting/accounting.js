@@ -8,6 +8,8 @@ var app = getApp();
 
 Page({
   data:{
+    pNo: 'orderlist',                       //流程
+    pw: app.sysinfo.pw,
     reqData: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
     vData: {},
     iClicked: ''
@@ -15,7 +17,7 @@ Page({
   onLoad:function(options){
     var that = this;
     if ( checkRols(9,app.roleData.user) ) {
-      updateData(true,'order').then(proData=>{
+      updateData(true,'orderlist').then(proData=>{
         if (proData){
           that.data.mPage = app.mData.order[app.roleData.user.unit];
           that.data.pageData = app.aData.order;
@@ -42,7 +44,7 @@ Page({
   indexClick: indexClick,
   sumOrders:function(){
     var that = this;
-    new AV.Query('orderlist')
+    new AV.Query('cargoSupplies')
     .equalTo('unitId', app.roleData.uUnit.objectId)
     .greaterThan('updatedAt', new Date(that.data.vData.seDate[0]))
     .lessThan('updatedAt', new Date(that.data.vData.seDate[1])+86400000)
@@ -70,6 +72,7 @@ Page({
   },
   orderquery:function(e){
     this.sumOrders();
-  }
+  },
+  onShareAppMessage: require('../../model/initForm').shareMessage
 
 })

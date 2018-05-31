@@ -1,6 +1,8 @@
 <import src="../import/impedit.wxml" />
 <import src="../../../libs/wedetail.wxml"/>
+<import src="../../libs/wepage.wxml" />
 <view class="page">
+  <template is="p_navBar__back" data="{{...pw,navBarTitle:'帐务中心'}}"/>
   <view class="page__hd weui-cells">
     <form bindsubmit="orderquery">
       <template is="i_sedate" data="{{...reqData[0],c:vData.seDate,n:0}}"></template>

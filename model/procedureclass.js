@@ -221,14 +221,13 @@ module.exports = {
 },
 "prodesign":{
   "pName": "生产计划",
+  "afamily":['原材料供应','加工及包装'],
   "pSuccess": [
     {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
     {gname:"title", p:'计划简述',t:"h3" },
-    {gname:"dafamily", p:'计划周期',inclose:false,t:"listsel", aList:['3年','每年','半年','每季','每月','每日'] },
     {gname:"thumbnail", p:'图片',t: "cutImageThumbnail" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"rawStart", p:'原材料供应起点时间', t:"datetime" },
-    {gname:"packStart", p:'包装加工起点时间', t:"datetime" }
+    {gname:"start_end", p:'起止日期', t:"sedate",endif:false}
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [

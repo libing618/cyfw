@@ -24,7 +24,7 @@ Page({
     readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].dObject).then(req=>{
       that.setData({
         bsType: req,      //流程内容格式
-        navBarTitle: procedureClass.pName     //将页面标题设置成流程名称
+        navBarTitle: procedureClass.pName,     //将页面标题设置成流程名称
         pBewrite: procedureClass.pBewrite,     //流程说明
         pModel: procedureClass.pModel,         //流程写入的数据表名
         aValue: app.procedures[options.approveId],        //流程缓存

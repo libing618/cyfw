@@ -75,8 +75,8 @@ function roleAuthorization(){      //权限表和用户表授权
       .setACL(roleAcl)
       .save()
     })
-  }).catch(wx.showToast({ title: '上级单位授权中发生错误,请联系客服人员。', icon:'none',duration: 2000 })   //保存错误
-}
+  }).catch( wx.showToast({ title: '上级单位授权中发生错误,请联系客服人员。', icon:'none',duration: 2000 }) )  //保存错误
+};
 module.exports = {
 
 initData: function(req, vData) {      //对数据录入或编辑的格式数组和数据对象进行初始化操作
