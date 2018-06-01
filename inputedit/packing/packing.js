@@ -1,57 +1,48 @@
 // inputedit/packing.js
-var COS = require('../../libs/cos-wx-sdk-v5')
-
-var cos = new COS({
-    getAuthorization: function (params, callback) {//获取签名 必填参数
-        var authorization = COS.getAuthorization({
-          SecretId: 'AKIDkJdhV4nUM2ThhTxukKflcDZfV5RXt5Ui',
-          SecretKey: 'A5lCRSFpEQN6aqsfDVYMuEI6f081g8LK',
-            Method: params.Method,
-            Key: params.Key
-        });
-        callback(authorization);
+var {cosUploadFile} = require('../../model/initForm');
+var app = getApp()
+Page({
+  data: {
+    navBarTitle: '编辑--',              //申请项目名称
+    pw: app.sysinfo.pw,
+    sPages: [{
+      pageName: 'editFields'
+    }],
+    selectd: -1,                       //详情项选中字段序号
+    enMenu: 'none',                  //‘插入、删除、替换’菜单栏关闭
+    enIns: true,                  //插入grid菜单组关闭
+    targetId: '0',              //流程申请表的ID
+    dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
+    showModalBox: false,
+    animationData: {},              //弹出动画
+    vData: {},
+    reqData: []
+  },
+  onLoad: function (options) {        //传入参数为tgId或pNo/artId,不得为空
+    var that = this;
+    wx.downloadFile({
+  url: 'https://file.myqcloud.com/',
+  success: function(res) {
+    // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+    if (res.statusCode === 200) {
+        wx.saveFile({
+          tempFilePath: res.tempFilePath,
+          success:(sf)=>{
+            wx.opendDocument({filePath:sf.savedFilePath})
+          }
+        })
     }
-});
-
-var requestCallback =function (err, data) {
-    console.log(err || data);
-    if (err && err.error) {
-        wx.showModal({title: '返回错误', content: '请求失败：' + err.error.Message + '；状态码：' + err.statusCode, showCancel: false});
-    } else if (err) {
-        wx.showModal({title: '请求出错', content: '请求出错：' + err + '；状态码：' + err.statusCode, showCancel: false});
-    } else {
-        wx.showToast({title: '请求成功', icon: 'success', duration: 3000});
-    }
-};
-
-var option = {
-    data: {
-      list: [],
-    },
-};
-
-option.simpleUpload = function () {
-    // 选择文件
-    wx.chooseImage({
+  }
+})
+  },
+  simpleUpload:function () {
+    wx.chooseImage({    // 选择文件
         count: 1, // 默认9
         sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function (res) {
-          var filePath = res.tempFilePaths[0];//wxfbbbc7b7f73ae7fb.o6zAJs41NybK0XgFbUrBA2VyNdVw.zOBxHczLQmQMe305f48099d94d4a82b3d2a27e43baf6.png
-            var Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
-
-            cos.postObject({
-              Bucket: 'lg-la2p7duw-1254249743',
-              Region: 'ap-shanghai',
-                Key: Key,
-                FilePath: filePath,
-                onProgress: function (info) {
-                    console.log(JSON.stringify(info));
-                }//https://lg-la2p7duw-1254249743.cos.ap-shanghai.myqcloud.com/wxfbbbc7b7f73ae7fb.o6zAJs41NybK0XgFbUrBA2VyNdVw.zOBxHczLQmQMe305f48099d94d4a82b3d2a27e43baf6.png
-            }, requestCallback);
+          cosUploadFile(res.tempFilePaths[0]);
         }
     })
-};
-
-//获取应用实例
-Page(option);
+  }
+})

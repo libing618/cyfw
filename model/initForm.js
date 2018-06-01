@@ -2,8 +2,26 @@ const AV = require('../libs/leancloud-storage.js');
 const { updateData } = require('initupdate');
 const menuKeys=['manage', 'plan', 'production', 'customer'];
 const { openWxLogin } = require('../libs/util');
+const COS = require('../../libs/cos-wx-sdk-v5')
+var cos = new COS({
+  getAuthorization: function (params, callback) {//获取签名 必填参数
+    var authorization = COS.getAuthorization({
+      SecretId: 'AKIDkJdhV4nUM2ThhTxukKflcDZfV5RXt5Ui',
+      SecretKey: 'A5lCRSFpEQN6aqsfDVYMuEI6f081g8LK',
+      Method: params.Method,
+      Key: params.Key
+    });
+    callback(authorization);
+  }
+});
 var app = getApp();
-
+function requestCallback(err, data) {
+  if (err && err.error) {
+    wx.showModal({title: '上传文件', content: '请求失败：' + err.error.Message + '；状态码：' + err.statusCode, showCancel: false});
+  } else if (err) {
+    wx.showModal({title: '上传文件', content: '请求出错：' + err + '；状态码：' + err.statusCode, showCancel: false});
+  } else { return data}
+};
 function fetchMenu(roleData) {
   return new Promise((resolve, reject) => {
     new AV.Query('userInit')
@@ -133,5 +151,16 @@ allUnitData: function(dataClass, unitId) {
       }
     });
   });
+},
+
+cosUploadFile: function(filePath){
+  let Key = filePath.substr(filePath.lastIndexOf('/') + 1); // 这里指定上传的文件名
+  cos.postObject({
+    Bucket: 'lg-la2p7duw-1254249743',
+    Region: 'ap-shanghai',
+    Key: Key,
+    FilePath: filePath,
+    onProgress: function (info) { console.log(JSON.stringify(info)) };
+  }, requestCallback);
 }
 }
