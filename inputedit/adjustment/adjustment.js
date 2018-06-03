@@ -1,6 +1,6 @@
 //调整当日成品生产计划
 const AV = require('../../libs/leancloud-storage.js');
-const { checkRols } =  require('../../model/initForm');;
+const { checkRols,shareMessage } =  require('../../model/initForm');
 const {hTabClick} = require('../../libs/util.js');
 const {f_modalRecordView} = require('../../model/controlModal');
 const oClass = require('../../model/procedureclass.js').prodesign;
@@ -8,14 +8,14 @@ var app = getApp();
 
 Page({
   data: {
-    pNo: 'prodesign',                       //流程的序号
+    pNo: 'prodesign',                       //流程
     pw: app.sysinfo.pw,
     ht:{
       navTabs: oClass.afamily,
-      fLength: 2,
+      fLength: oClass.afamily.length,
       pageCk: 0
     },
-    cPage: [[],[]],
+    cPage: [],
     pageData: {},
     sPages: [{
       pageName: 'tabPanel'
@@ -28,18 +28,48 @@ Page({
   onLoad: function (ops) {        //传入参数为pNo,不得为空
     var that = this;
     if (checkRols(1,app.roleData.user)) {  //检查用户操作权限
-      updateTodo(that,'prodesign');
+      updateTodo('prodesign');
     };
   },
 
-  onReady: function () {
-                           //更新缓存以后有变化的数据
+  updateTodo: function(pNo) {    //更新页面显示数据
+    var that = this;
+    return new Promise((resolve, reject) => {
+      var umdata = new Array(oClass.afamily.length);
+      umdata.fill([]);
+      var readProcedure = new AV.Query(pNo);                                      //进行数据库初始化操作
+      var unitId = uId ? uId : app.roleData.uUnit.objectId;
+      readProcedure.equalTo('unitId', unitId);                //除权限和文章类数据外只能查指定单位的数据
+      readProcedure.greaterThan('startTime', new Date());
+      readProcedure.lessThan('endTime', new Date());          //查询本地最新时间后修改的记录
+      readProcedure.ascending('updatedAt');           //按更新时间升序排列
+      readProcedure.limit(1000);                      //取最大数量
+      readProcedure.find().then(results => {
+        var lena = results.length;
+        if (lena > 0) {
+          let aProcedure,aData = {};
+          for (let i = 0; i < lena; i++) {
+            aProcedure = results[i].toJSON();
+            umdata[aProcedure.afamily].unshift(aProcedure.objectId);
+            aData[aProcedure.objectId] = aProcedure;                        //将数据对象记录到本机
+          };
+          that.setData({
+            cPage: umdata,
+            pageData: aData
+          })
+        };
+        resolve(lena > 0);               //数据更新状态
+      }).catch(error => {
+        if (!that.netState) { wx.showToast({ title: '请检查网络！' }) }
+      });
+    }).catch(console.error);
   },
-  onPullDownRefresh: function () {
-    updateTodo(this,'prodesign');;
+
+  onPullDownRefresh: function () {                   //更新缓存以后有变化的数据
+    updateTodo('prodesign');
   },
   onReachBottom: function () {
-    updateTodo(this,'prodesign');;
+    updateTodo('prodesign');
   },
-  onShareAppMessage: require('../../model/initForm').shareMessage
+  onShareAppMessage: shareMessage
 })

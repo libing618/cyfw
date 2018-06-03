@@ -204,6 +204,9 @@ initData: function(req, vData) {      //对数据录入或编辑的格式数组�
           case 'sedate':
             vData[reqField.gname] = [getdate(Date.now()), getdate(Date.now() + 864000000)];
             break;
+          case 'idate':
+            vData[reqField.gname] = getdate(Date.now());
+            break;
           case 'fg' :
             vData[reqField.gname] = 0;
             break;
@@ -282,6 +285,7 @@ fSubmit: function (e) {
     if (typeof that.data.vData[req.gname]=='undefined'){
       emptyField += '《' + req.p + '》';
     } else {
+      if (req.t=='itime') {that.data.vData[req.gname] = Number(that.data.vData[req.gname].replace(':',''))}
       if ( cNumber.indexOf(req.t)>=0 ) { that.data.vData[req.gname] = Number(that.data.vData[req.gname]); }
       if ( cObject.indexOf(req.t)>=0 && typeof that.data.vData[req.gname]=='string') {that.data.vData[req.gname] = JSON.parse(that.data.vData[req.gname])}
     }

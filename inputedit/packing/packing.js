@@ -21,19 +21,19 @@ Page({
   onLoad: function (options) {        //传入参数为tgId或pNo/artId,不得为空
     var that = this;
     wx.downloadFile({
-  url: 'https://file.myqcloud.com/',
-  success: function(res) {
+      url: 'https://lg-la2p7duw-1254249743.cos.ap-shanghai.myqcloud.com/agree/P020130603537924184482.doc',
+      success: function(res) {
     // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
-    if (res.statusCode === 200) {
-        wx.saveFile({
-          tempFilePath: res.tempFilePath,
-          success:(sf)=>{
-            wx.opendDocument({filePath:sf.savedFilePath})
-          }
-        })
-    }
-  }
-})
+        if (res.statusCode === 200) {
+          wx.saveFile({
+            tempFilePath: res.tempFilePath,
+            success:(sf)=>{
+              wx.openDocument({filePath:sf.savedFilePath})
+            }
+          })
+        }
+      }
+    })
   },
   simpleUpload:function () {
     wx.chooseImage({    // 选择文件

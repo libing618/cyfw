@@ -2,7 +2,7 @@ const AV = require('../libs/leancloud-storage.js');
 const { updateData } = require('initupdate');
 const menuKeys=['manage', 'plan', 'production', 'customer'];
 const { openWxLogin } = require('../libs/util');
-const COS = require('../../libs/cos-wx-sdk-v5')
+const COS = require('../libs/cos-wx-sdk-v5')
 var cos = new COS({
   getAuthorization: function (params, callback) {//获取签名 必填参数
     var authorization = COS.getAuthorization({
@@ -160,7 +160,7 @@ cosUploadFile: function(filePath){
     Region: 'ap-shanghai',
     Key: Key,
     FilePath: filePath,
-    onProgress: function (info) { console.log(JSON.stringify(info)) };
+    onProgress: function (info) { console.log(JSON.stringify(info)) }
   }, requestCallback);
 }
 }

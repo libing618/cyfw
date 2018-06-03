@@ -32,7 +32,7 @@ module.exports = {
     let sIdValue = this.data.reqData[n].maData[Number(e.detail.value)].objectId;
     let rvdSet = vdSet(this.data.reqData[n].gname, sIdValue);
     rvdSet['reqData[' + n + '].mn'] = Number(e.detail.value);
-    let sIdNumber = -1, sIdName = 's_' + this.data.reqData[n].gname;
+    let sIdNumber = -1, sIdName = this.data.reqData[n].gname;
     for (let i=0;i<this.data.reqData.length;i++){
       if (this.data.reqData[i].gname==sIdName){
         sIdNumber = i;
@@ -46,6 +46,34 @@ module.exports = {
         rvdSet['vData.' + sIdName] = { code: 0, sName: '点此处进行选择' };
       }
     this.setData(rvdSet);
+    }
+  },
+
+  f_idate: function (e) {                         //日期选择
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0, 2);
+    switch (id) {
+      case 'se':
+        that.setData(rdSet(n, 'inclose', !that.data.reqData[n].inclose));
+        break;
+      case 'pa':
+        that.setData( vdSet( that.data.reqData[n].gname, new Date(e.detail.value) ) );
+        break;
+    }
+  },
+
+  f_itime: function (e) {                         //时间选择
+    var that = this;
+    let n = parseInt(e.currentTarget.id.substring(3));      //数组下标
+    var id = e.currentTarget.id.substring(0, 2);
+    switch (id) {
+      case 'se':
+        that.setData(rdSet(n, 'inclose', !that.data.reqData[n].inclose));
+        break;
+      case 'pa':
+        that.setData(vdSet(that.data.reqData[n].gname, e.detail.value));
+        break;
     }
   },
 

@@ -51,7 +51,7 @@ module.exports = {
   "pModel": "articles"
 },
 "asset":{
-  "pName": "固定资产登记",
+  "pName": "固定资产",
   "pSuccess": [
     {inclose:true, gname:"assetType", p:'固定资产类别',t:"assettype", csc:"arrsel"},
     {gname:"title", p:'固定资产简介',t:"h3" },
@@ -59,7 +59,9 @@ module.exports = {
     {gname:"aGeoPoint", p:'地理位置',t:"chooseAd" },
     {gname:"address", p: '详细地址', t: "modalEditAddress"},
     {gname:"thumbnail", p: '图片简介',t: "cutImageThumbnail" },
-    {gname:"fcode", p: '编号',t: "inScan"  }
+    {gname:"fcode", p: '编号',t: "inScan" },
+    {gname:"manageName", p:'管理人姓名', t:"h4" },
+    {gname:"managePhone", p:'管理人电话', t:"h4" }
   ],
   "pBewrite": "综合条线提出固定资产设置或修改申请，由条线负责人进行审批。",
   "puRoles": [
@@ -98,8 +100,9 @@ module.exports = {
   "pSuccess": [
     {gname:"serFamily", p:'服务类型', inclose: true, t:"producttype",  csc:"arrsel"},
     {gname:"title", p:'简介',t:"h4" },
-    {gname:"aGeoPoint", p: '服务地位置', t: "chooseAd" },
-    {gname:"address", p: '服务地址', t: "modalEditAddress" },
+    {gname:"aGeoPoint", p:'服务地位置', t: "chooseAd" },
+    {gname:"address", p:'服务地址', t: "modalEditAddress" },
+    {gname:"priceClass", p:'计价类型', t: "h3" },
     {gname:"price", p:'价格', t:"dg",csc:"digit" },
     {gname:"serParty", p:'服务方', t:"h4" },
     {gname:"serName", p:'联系人姓名', t:"h4" },
@@ -111,6 +114,35 @@ module.exports = {
     "11"
   ],
   "pModel": "service"
+},
+"share":{
+  "pName": "共享服务",
+  "afamily":['开始','服务','停止'],
+  "pSuccess": [
+    {gname:"service", p:'服务', t:"sId", csc:"idsel" },
+    {gname:"asset", p:'固定资产', t:"sId", csc:"idsel" },
+    {gname:"serFamily", p:'服务类型', inclose: true, t:"producttype",  csc:"arrsel"},
+    {gname:"title", p:'简介',t:"h4" },
+    {gname:"aGeoPoint", p:'服务地位置', t: "chooseAd" },
+    {gname:"address", p:'服务地址', t: "modalEditAddress" },
+    {gname:"fcode", p: '编号',t: "inScan" },
+    {gname:"priceClass", p:'计价类型', t: "h3" },
+    {gname:"price", p:'价格', t:"dg",csc:"digit" },
+    {gname:"serParty", p:'服务方', t:"h4" },
+    {gname:"serName", p:'联系人姓名', t:"h4" },
+    {gname:"serPhone", p:'联系人电话', t:"h4" },
+    {gname:"manageParty", p:'管理方', t:"h4" },
+    {gname:"manageName", p:'管理人姓名', t:"h4" },
+    {gname:"managePhone", p:'管理人电话', t:"h4" },
+    {gname:"startTime", p:'开始时间', t:"itime",endif:false},
+    {gname:"endTime", p:'结束时间', t:"itime",endif:false}
+  ],
+  "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
+  "puRoles": [
+    "12",
+    "11"
+  ],
+  "pModel": "share"
 },
 "cargo":{
   "pName": "成品",
@@ -227,7 +259,8 @@ module.exports = {
     {gname:"title", p:'计划简述',t:"h3" },
     {gname:"thumbnail", p:'图片',t: "cutImageThumbnail" },
     {gname:"dOutput", p:'计划产量', t:"dg",csc:"number" },
-    {gname:"start_end", p:'起止日期', t:"sedate",endif:false}
+    {gname:"startDate", p:'开始日期', t:"idate",endif:false},
+    {gname:"endDate", p:'结束日期', t:"idate",endif:false}
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
