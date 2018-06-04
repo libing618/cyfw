@@ -60,8 +60,7 @@ module.exports = {
     {gname:"address", p: '详细地址', t: "modalEditAddress"},
     {gname:"thumbnail", p: '图片简介',t: "cutImageThumbnail" },
     {gname:"fcode", p: '编号',t: "inScan" },
-    {gname:"manageName", p:'管理人姓名', t:"h4" },
-    {gname:"managePhone", p:'管理人电话', t:"h4" }
+    {gname:"manageParty", p:'管理方', t:"sId", csc:"idsel" }
   ],
   "pBewrite": "综合条线提出固定资产设置或修改申请，由条线负责人进行审批。",
   "puRoles": [
@@ -96,7 +95,7 @@ module.exports = {
   "pModel": "product"
 },
 "service":{
-  "pName": "服务",
+  "pName": "服务项目",
   "pSuccess": [
     {gname:"serFamily", p:'服务类型', inclose: true, t:"producttype",  csc:"arrsel"},
     {gname:"title", p:'简介',t:"h4" },
@@ -104,7 +103,9 @@ module.exports = {
     {gname:"address", p:'服务地址', t: "modalEditAddress" },
     {gname:"priceClass", p:'计价类型', t: "h3" },
     {gname:"price", p:'价格', t:"dg",csc:"digit" },
-    {gname:"serParty", p:'服务方', t:"h4" },
+    {gname: "channel", p:'渠道分成比例%',t:"dg",itype:"digit",csc:"mCost"},
+    {gname: "extension", p:'推广分成比例%',t:"dg",itype:"digit",csc:"mCost"},
+    {gname: "mCost", p:'销售管理总占比', t: "fg"},
     {gname:"serName", p:'联系人姓名', t:"h4" },
     {gname:"serPhone", p:'联系人电话', t:"h4" }
   ],
@@ -117,7 +118,7 @@ module.exports = {
 },
 "share":{
   "pName": "共享服务",
-  "afamily":['开始','服务','停止'],
+  "afamily":['停止','开始','服务'],
   "pSuccess": [
     {gname:"service", p:'服务', t:"sId", csc:"idsel" },
     {gname:"asset", p:'固定资产', t:"sId", csc:"idsel" },

@@ -57,7 +57,7 @@
         "process/process",
         "storage/storage",
         "stocks/stocks",
-        "live/live",
+        "sOrder/sOrder",
         "capital/capital",
         "returns/returns",
         "logistics/logistics",
