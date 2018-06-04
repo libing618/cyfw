@@ -113,7 +113,7 @@ module.exports = {
     }
   },
 
-  i_modalSelectFile: function ({ currentTarget:{id,dataset} }) {            //单项选择面板弹出页
+  i_modalSelectFile: function ({ currentTarget:{id,dataset} }) {            //文件选择面板弹出页
     var that = this;
     let hidePage = {};
     switch (id) {
@@ -374,13 +374,13 @@ module.exports = {
               that.mapCtx.moveToLocation();
               break;
             case 'end':
-            that.mapCtx.getCenterLocation({
-              success: (res)=>{
-                showPage[spmKey + 'latitude'] = res.latitude;
-                showPage[spmKey + 'longitude'] = res.longitude;
-                that.setData(showPage);
-              }
-            });
+              that.mapCtx.getCenterLocation({
+                success: (res)=>{
+                  showPage[spmKey + 'latitude'] = res.latitude;
+                  showPage[spmKey + 'longitude'] = res.longitude;
+                  that.setData(showPage);
+                }
+              });
               break;
           }
         };

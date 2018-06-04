@@ -1,7 +1,8 @@
 //共享信息管理
-const { checkRols } =  require('../../model/initForm');
-const { initupdate } =  require('../../model/initupdate');
-const {f_modalRecordView,f_modalSwitchBox} = require('../../model/controlModal');
+const AV = require('../../libs/leancloud-storage.js');
+const { checkRols } = require('../../model/initForm');
+const { initupdate } = require('../../model/initupdate');
+const {f_modalRecordView} = require('../../model/controlModal');
 const { initData } = require('../import/unitEdit');
 const oClass = require('../../model/procedureclass.js').share;
 var app = getApp()
@@ -22,6 +23,7 @@ Page({
     }],
     showModalBox: false,
     animationData: {},
+    vData: {},
     reqData:oClass.pSuccess
   },
 
@@ -46,7 +48,36 @@ Page({
 
   hTabClick: hTabClick,
 
-  f_modalSwitchBox: f_modalSwitchBox,
+  f_modalSwitchBox: function ({ currentTarget:{id,dataset} }) {            //切换选择弹出页
+    var that = this;
+    let hidePage = {};
+    switch (id) {
+      case 'fSwitch':                  //确认切换到下一数组并返回
+        let arrNext = (that.data.ht.pageCk + 1) == that.data.ht.fLength ? 0 : (that.data.ht.pageCk + 1);
+        AV.Object.createWithoutData('share',that.data.modalId).set('afamily',arrNext).save().then(()=>{
+          that.data.cPage[arrNext].push(that.data.modalId);
+          let oldNo = that.data.cPage[that.data.ht.pageCk].indexOf(that.data.modalId);
+          that.data.cPage[that.data.ht.pageCk].splice(oldNo, 1);
+          hidePage.cPage = that.data.cPage;
+          downModal(that,hidePage)
+        });
+        break;
+      case 'fBack':                  //返回
+        downModal(that,hidePage);
+        break;
+      default:                  //打开弹出页
+        that.data.sPages.push({
+          pageName: 'modalSwitchBox',
+          targetId: id,
+          smtName: that.data.ht.modalBtn[that.data.ht.pageCk]
+        });
+        that.setData({
+          sPages: that.data.sPages
+        });
+        popModal(that)
+        break;
+    }
+  },
 
   fRegisterShare: function({currentTarget:{id}}){
     var that = this;
@@ -57,9 +88,19 @@ Page({
           app.mData.asset[app.roleData.uUnit.objectId].forEach(asId=>{
             services.add(app.aData.asset[asId].manageParty)
           });
-          services = services.map(suId=>{ return updateData(true,'service'),suId});
-          return new Promise.all(services).then(()=>{
+          return new Promise.all(services.map(suId=>{ return updateData(true,'service'),suId})).then(()=>{
+            that.data.reqData = that.data.reqData.map(req=>{
+              if (req.t=='sId') {
+                req.maData = app.mData[req.gname][app.roleData.uUnit.objectId].map(mId=>{
+                  return {
+                      objectId: mId, sName: app.aData[req.gname][mId].uName + ':  ' + app.aData[req.gname][mId].title }
+                  });
+                req.mn = 0;
+              };
+              return req
+            });
 
+            that.setData({reqData:that.data.reqData})
           })
         })
         break;
