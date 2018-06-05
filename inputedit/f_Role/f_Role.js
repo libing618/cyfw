@@ -16,7 +16,7 @@ Page({
     vData: {},                 //编辑值的对象
     unEdit: false,           //新建信息页面,可以提交和保存
     selectd: -1,                       //详情项选中字段序号
-    reqData: [],
+    iFormat: [],
     showModalBox: false,
     animationData: {}
   },
@@ -24,7 +24,6 @@ Page({
   onLoad: function (options) {
     var that = this;
     if (app.roleData.uUnit.name == app.roleData.user.objectId) {       //单位名等于用户ID则为创始人
-      let reqDatas = require('../../model/procedureclass.js')._Role.pSuccess;
       new AV.Query('sengpi')
         .equalTo('unitId', app.roleData.uUnit.objectId)
         .equalTo('dProcedure', 0)
@@ -37,9 +36,9 @@ Page({
             that.data.unEdit = spdata.cInstance > 0 && spdata.cInstance < spdata.cManagers.length;        //流程起点或已结束才能提交
           };
           that.data.dObjectId = app.roleData.user.unit;
-          initData(reqDatas, that.data.vData).then(({reqData, vData, funcArr})=>{
+          initData(app.fData._Role.pSuccess, that.data.vData).then(({iFormat, vData, funcArr})=>{
             funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] });
-            that.data.reqData = reqData;
+            that.data.iFormat = iFormat;
             that.data.vData = vData;
             that.setData( that.data );
           });

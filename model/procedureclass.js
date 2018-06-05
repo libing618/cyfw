@@ -27,8 +27,7 @@ module.exports = {
   "suRoles": [
     "32",
     "31"
-  ],
-  "pModel": "_Role"
+  ]
 },
 "articles":{
   "pName": "文章",
@@ -47,8 +46,7 @@ module.exports = {
   "suRoles": [
     "21",
     "20"
-  ],
-  "pModel": "articles"
+  ]
 },
 "asset":{
   "pName": "固定资产",
@@ -66,8 +64,7 @@ module.exports = {
   "puRoles": [
     "32",
     "31"
-  ],
-  "pModel": "asset"
+  ]
 },
 "product":{
   "pName": "产品",
@@ -91,8 +88,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "product"
+  ]
 },
 "service":{
   "pName": "服务项目",
@@ -114,8 +110,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "service"
+  ]
 },
 "share":{
   "pName": "共享服务",
@@ -143,8 +138,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "share"
+  ]
 },
 "cargo":{
   "pName": "成品",
@@ -161,8 +155,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "cargo"
+  ]
 },
 "goods":{
   "pName": "商品",
@@ -184,8 +177,7 @@ module.exports = {
     "12",
     "11"
   ],
-  "suRoles": ["12"],
-  "pModel": "goods"
+  "suRoles": ["12"]
 },
  "specs":{
   "pName": "商品规格",
@@ -202,8 +194,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "specs"
+  ]
 },
 "promotion":{
   "pName": "众筹团购及促销",
@@ -220,8 +211,7 @@ module.exports = {
   "puRoles": [
     "12",
     "31"
-  ],
-  "pModel": "promotion"
+  ]
 },
 "material":{
   "pName": "原材料与包装",
@@ -235,8 +225,7 @@ module.exports = {
   "puRoles": [
     "11",
     "10"
-  ],
-  "pModel": "material"
+  ]
 },
 "content":{
   "pName": "成品内含原料及包装",
@@ -250,8 +239,7 @@ module.exports = {
   "puRoles": [
     "11",
     "10"
-  ],
-  "pModel": "content"
+  ]
 },
 "prodesign":{
   "pName": "生产计划",
@@ -268,8 +256,7 @@ module.exports = {
   "puRoles": [
     "11",
     "10"
-  ],
-  "pModel": "prodesign"
+  ]
 },
 "wholesale":{
   "pName": "产品批发",
@@ -286,8 +273,7 @@ module.exports = {
   "puRoles": [
     "12",
     "11"
-  ],
-  "pModel": "wholesale"
+  ]
 },
 "rawOperate":{
   "pName": "原料采供",
@@ -298,15 +284,14 @@ module.exports = {
     { gname: "vUnit", p: '供货商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],
-  "pModel": "rawStock",
+  "oModel": "rawStock",
   "oSuccess": [
     { indexField: 'cargo', sumField: ['quantity']},
     { indexField: 'material', sumField: ['deliverTotal'] },
     { indexField: 'material', sumField: ['receiptTotal'] }
   ],
   "ouRoles": [1,0,0],
-  "oBewrite": "产品条线确认采购计划,综合条线采购原料并入库。",
-  "oModel": "rawOperate"
+  "oBewrite": "产品条线确认采购计划,综合条线采购原料并入库。"
 },
 "packOperate":{
   "pName": "加工入库",
@@ -317,15 +302,14 @@ module.exports = {
     { gname: "vUnit", p: '加工商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],
-  "pModel": "packing",
+  "oModel": "packing",
   "oSuccess": [
     { indexField: 'cargo', sumField: ['quantity']},
     { indexField: 'cargo', sumField: ['deliverTotal'] },
     { indexField: 'cargo', sumField: ['receiptTotal'] }
   ],
   "ouRoles": [1,1,0],
-  "oBewrite": "产品条线确认出品计划,产品条线包装并入库。",
-  "oModel": "packOperate"
+  "oBewrite": "产品条线确认出品计划,产品条线包装并入库。"
 },
 "supplies":{
   "pName": "订单处理",
@@ -336,14 +320,13 @@ module.exports = {
     { gname: "vUnit", p: '物流商', t: "h3", e: '单位名称' },
     { gname: "signUser", p: '签收人', t: "h3", e: '签收人名称' }
   ],
-  "pModel": "order",
+  "oModel": "orderlist",
   "oSuccess": [
     { indexField: 'cargo', sumField: ['quantity']},
     { indexField: 'address', sumField: ['deliverTotal'] },
     { indexField: 'address', sumField: ['receiptTotal'] }
   ],
   "ouRoles": [1,1,3],
-  "oBewrite": "产品条线确认订单并出货,服务条线进行店铺确认。",
-  "oModel": "supplies"
+  "oBewrite": "产品条线确认订单并出货,服务条线进行店铺确认。"
 }
 }

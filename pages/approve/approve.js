@@ -19,14 +19,14 @@ Page({
 
   onLoad:function(options){
     var that = this;
-    let procedureClass = require('../../model/procedureclass.js')[app.procedures[options.approveId].dProcedure];
+    let procedureClass = app.fData[app.procedures[options.approveId].dProcedure];
     app.procedures[options.approveId].dObject.unitId = app.procedures[options.approveId].unitId;
     readShowFormat(procedureClass.pSuccess,app.procedures[options.approveId].dObject).then(req=>{
       that.setData({
         bsType: req,      //流程内容格式
         navBarTitle: procedureClass.pName,     //将页面标题设置成流程名称
         pBewrite: procedureClass.pBewrite,     //流程说明
-        pModel: procedureClass.pModel,         //流程写入的数据表名
+        pModel: app.procedures[options.approveId].dProcedure,         //流程写入的数据表名
         aValue: app.procedures[options.approveId],        //流程缓存
         enEdit: app.roleData.uUnit.objectId==app.procedures[options.approveId].unitId,          //本单位的流程允许编辑
         enApprove: app.procedures[options.approveId].cFlowStep.indexOf(app.roleData.user.objectId) >= 0,     //当前用户为流程处理人

@@ -6,7 +6,7 @@ const conversationRole = {
   "客户服务":{participant:9,chairman:6}
 };
 const {i_msgEditSend} = require('../../libs/util.js');
-const { checkRole,checkRols } =  require('../../model/initForm');
+const { checkRols } =  require('../../model/initForm');
 var app = getApp()
 Page({
   data:{
@@ -39,14 +39,13 @@ Page({
     } else {
       if (checkRols(conversationRole[options.ctype].participant,app.roleData.user)){
         cPageSet.announcement = true;    //有通告（直播）窗口
-        cPageSet.chairman = checkRole(conversationRole[options.ctype].participant,app.roleData.user)
+        cPageSet.chairman = conversationRole[options.ctype].participant,app.roleData.user;
         app.fwCs.forEacth(conversation=>{ if (options.ctype == conversation.name){cPageSet.cId=conversation.cId} });
       }
     };
     app.getM(cPageSet.cId).then(updatedmessage=>{
       cPageSet.messages = app.conMsg[cPageSet.cId];
       if (options.pNo && options.artId){
-        let pName = require('../../model/procedureclass.js')[options.pNo].pName;
         let iMsg = {mtype: -1};
         return new Promise((resolve, reject) => {
           if (app.aData[options.pNo][options.artId]){
@@ -58,7 +57,7 @@ Page({
             }).catch(reject(false))
           }
         }).then(()=>{
-          iMsg.mtext = pName+':'+app.aData[options.pNo][options.artId].uName;
+          iMsg.mtext = app.fData[options.pNo].pName+':'+app.aData[options.pNo][options.artId].uName;
           iMsg.mcontent = {pNo:options.pNo,...app.aData[options.pNo][options.artId]};
           app.sendM(iMsg,cPageSet.cId).then(()=>{
             cPageSet.messages = app.conMsg[cPageSet.cId];

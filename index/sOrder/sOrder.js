@@ -2,7 +2,6 @@
 const { checkRols } =  require('../../model/initForm');
 const {f_modalRecordView} = require('../../model/controlModal');
 const { initData } = require('../import/unitEdit');
-const oClass = require('../../model/procedureclass.js').service;
 var app = getApp()
 Page({
   data: {
@@ -15,42 +14,20 @@ Page({
     }],
     showModalBox: false,
     animationData: {},
-    reqData:oClass.pSuccess
+    vFormat:app.fData.service.pSuccess
   },
 
   onLoad: function (options) {
     var that = this;
-    if (checkRols(3,app.roleData.user)) {       //单位名等于用户ID则为创始人
-      let reqDatas = require('../../model/procedureclass.js')[0].pSuccess;
-      let aList = require('../../model/procedureclass.js')[0].afamily;
-      reqDatas.unshift({ gname: "afamily", p: '单位类型', t: "listsel", aList: aList })
-      wx.setNavigationBarTitle({ title: app.roleData.uUnit.uName + '的信息', })
-      new AV.Query('sengpi')
-        .equalTo('unitId', app.roleData.uUnit.objectId)
-        .equalTo('dProcedure', 0)
-        .select(['dObject', 'cInstance', 'dObjectId', 'cManagers'])
-        .descending('createdAt')
-        .first().then((rdata) => {
-          if (rdata) {
-            var spdata = rdata.toJSON();
-            that.data.vData = spdata.dObject;
-            that.data.unEdit = spdata.cInstance > 0 && spdata.cInstance < spdata.cManagers.length;        //流程起点或已结束才能提交
-          };
-          that.data.dObjectId = app.roleData.user.unit;
-          initData(reqDatas, that.data.vData).then(({ reqData, vData, funcArr }) => {
-            funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] });
-            that.data.reqData = reqData;
-            that.data.vData = vData;
-            that.setData(that.data);
-          });
-        }).catch(console.error)
+    if (checkRols(0,app.roleData.user)) {       //负责人或综合条线员工
+
     };
   },
 
   updateService: function(pNo) {    //更新页面显示数据
     var that = this;
     return new Promise((resolve, reject) => {
-      var umdata = new Array(oClass.afamily.length);
+      var umdata = new Array(app.fData.service.afamily.length);
       umdata.fill([]);
       var readProcedure = new AV.Query('service');                                      //进行数据库初始化操作
       var unitId = uId ? uId : app.roleData.uUnit.objectId;

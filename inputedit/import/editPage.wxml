@@ -5,7 +5,7 @@
   <view animation="{{animationData}}" class="modal_attr_box" wx:if="{{showModalBox}}">
     <form bindsubmit="fSubmit">
       <view class="page__bd_spacing" id="{{targetId}}">
-        <block wx:for="{{reqData}}" wx:key="index">
+        <block wx:for="{{iFormat}}" wx:key="index">
           <template is="i_{{item.t}}" data="{{...item,c:vData[item.gname],n:index}}"></template>
         </block>
       </view>

@@ -1,4 +1,4 @@
-<import src="../import/impedit.wxml" />
+iFormat<import src="../import/impedit.wxml" />
 <import src="../../libs/wepage.wxml" />
 <view class="page">
   <template is="p_navBar__headTab" data="{{...pw,...ht}}"/>
@@ -22,6 +22,6 @@
     </view>
   </view>
   <view wx:else>
-    <template is="p_{{sPages[sPages.length-1].pageName}}" data="{{...sPages[sPages.length-1],showModalBox,animationData,vData,pageData,reqData}}"/>
+    <template is="p_{{sPages[sPages.length-1].pageName}}" data="{{...sPages[sPages.length-1],showModalBox,animationData,vData,pageData,iFormat}}"/>
   </view>
 </view>

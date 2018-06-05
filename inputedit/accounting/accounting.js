@@ -10,7 +10,7 @@ Page({
   data:{
     pNo: 'orderlist',                       //流程
     pw: app.sysinfo.pw,
-    reqData: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
+    iFormat: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
     vData: {},
     iClicked: ''
   },

@@ -3,7 +3,6 @@ const AV = require('../../libs/leancloud-storage.js');
 const { checkRols,shareMessage } =  require('../../model/initForm');
 const {hTabClick} = require('../../libs/util.js');
 const {f_modalRecordView} = require('../../model/controlModal');
-const oClass = require('../../model/procedureclass.js').prodesign;
 var app = getApp();
 
 Page({
@@ -11,8 +10,8 @@ Page({
     pNo: 'prodesign',                       //流程
     pw: app.sysinfo.pw,
     ht:{
-      navTabs: oClass.afamily,
-      fLength: oClass.afamily.length,
+      navTabs: app.fData.prodesign.afamily,
+      fLength: app.fData.prodesign.afamily.length,
       pageCk: 0
     },
     cPage: [],
@@ -22,10 +21,10 @@ Page({
     }],
     showModalBox: false,
     animationData: {},
-    reqData:oClass.pSuccess
+    iFormat:app.fData.prodesign.pSuccess
   },
 
-  onLoad: function (ops) {        //传入参数为pNo,不得为空
+  onLoad: function (ops) {        //传入参数为pNo
     var that = this;
     if (checkRols(1,app.roleData.user)) {  //检查用户操作权限
       updateTodo('prodesign');
@@ -35,7 +34,7 @@ Page({
   updateTodo: function(pNo) {    //更新页面显示数据
     var that = this;
     return new Promise((resolve, reject) => {
-      var umdata = new Array(oClass.afamily.length);
+      var umdata = new Array(app.fData.prodesign.afamily.length);
       umdata.fill([]);
       var readProcedure = new AV.Query(pNo);                                      //进行数据库初始化操作
       var unitId = uId ? uId : app.roleData.uUnit.objectId;

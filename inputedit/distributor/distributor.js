@@ -20,7 +20,7 @@ Page({
     }],
     showModalBox: false,
     animationData: {},
-    reqData:[
+    vFormat:[
       {gname: "agreement", p:'招募文件',t: "agreeFile"},
       {gname: "agreeState", p:'合同状态',inclose:false,t:"listsel", aList:['签约',' 解约']},
       {gname: "shopName", p: '店铺名称', t: "h2" },

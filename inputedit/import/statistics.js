@@ -9,7 +9,7 @@ var app = getApp();
 
 Page({
   data:{
-    reqData: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
+    iFormat: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
     vData: {},
     iClicked: '0'
   },

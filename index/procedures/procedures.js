@@ -1,10 +1,9 @@
 //审批流程列表
 const AV = require('../../libs/leancloud-storage.js');
-const pClass = require('../../model/procedureclass.js');
 var app = getApp();
 function ats(){
   let rats = [{},{},{}], j;
-  for (j in pClass) {
+  for (j in app.fData) {
     if (app.mData.procedures[j]) {
       app.mData.procedures[j].forEach(mpoId => {
         if (typeof rats[app.procedures[mpoId].apState][j] == 'undefined') { rats[app.procedures[mpoId].apState][j] = [] };
@@ -36,8 +35,8 @@ Page({
 
   onLoad:function(options){
     let procedure;
-    for (procedure in pClass) {
-      this.data.pClassName[procedure] = pClass[procedure].pName;
+    for (procedure in app.fData) {
+      this.data.pClassName[procedure] = app.fData[procedure].pName;
       if (!app.mData.procedures[procedure]) { app.mData.procedures[procedure]=[] }
     };
     this.setData({

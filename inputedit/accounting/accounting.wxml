@@ -5,7 +5,7 @@
   <template is="p_navBar__back" data="{{...pw,navBarTitle:'帐务中心'}}"/>
   <view class="page__hd weui-cells">
     <form bindsubmit="orderquery">
-      <template is="i_sedate" data="{{...reqData[0],c:vData.seDate,n:0}}"></template>
+      <template is="i_sedate" data="{{...iFormat[0],c:vData.seDate,n:0}}"></template>
       <button class="weui-btn" formType="submit">查询该时间段交易</button>
     </form>
   </view>

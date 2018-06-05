@@ -1,19 +1,18 @@
 //原材料
 const AV = require('../../libs/leancloud-storage.js');
 const supplies = require('../../model/supplies.js');
-const oClass = require('../../model/procedureclass.js').rawOperate;
 const { indexClick,binddata } = require('../../libs/util.js');
 const { integration } = require('../../model/initupdate');
 const { checkRols,unitData } = require('../../model/initForm.js');
 var app = getApp()
 Page({
   data: {
-    oState: 0,                       //流程的序号
+    pNo: 'rawOperate',                       //流程
     mPage: [],                 //页面管理数组
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
     pageData: [],
     iClicked: '0',
-    reqData:oClass.pSuccess
+    iFormat:app.fData.rawOperate.pSuccess
   },
   subscription: {},
   indexField:'',      //定义索引字段
@@ -39,7 +38,7 @@ Page({
     supplieQuery.equalTo('unitId',app.roleData.uUnit.objectId);                //只能查本单位数据
     supplieQuery.limit(1000);                      //取最大数量
     const setReqData = this.setReqData.bind(this);
-    return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then( ([reqData,subscription])=> {
+    return Promise.all([supplieQuery.find().then(setReqData), supplieQuery.subscribe()]).then( ([iFormat,subscription])=> {
       this.subscription = subscription;
       if (this.unbind) this.unbind();
       this.unbind = binddata(subscription, arp, setReqData);
@@ -68,14 +67,14 @@ Page({
 
   onLoad: function (ops) {        //传入参数为oState,不得为空
     var that = this;
-    if (checkRols(oClass.ouRoles[ops.oState],app.roleData.user)){  //检查用户操作权限
-      that.indexField = oClass.oSuccess[ops.oState].indexField;
-      that.sumField = oClass.oSuccess[ops.oState].sumField;
+    if (checkRols(app.fData.rawOperate.ouRoles[ops.oState],app.roleData.user)){  //检查用户操作权限
+      that.indexField = app.fData.rawOperate.oSuccess[ops.oState].indexField;
+      that.sumField = app.fData.rawOperate.oSuccess[ops.oState].sumField;
       integration('rawStock','cargo',app.roleData.uUnit.objectId).then(isupdated=>{
         that.setData({cargo:unitData('cargo',app.roleData.uUnit.objectId)});
         that.fetchData.bind(that) ;
         wx.setNavigationBarTitle({
-          title: app.roleData.uUnit.nick + '的' + oClass.oprocess[ops.oState]
+          title: app.roleData.uUnit.nick + '的' + app.fData.rawOperate.oprocess[ops.oState]
         });
       }).catch( ()=>{
         wx.showToast({ title: '无库存数据！', duration: 2500 });

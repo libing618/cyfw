@@ -9,19 +9,18 @@ Page({
     pw: app.sysinfo.pw,
     sPages: ['viewRecord'],
     vData: {},
-    reqData: []
+    vFormat: []
   },
   inFamily:false,
 
   onLoad: function(options) {
     var that = this ;
-    that.data.navBarTitle = app.roleData.user.emailVerified ? app.roleData.uUnit.uName : '体验用户';     //用户已通过单位和职位审核
+    that.data.navBarTitle = app.roleData.user.emailVerified ? app.roleData.uUnit.nick : '体验用户';     //用户已通过单位和职位审核
     that.data.pNo = options.pNo;
     let artid = Number(options.artId);
-    let pClass = require('../../model/procedureclass.js')[that.data.pNo];
-    that.inFamily = (typeof pClass.afamily != 'undefined');
+    that.inFamily = (typeof app.fData[that.data.pNo].afamily != 'undefined');
     that.data.vData = app.aData[that.data.pNo][options.artId];
-    let showFormat = pClass.pSuccess;
+    let showFormat = app.fData[that.data.pNo].pSuccess;
     switch (that.data.pNo) {
       case 'goods':
         showFormat = [
@@ -36,9 +35,9 @@ Page({
         break;
     };
     readShowFormat(showFormat, that.data.vData).then(req=>{
-      that.data.reqData=req;
-      that.data.navBarTitle += '的' + (that.inFamily ? pClass.afamily[that.data.vData.afamily] : pClass.pName);
-      that.data.enUpdate = that.data.vData.unitId==app.roleData.uUnit.objectId && typeof pClass.suRoles!='undefined';  //本单位信息且流程有上级审批的才允许修改
+      that.data.vFormat=req;
+      that.data.navBarTitle += '的' + (that.inFamily ? app.fData[that.data.pNo].afamily[that.data.vData.afamily] : app.fData[that.data.pNo].pName);
+      that.data.enUpdate = that.data.vData.unitId==app.roleData.uUnit.objectId && typeof app.fData[that.data.pNo].suRoles!='undefined';  //本单位信息且流程有上级审批的才允许修改
       that.setData(that.data);
     });
   },

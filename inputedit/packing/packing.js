@@ -16,7 +16,7 @@ Page({
     showModalBox: false,
     animationData: {},              //弹出动画
     vData: {},
-    reqData: []
+    iFormat: []
   },
   onLoad: function (options) {        //传入参数为tgId或pNo/artId,不得为空
     var that = this;
