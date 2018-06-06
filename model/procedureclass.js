@@ -147,6 +147,7 @@ module.exports = {
     {gname:"title", p:'成品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
+    {gname:"content", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
     {gname:"cargoStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
     {gname: "canSupply", p:'可供销售', t: "fg"}
@@ -227,13 +228,16 @@ module.exports = {
     "10"
   ]
 },
-"content":{
-  "pName": "成品内含原料及包装",
+"sOrder":{
+  "pName": "服务订单",
   "pSuccess": [
-    {gname:"cargo", p:'成品', inclose: true,t:"sObject", csc:"objsel" },
-    {gname:"material", p:'材料(包装)', t:"sId",csc:"idsel" },
-    {gname:"dOutput", p:'内含数量', t:"dg",csc:"number" },
-    {gname:"price", p:'价格预算', t:"dg",csc:"digit"}
+    {p:"账本ID",gname:"ledger_id",t:"String",len:32},
+    {p:"资产转出帐户",gname:"src_account",t:"String",len:64},
+    {p:"资产转入帐户",gname:"dst_account",t:"String",len:64},
+    {p:"资产类型",gname:"asset_type",t:"int"},
+    {p:"转让份额",gname:"amount",t:"int"},
+    {p:"要求签收时间",gname:"sign_in_date",t:"datetime"},
+    {p:"扩展信息",gname:"extra_info",t:"JSON"}
   ],
   "pBewrite": "产品条线提出产品设置或修改申请，由产品条线负责人进行审批。",
   "puRoles": [
