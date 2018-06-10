@@ -56,6 +56,30 @@ function readSumData(className,sumField,updAt,atName){
 module.exports = {
   getMonInterval:getMonInterval,
 
+  cargoSum: function (fields) {
+    return new Promise((resolve, reject) => {
+      let sLength = fields.length;
+      let fieldSum = new Array(sLength);
+      let mSum = {};
+      fieldSum.fill(0);         //定义汇总数组长度且填充为0
+      if (app.mData.product[app.roleData.uUnit.objectId]) {
+        app.mData.product[app.roleData.uUnit.objectId].forEach(mId => {
+          mSum[mId] = [];
+          for (let i = 0; i < sLength; i++) { mSum[mId].push(0) };
+          if (app.aData.product[mId].cargo){
+            app.aData.product[mId].cargo.forEach(aId => {
+              for (let i = 0; i < sLength; i++) {
+                fieldSum[i] += app.aData.cargo[aId][fields[i]];
+                mSum[mId][i] = mSum[mId][i] + app.aData.cargo[aId][fields[i]];
+              }
+            })
+          };
+        })
+      }
+      resolve({ rSum: fieldSum, mSum });
+    }).catch(console.error);
+  },
+
   readRoleData: function(className){
     updateRoleData(true,className).then(()=>{
       let readDown = Promise.resolve(updateRoleData(false, className)).then(notEnd => {

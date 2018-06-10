@@ -18,7 +18,7 @@ Page({
     vData: {},
     iFormat: []
   },
-  onLoad: function (options) {        //传入参数为tgId或pNo/artId,不得为空
+  onLoad: function (options) {        //传入参数为tgId或pNo/artId
     var that = this;
     wx.downloadFile({
       url: 'https://lg-la2p7duw-1254249743.cos.ap-shanghai.myqcloud.com/agree/P020130603537924184482.doc',

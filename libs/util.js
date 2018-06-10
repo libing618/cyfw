@@ -20,13 +20,12 @@ openWxLogin: function(roleData) {            //注册登录（本机登录状态
                   success: function (wxuserinfo) {
                     if (wxuserinfo) {
                       AV.Cloud.run('wxLogin' + wxappNumber, { code: wxlogined.code, encryptedData: wxuserinfo.encryptedData, iv: wxuserinfo.iv }).then(function (wxuid) {
-                        let signuser = {};
-                        signuser['uid'+ wxappNumber] = wxuid.oId;
-                        AV.User.loginWithAuthDataAndUnionId(signuser,'weapp_union', wxuid.uId, {
-                          unionIdPlatform: 'weixin', // 指定为 weixin 即可通过 unionid 与其他 weixin 平台的帐号打通
-                          asMainAccount: true,
-                        }).then((statuswx) => {    //用户在云端注册登录
-                          if (statuswx.createdAt != statuswx.updatedAt) {
+                        AV.User.loginWithAuthDataAndUnionId(
+                          { openid: wxuid.oId,access_token: wxuid.session, expires_in: wxappNumber},
+                          'weixin', wxuid.uId,
+                          { unionIdPlatform: 'weixin',asMainAccount: true}
+                        ).then((statuswx) => {    //用户在云端注册登录
+                          if (statuswx.nickName && statuswx['wxapp'+wxappNumber]) {
                             roleData.user = statuswx.toJSON();
                             resolve(roleData);                        //客户已注册在本机初次登录成功
                           } else {                         //客户在本机授权登录则保存信息

@@ -147,7 +147,7 @@ module.exports = {
     {gname:"title", p:'成品简介',t:"h4" },
     {gname:"thumbnail", p:'图片简介',t: "cutImageThumbnail" },
     {gname:"s_product", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
-    {gname:"content", p:'外观尺寸重量', t:"arrplus", csc:"arrsel" },
+    {gname:"content", p:'内含物', t:"content", csc:"arrsel" },
     {gname:"retail_price", p:'零售价', t:"dg",itype:"digit",csc:"digit" },
     {gname:"cargoStock", p:'库存', t:"dg",itype:"number", csc:"canSupply"},
     {gname: "canSupply", p:'可供销售', t: "fg"}
