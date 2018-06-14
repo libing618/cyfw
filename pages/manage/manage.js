@@ -31,7 +31,8 @@ Page({
         mSwiper: app.mData.articles[0],
         mPage: [app.mData.articles[1], app.mData.articles[2], app.mData.articles[3]],
         pageData: app.aData.articles
-      })
+      });
+      if (!app.roleData.user.emailVerified){ wx.hideTabBar() };
     });
   },
 

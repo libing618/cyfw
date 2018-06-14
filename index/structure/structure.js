@@ -110,12 +110,11 @@ Page({
 		}
 		sUser.set('userRolName',sRole);
 		sUser.set('userRol',rQuery);
-		return sUser.save().then(function(){
+		return sUser.save().then(()=>{
 		  return '授权成功';
-		},function(error){
-		  return error;
-		});
-	}),
+		}).catch(console.error);
+
+	},
 
 	fSpicker: function(e) {                         //选择岗位和条线
 		let rval = e.detail.value;

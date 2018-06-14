@@ -33,7 +33,33 @@ function onNet() {
     });
   })
 };
+function cheSys() {
+  return new Promise((resolve, reject) => {
+    wx.getSystemInfo({                     //读设备信息
+      success: function (res) {
+        let sdkvc = res.SDKVersion.split('.');
+        let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
+        if (sdkVersion < 2.09) {
+          wx.showModal({
+            title: '提示',
+            content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。',
+            compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
+          })
+        } else {
+          res.pw = {
+            statusBar: res.statusBarHeight,
+            capsule: res.screenHeight - res.windowHeight - 8,
+            cwHeight: res.windowHeight - res.statusBarHeight
+          };
+        };
+        resolve(res)
+      }
+    });
+  });
+};
+
 App({
+  sysinfo: cheSys(),
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   fData: require('./model/procedureclass'),
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
@@ -173,33 +199,9 @@ App({
     return rMessage;
   },
 
-  onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
-    var that = this;            //调用应用实例的方法获取全局数据
-    wx.getSystemInfo({                     //读设备信息
-      success: function (res) {
-        that.sysinfo = res;
-        let sdkvc = res.SDKVersion.split('.');
-        let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
-        if (sdkVersion < 2.0) {
-          wx.showModal({
-            title: '提示',
-            content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。',
-            compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
-          })
-        } else {
-          AV.Cloud.run('writers', ).then(myip => { that.sysinfo.userip=myip; })
-          that.sysinfo.pw={
-            statusBar: res.statusBarHeight,
-            capsule: res.screenHeight - res.windowHeight-8,
-            cwHeight: res.windowHeight - res.statusBarHeight
-          }
-        };
-      }
-    });
-  },
-
   onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;
+    AV.Cloud.run('writers', ).then(myip => { that.sysinfo.userip = myip; })
     wx.onNetworkStatusChange(res => {
       if (!res.isConnected) {
         that.netState = false;

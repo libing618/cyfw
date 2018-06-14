@@ -5,10 +5,8 @@ Page({
   data:{
     user: {},
     pw: app.sysinfo.pw,
-    navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender==1 ? '先生' :'女士'),
     sysheight: app.sysinfo.windowHeight-300,
     swcheck: true,
-    iName: app.roleData.user.uName,
     uName: '',
     phonen: '',
     vcoden: '',
@@ -48,17 +46,20 @@ Page({
   onLoad: function () {
     var that = this;
     if (app.roleData.user.unit!='0') {
+      that.data.uName = app.roleData.uUnit.uName;
       if (app.roleData.uUnit.name == app.roleData.user.objectId) {
         that.data.cUnitInfo = '您创建的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
       } else {
-        that.data.cUnitInfo = '您工作的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
+        that.data.cUnitInfo = '您申请的' + (app.roleData.user.emailVerified ? '' : '岗位正在审批中')
       }
     }
     that.setData({		    		// 获得当前用户
       user: app.roleData.user,
+      iName: app.roleData.user.uName,
+      navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender == 1 ? '先生' : '女士'),
       activeIndex: app.roleData.user.mobilePhoneVerified ? "1" : "0",
       cUnitInfo: that.data.cUnitInfo,
-      vc: app.roleData.uUnit
+      uName: that.data.uName 
     })
   },
 
@@ -160,7 +161,7 @@ Page({
 
   makeunit: function(e) {                         //创建单位并申请负责人岗位
     var that = this;
-		var reqUnitName = e.detail.value.uName;
+		var reqUnitName = e.detail.value.unitName;
     if (reqUnitName){
       var fSeatch = new AV.Query('_Role');
       fSeatch.equalTo('uName',reqUnitName);
