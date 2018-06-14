@@ -45,7 +45,7 @@ Page({
     };
   },
 
-  hTabClick: hTabClick,
+  hTabClick: require('../../libs/util').hTabClick,
 
   f_modalSwitchBox: function ({ currentTarget:{id,dataset} }) {            //切换选择弹出页
     var that = this;

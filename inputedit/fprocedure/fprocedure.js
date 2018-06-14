@@ -7,7 +7,7 @@ Page({
     navBarTitle: '编辑--',              //申请项目名称
     pw: app.sysinfo.pw,
     sPages: [{
-      pageName: 'editFields'
+      pageName: 'tabPanelIndex'
     }],
     selectd: -1,                       //详情项选中字段序号
     enMenu: 'none',                  //‘插入、删除、替换’菜单栏关闭
