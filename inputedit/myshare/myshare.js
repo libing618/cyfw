@@ -3,7 +3,6 @@ const AV = require('../../libs/leancloud-storage.js');
 const { checkRols } = require('../../model/initForm');
 const { initupdate } = require('../../model/initupdate');
 const {f_modalRecordView} = require('../../model/controlModal');
-const { initData } = require('../import/unitEdit');
 var app = getApp()
 Page({
   data: {

@@ -27,7 +27,7 @@ function fetchMenu(roleData) {
     new AV.Query('userInit')
     .notEqualTo('updatedAt', new Date(roleData.wmenu.updatedAt))
     .select(menuKeys)
-    .equalTo('objectId', roleData.user.userRol.objectId)
+    .equalTo('initName', roleData.user.userRolName)
     .find().then(fetchMenu => {
       if (fetchMenu.length > 0) {                          //菜单在云端有变化
         roleData.wmenu = fetchMenu[0].toJSON();

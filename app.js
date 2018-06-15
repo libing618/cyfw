@@ -21,52 +21,17 @@ const realtime = new Realtime({
 });
 function onNet() {
   return new Promise((resolve, reject) => {
-    wx.getNetworkType({
-      success: function (res) {
-        if (res.networkType == 'none') {
-          resolve(false);
-          wx.showToast({ title: '请检查网络！' });
-        } else {
-          resolve(true);
-        }
-      }
-    });
+    
   })
-};
-function cheSys() {
-  return new Promise((resolve, reject) => {
-    wx.getSystemInfo({                     //读设备信息
-      success: function (res) {
-        let sdkvc = res.SDKVersion.split('.');
-        let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
-        if (sdkVersion < 2.09) {
-          wx.showModal({
-            title: '提示',
-            content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。',
-            compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
-          })
-        } else {
-          res.pw = {
-            statusBar: res.statusBarHeight,
-            capsule: res.screenHeight - res.windowHeight - 8,
-            cwHeight: res.windowHeight - res.statusBarHeight
-          };
-        };
-        resolve(res)
-      }
-    });
-  });
 };
 
 App({
-  sysinfo: cheSys(),
   roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
   fData: require('./model/procedureclass'),
   mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
   aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
   aCount : wx.getStorageSync('aCount') || require('globaldata.js').aData,
   procedures: wx.getStorageSync('procedures') || {},              //读流程的缓存
-  netState: onNet(),
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
@@ -199,9 +164,40 @@ App({
     return rMessage;
   },
 
-  onShow: function ({ path, query, scene, shareTicket, referrerInfo }) {
+  onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;
-    AV.Cloud.run('writers', ).then(myip => { that.sysinfo.userip = myip; })
+    return new Promise((resolve, reject) => {
+      wx.getSystemInfo({                     //读设备信息
+        success: function (res) {
+          that.sysinfo = res;
+          that.sysinfo.pw = {
+            statusBar: res.statusBarHeight,
+            capsule: res.screenHeight - res.windowHeight - 8,
+            cwHeight: res.windowHeight - res.statusBarHeight
+          };
+          let sdkvc = res.SDKVersion.split('.');
+          let sdkVersion = parseFloat(sdkvc[0] + '.' + sdkvc[1] + sdkvc[2]);
+          if (sdkVersion < 2.09) {
+            wx.showModal({
+              title: '提示',
+              content: '当前微信版本过低，无法正常使用，请升级到最新微信版本后重试。',
+              compressed(res) { setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000); }
+            })
+          };
+        }
+      });
+    });
+    wx.getNetworkType({
+      success: function (res) {
+        if (res.networkType == 'none') {
+          that.netState = false;
+          wx.showToast({ title: '请检查网络！' });
+        } else {
+          that.netState = true;
+          AV.Cloud.run('writers', ).then(myip => { that.sysinfo.userip = myip; })
+        }
+      }
+    });
     wx.onNetworkStatusChange(res => {
       if (!res.isConnected) {
         that.netState = false;

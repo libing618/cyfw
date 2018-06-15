@@ -7,17 +7,10 @@ Page({
   data: {
     autoplay: true,
     scrollTop : 0,
-    mSwiper: app.mData.articles[0],
-    pw: app.sysinfo.pw,
-    unAuthorize: app.roleData.user.objectId=='0',
-    mPage: [app.mData.articles[1],app.mData.articles[2],app.mData.articles[3]],
     pNo: 'articles',                       //文章类信息
-    pageData: {},
     fLength:3,
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
-    pageCk: app.mData.pCk1,
-    wWidth: app.sysinfo.windowWidth,
-    grids: []
+    pageCk: app.mData.pCk1
   },
 
   onLoad: function () {
@@ -26,6 +19,8 @@ Page({
       that.data.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage, 'manage');
       that.data.grids[0].mIcon = app.roleData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
       that.setData({
+        pw: app.sysinfo.pw,
+        wWidth: app.sysinfo.windowWidth,
         grids: that.data.grids,
         unAuthorize: app.roleData.user.objectId == '0',
         mSwiper: app.mData.articles[0],
