@@ -46,7 +46,7 @@ module.exports={
     prodesign: [],              //已发布生产计划缓存数组
     procedures: {},              //流程分类缓存数组
     proceduresCk: '0',
-    pAt:{}
+    pAt:{"articles":[0, 0],"asset":{},"product":{},"service":{},"cargo":{},"goods":{},"specs":{},"promotion":{},"material":{},"sOrder":{},"prodesign":{},"wholesale":{},"rawStock":{},"packing":{},"order":{}}
   },
   aData:{"articles":{},"asset":{},"product":{},"service":{},"cargo":{},"goods":{},"specs":{},"promotion":{},"material":{},"sOrder":{},"prodesign":{},"wholesale":{},"rawStock":{},"packing":{},"order":{}}
 }

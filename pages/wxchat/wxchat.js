@@ -58,7 +58,8 @@ Page({
           }
         }).then(()=>{
           iMsg.mtext = app.fData[options.pNo].pName+':'+app.aData[options.pNo][options.artId].uName;
-          iMsg.mcontent = {pNo:options.pNo,...app.aData[options.pNo][options.artId]};
+          iMsg.mcontent = app.aData[options.pNo][options.artId];
+          iMsg.mcontent.pNo = options.pNo;
           app.sendM(iMsg,cPageSet.cId).then(()=>{
             cPageSet.messages = app.conMsg[cPageSet.cId];
             that.setData(cPageSet);

@@ -57,7 +57,6 @@
         "process/process",
         "storage/storage",
         "stocks/stocks",
-        "sOrder/sOrder",
         "capital/capital",
         "returns/returns",
         "logistics/logistics",
@@ -78,6 +77,7 @@
         "distributor/distributor",
         "distribution/distribution",
         "packing/packing",
+        "sOrder/sOrder",
         "fprocedure/fprocedure",
         "supply/supply"
       ]

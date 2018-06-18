@@ -1,7 +1,7 @@
 //共享信息管理
 const { checkRols } =  require('../../model/initForm');
 const {f_modalRecordView} = require('../../model/controlModal');
-const { initData } = require('../import/unitEdit');
+const { initData, fSubmit } = require('../import/unitEdit');
 var app = getApp()
 Page({
   data: {
@@ -20,11 +20,11 @@ Page({
   onLoad: function (options) {
     var that = this;
     if (checkRols(0,app.roleData.user)) {       //负责人或综合条线员工
-
+      that.updateService()
     };
   },
 
-  updateService: function(pNo) {    //更新页面显示数据
+  updateService: function() {    //更新页面显示数据
     var that = this;
     return new Promise((resolve, reject) => {
       var umdata = new Array(app.fData.service.afamily.length);

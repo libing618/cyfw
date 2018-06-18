@@ -25,9 +25,9 @@ function requestCallback(err, data) {
 function fetchMenu(roleData) {
   return new Promise((resolve, reject) => {
     new AV.Query('userInit')
+    .equalTo('initName', roleData.user.userRolName)
     .notEqualTo('updatedAt', new Date(roleData.wmenu.updatedAt))
     .select(menuKeys)
-    .equalTo('initName', roleData.user.userRolName)
     .find().then(fetchMenu => {
       if (fetchMenu.length > 0) {                          //菜单在云端有变化
         roleData.wmenu = fetchMenu[0].toJSON();
@@ -94,7 +94,9 @@ loginAndMenu: function (lcUser,roleData) {
     if (roleData.user.objectId != '0') {             //用户如已注册并在本机登录过,则有数据缓存，否则进行注册登录
       if (roleData.user.mobilePhoneVerified) {
         fetchMenu(roleData).then((rfmData) => { resolve(rfmData) });
-      } else { resolve(roleData) };
+      } else {
+        resolve(roleData)
+      };
     } else {
       wx.getSetting({
         success:(res)=> {

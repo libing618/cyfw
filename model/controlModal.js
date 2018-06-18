@@ -108,9 +108,11 @@ module.exports = {
       case 'fSelect':                  //选定返回
         let nowPage = that.data.sPages[that.data.sPages.length-1];
         if (that.data.selectd<0){
-          hidePage['vData.'+nowPage.gname] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+          hidePage['vData.'+nowPage.gname] = that.data.pageData[that.data.idClicked];
+          hidePage['vData.' + nowPage.gname].pNo = nowPage.pNo;
         } else {
-          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] =  { pNo: nowPage.pNo, ...that.data.pageData[that.data.idClicked] };
+          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] = that.data.pageData[that.data.idClicked];
+          hidePage['vData.' + nowPage.gname + '[' + that.data.selectd + ']'].pNo = nowPage.pNo;
         }
         downModal(that,hidePage);
         break;
@@ -130,9 +132,9 @@ module.exports = {
       case 'fSelect':                  //选定返回
         let nowPage = that.data.sPages[that.data.sPages.length-1];
         if (that.data.selectd<0){
-          hidePage['vData.'+nowPage.gname] =  { ...that.data.pageData[that.data.idClicked] };
+          hidePage['vData.'+nowPage.gname] =  that.data.pageData[that.data.idClicked];
         } else {
-          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] =  { ...that.data.pageData[that.data.idClicked] };
+          hidePage['vData.'+nowPage.gname+'['+that.data.selectd+']'] =  that.data.pageData[that.data.idClicked];
         }
         downModal(that,hidePage);
         break;
@@ -298,6 +300,7 @@ module.exports = {
           app.roleData.sUnit = nowPage.unitArray[nowPage.sId];
           hidePage['dObjectId'] = app.roleData.uUnit.objectId;
         };
+        downModal(that,hidePage)
         break;
       case 'fBa':                  //返回
         downModal(that,hidePage)

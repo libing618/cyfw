@@ -63,6 +63,7 @@ Page({
       });
     }).catch(console.error);
   },
+  hTabClick: hTabClick,
 
   onPullDownRefresh: function () {                   //更新缓存以后有变化的数据
     updateTodo('prodesign');

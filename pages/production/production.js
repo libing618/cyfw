@@ -8,7 +8,6 @@ Page({
   data:{
     mPage: [],
     pNo: 'cargo',                       //成品信息
-    pw: app.sysinfo.pw,
     pageData: {},
     iClicked: '0',
     mSum: {},
@@ -35,11 +34,11 @@ Page({
   onReady:function(){
     var that = this;
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
-    wx.setNavigationBarTitle({
-      title: app.roleData.user.emailVerified ? app.roleData.uUnit.uName+'的生产管理' : '用户体验产品生产',
-    });
     this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.production, 'production');
-    this.setData({ grids: this.grids })
+    this.setData({
+      pw: app.sysinfo.pw,
+      grids: this.grids
+    })
   },
 
   indexClick:indexClick,

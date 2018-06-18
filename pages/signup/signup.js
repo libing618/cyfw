@@ -9,44 +9,25 @@ Page({
     swcheck: true,
     uName: '',
     phonen: '',
-    vcoden: '',
-    cUnitInfo: '创建或加入单位',
-    activeIndex: "0",
-    rejectWxPhone: false
+    wxlogincode: '',
+    cUnitInfo: '创建或加入单位(必须输入姓名)'
 	},
-  wxlogincode: '',
 
   getLoginCode: function() {
     var that=this;
     wx.login({
       success: function (wxlogined) {
-        that.wxlogincode = (wxlogined.code) ? wxlogined.code : ''
+        that.setData({wxlogincode: wxlogined.code ? wxlogined.code : '' })
       }
     });
     return
-  },
-
-  editenable: function(e) {                         //点击条目进入编辑或选择操作
-    if (e.currentTarget.id == '0'){
-      this.setData({activeIndex: "0" });
-      this.getLoginCode();
-    } else {
-      if (!app.roleData.user.mobilePhoneVerified){
-        this.setData({ activeIndex: "0", cUnitInfo: '创建或加入单位(必须验证手机号)' });
-      } else {
-        if (!app.roleData.user.uName) {
-          this.setData({ cUnitInfo: '创建或加入单位(必须输入姓名)' });
-        } else {
-          this.setData({ activeIndex: "1"})
-        }
-      }
-    }
   },
 
   onLoad: function () {
     var that = this;
     if (app.roleData.user.unit!='0') {
       that.data.uName = app.roleData.uUnit.uName;
+      if (app.roleData.user.mobilePhoneVerified==false) { that.getLoginCode();}
       if (app.roleData.uUnit.name == app.roleData.user.objectId) {
         that.data.cUnitInfo = '您创建的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
       } else {
@@ -57,9 +38,8 @@ Page({
       user: app.roleData.user,
       iName: app.roleData.user.uName,
       navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender == 1 ? '先生' : '女士'),
-      activeIndex: app.roleData.user.mobilePhoneVerified ? "1" : "0",
       cUnitInfo: that.data.cUnitInfo,
-      uName: that.data.uName 
+      uName: that.data.uName
     })
   },
 
@@ -69,24 +49,29 @@ Page({
 
   gUserPhoneNumber: function(e) {
     var that = this;
-    if (that.wxlogincode) {
+    if (that.data.wxlogincode) {
       if (e.detail.errMsg == 'getPhoneNumber:ok'){
-        AV.Cloud.run('gPN', { code: that.wxlogincode, encryptedData: e.detail.encryptedData, iv: e.detail.iv }).then(function() {
-          wx.showToast({
-            title: '微信绑定的手机号注册成功', duration: 2000
-          })
-          app.roleData.user.mobilePhoneVerified = true;
-          that.setData({ 'user.mobilePhoneVerified':app.roleData.user.mobilePhoneVerified})
+        AV.Cloud.run('gPN', { code: that.data.wxlogincode, encryptedData: e.detail.encryptedData, iv: e.detail.iv }).then(function(phone) {
+          AV.User.current()
+            .setMobilePhoneNumber(phone)  // 设置并保存手机号
+            .set('mobilePhoneVerified',true)
+            .save()
+            .then(user=> {
+            app.roleData.user = user.toJSON();
+            wx.showToast({
+              title: '微信绑定的手机号注册成功', icon: 'none',duration: 2000
+            })
+            that.setData({ user :app.roleData.user})
+          });
         }).catch(console.error());
       } else {
         wx.showToast({
-          title: '未授权使用微信手机号', duration: 2000
+          title: '不授权使用微信手机号则不可注册！',icon:'none', duration: 2000
         });
-        that.setData({ rejectWxPhone: true });               //输入手机号验证注册
       }
     } else {
       wx.showToast({
-        title: '需要进行微信登录，请再次点击本按钮。', duration: 2000
+        title: '需要进行微信登录，请再次点击本按钮。', icon: 'none',duration: 2000
       });
       that.getLoginCode();
     }
@@ -101,61 +86,13 @@ Page({
           app.roleData.user['uName'] = e.detail.value.uName;
           this.setData({ iName: e.detail.value.uName})
 			}).catch((error)=>{console.log(error)
-				wx.showToast({title: '修改姓名出现问题,请重试。'})
+        wx.showToast({ title: '修改姓名出现问题,请重试。',icon: 'none'})
 			});
 		}else{
 			wx.showModal({
   			title: '姓名输入错误',
   			content: '姓名输入不能为空！'
       });
-		}
-  },
-  getvcode: function(e) {							//向服务器请求验证码
-		var phone = e.detail.value['inputmpn'];
-		if ( phone && /^1\d{10}$/.test(phone) ) {                  //结束输入后验证手机号格式
-			this.setData({phonen : phone})
-			AV.User.current()
-				.setMobilePhoneNumber(phone)  // 设置并保存手机号
-				.save()
-				.then(function(user) {
-				AV.Cloud.run('vsmp',{ mbn:phone })       // 发送验证短信请求
-				}).then(function(){
-				wx.showToast({title: '请查看手机短信找到验证码'})
-			}).catch((error)=>{
-				wx.showToast({title: '手机号短信注册出现问题,换一个手机号再试试。'})
-			});
-		}else{
-			wx.showModal({
-			title: '手机号输入错误',
-			content: '请重新输入正确的手机号！'
-			});
-			this.setData({phonen : ''});
-		}
-  },
-
-  fpvcode: function (e) {                         //验证并绑定手机号
-		var vcode = e.detail.value.inputvc;
-		if( vcode && /\d{6}$/.test(vcode) ) {           //结束输入后检查验证码格式
-			this.setData({vcoden : vcode})
-			AV.Cloud.run('vSmsCode',{mbn:this.data.phonen,mcode:this.data.vcoden}).then( (mVerfied) => {              // 用户填写收到的短信验证码
-				app.roleData.user.mobilePhoneNumber = this.data.phonen;
-				app.roleData.user.mobilePhoneVerified = true;
-				this.setData({
-					user: app.roleData.user,
-					activeIndex : 1
-				});
-			}).catch( (error)=>{                 //验证失败将旧手机号保存（若有）
-				AV.User.current()
-					.set({ "mobilePhoneNumber": app.roleData.user.mobilePhoneVerified ? app.roleData.user.mobilePhoneNumber : "",
-                 "mobilePhoneVerified": app.roleData.user.mobilePhoneVerified ? true : false })
-					.save()
-			})
-		}else{
-			wx.showModal({
-			title: '验证码输入错误',
-			content: '请重新输入正确的验证码'
-			});
-			this.setData({vcoden : ''});
 		}
   },
 
@@ -177,17 +114,16 @@ Page({
           unitRole.set('unitUsers',[{"objectId":app.roleData.user.objectId, "userRolName":'admin', 'uName':app.roleData.user.uName, 'avatarUrl':app.roleData.user.avatarUrl,'nickName':app.roleData.user.nickName}] );
           unitRole.save().then((res)=>{
             app.roleData.uUnit = res.toJSON();
-            let rQuery = AV.Object.createWithoutData('userInit', '598353adfe88c200571b8636')  //设定菜单为applyAdmin
             AV.User.current()
-              .set({ "unit": res.objectId, "userRolName": 'admin', "userRol": rQuery })  // 设置并保存单位ID
+              .set({ "unit": res.objectId, "userRolName": 'applyAdmin' })  // 设置并保存单位ID,设定菜单为applyAdmin
               .save()
               .then(function(user) {
                 app.getRols(res.objectId);
                 wx.navigateTo({ url: '/inputedit/f_Role/f_Role' })
               }).catch((error) => { console.log(error)
-              wx.showToast({title: '修改用户单位信息出现问题,请重试。'})	});
+                wx.showToast({ title: '修改用户单位信息出现问题,请重试。', icon: 'none'})	});
           }).catch((error) => { console.log(error);
-            wx.showToast({ title: '新建单位时出现问题,请重试。', duration: 7500}) })
+            wx.showToast({ title: '新建单位时出现问题,请重试。', icon: 'none',duration: 7500}) })
         }else{
           wx.showModal({
             title: '已存在同名单位',

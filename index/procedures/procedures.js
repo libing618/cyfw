@@ -1,5 +1,6 @@
 //审批流程列表
 const AV = require('../../libs/leancloud-storage.js');
+const { hTabClick } = require('../../libs/util.js');
 var app = getApp();
 function ats(){
   let rats = [{},{},{}], j;
@@ -25,11 +26,14 @@ Page({
   data:{
     pClassName: {},
     wWidth: app.sysinfo.windowWidth,
-    fLength: 3,
-    pageCk: 0,
+    pw: app.sysinfo.pw,
+    ht: {
+      navTabs: ['待我审', '处理中', '已结束'],
+      fLength: 3,
+      pageCk: 0
+    },
     pageData: {},
     indexPage: [[],[],[]],
-    tabs:['待我审','处理中','已结束'],
     anClicked: app.mData.proceduresCk
   },
 
@@ -53,7 +57,7 @@ Page({
     })
   },
 
-  tabClick: require('../../model/initupdate').tabClick,
+  hTabClick: hTabClick,
 
   anClick: function(e){                           //选择审批流程类型的数组下标
     app.mData.proceduresCk = e.currentTarget.id.substring(3);

@@ -9,7 +9,7 @@ Page({
     navBarTitle: app.roleData.uUnit.uName,              //申请项目名称
     pw: app.sysinfo.pw,
     sPages: [{
-      pageName: 'editFields'
+      pageName: 'tabPanelIndex'
     }],
     targetId: '0',              //流程申请表的ID
     dObjectId: '0',             //已建数据的ID作为修改标志，0则为新建
@@ -34,7 +34,7 @@ Page({
             var spdata = rdata.toJSON();
             that.data.vData = spdata.dObject;
             that.data.unEdit = spdata.cInstance > 0 && spdata.cInstance < spdata.cManagers.length;        //流程起点或已结束才能提交
-          };
+          } else { that.data.vData=require('../../test/irole.js')};
           that.data.dObjectId = app.roleData.user.unit;
           initData(app.fData._Role.pSuccess, that.data.vData).then(({iFormat, vData, funcArr})=>{
             funcArr.forEach(functionName => { that[functionName] = wImpEdit[functionName] });

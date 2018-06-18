@@ -133,7 +133,7 @@ indexRecordFamily: function(requery,indexField,aFamilyLength) {             //æŒ
     });
     let cPage = indexList.map((tId,family)=>{
       return tId.map(fi=>{
-        return {indexId:fi,...mData[fi+family],iCount:mData[fi+family].indexFieldId.length}
+        return { indexId: fi, uName: mData[fi + family].uName,iCount:mData[fi+family].indexFieldId.length}
       })
     })
     resolve({indexList,aData}) ;

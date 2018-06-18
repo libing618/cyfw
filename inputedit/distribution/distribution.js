@@ -6,7 +6,6 @@ var app = getApp();
 
 Page({
   data:{
-    mPage: app.mData.goods[app.roleData.uUnit.objectId] || [],
     navBarTitle: app.roleData.uUnit.uName+'的货架',
     pw: app.sysinfo.pw,
     pageData: {}
