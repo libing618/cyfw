@@ -2,7 +2,7 @@
 <import src="../../libs/weimport.wxml" />
 <import src="../../libs/wepage.wxml" />
 <view class="page">
-  <template is="p_navBar__switchTab" data="{{...pw,navBarTitle:' 创业服务平台--生产管理'}}"/>
+  <template is="p_navBar__switchTab" data="{{statusBar,navBarTitle:' 创业服务平台--生产管理'}}"/>
   <view class="page__hd">
     <view class="page__title">产量库存总览</view>
     <view class="page__desc">可供应总量{{pandect[0]}}件，总库存{{pandect[1]}}件。</view>

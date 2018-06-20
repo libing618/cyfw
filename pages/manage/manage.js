@@ -1,6 +1,7 @@
 const AV = require('../../libs/leancloud-storage.js');
 const { loginAndMenu, shareMessage } = require('../../model/initForm');
 const { openWxLogin } = require('../../libs/util');
+import { updateData } from '../../model/initupdate'
 var app = getApp();
 
 Page({
@@ -12,24 +13,19 @@ Page({
     tabs: ["品牌建设", "政策扶持", "我的商圈"],
     pageCk: app.mData.pCk1
   },
-  updateData: require('../../model/initupdate').updateData,
+
   onLoad: function () {
     var that = this;
     loginAndMenu(AV.User.current(), app.roleData).then(() => {
-      app.sysinfo.pw = {
-        statusBar: app.sysinfo.statusBarHeight,
-        capsule: app.sysinfo.screenHeight - app.sysinfo.windowHeight - 8,
-        cwHeight: app.sysinfo.windowHeight - app.sysinfo.statusBarHeight
-      };
       that.data.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage, 'manage');
       that.data.grids[0].mIcon = app.roleData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
       that.setData({
-        pw: app.sysinfo.pw,
+        statusBar: app.sysinfo.statusBarHeight,
         wWidth: app.sysinfo.windowWidth,
         grids: that.data.grids,
         unAuthorize: app.roleData.user.objectId == '0',
-        mSwiper: [],//app.mData.articles[0],
-        mPage: [[],[],[]],//[app.mData.articles[1], app.mData.articles[2], app.mData.articles[3]],
+        mSwiper: app.mData.articles[0],
+        mPage: [app.mData.articles[1], app.mData.articles[2], app.mData.articles[3]],
         pageData: app.aData.articles
       });
       if (!app.roleData.user.emailVerified){ wx.hideTabBar() };
@@ -47,7 +43,7 @@ Page({
   },
 
   onReady: function(){
-   // this.updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
+    updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });        //更新缓存以后有变化的数据
   },
 
   userInfoHandler: function (e) {
@@ -63,11 +59,11 @@ Page({
   tabClick: require('../../model/initupdate').tabClick,
 
   onPullDownRefresh:function(){
-   // this.updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });
+   updateData(true,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
 
   onReachBottom:function(){
-    this.updateData(false,'articles').then(isupdated=>{ this.setPage(isupdated) });
+    updateData(false,'articles').then(isupdated=>{ this.setPage(isupdated) });
   },
 
   onShareAppMessage: shareMessage    // 用户点击右上角分享

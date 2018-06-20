@@ -1,6 +1,6 @@
 <import src="../../libs/wepage.wxml" />
 <view class="page">
-  <template is="p_navBar__headTab" data="{{...pw}}"/>
+  <template is="p_navBar__headTab" data="{{statusBar}}"/>
   <view wx:if="{{sPages.length<2}}" class="page__sub" id="model-{{pNo}}">
     <view id="masterGroup" class="weui-grids">
         <view wx:for="{{droneId}}" wx:key="{{index}}" wx:for-index="mNo">

@@ -8,7 +8,7 @@
 </wxs>
 <import src="../../libs/wepage.wxml" />
 <view class="page">
-  <template is="p_navBar__back" data="{{...pw,navBarTitle}}"/>
+  <template is="p_navBar__back" data="{{statusBar,navBarTitle}}"/>
   <view class="page__hd">
     <view class="weui-cells__title">{{pBewrite}}</view>
   </view>

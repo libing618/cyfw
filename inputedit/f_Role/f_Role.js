@@ -7,7 +7,7 @@ Page({
   data: {
     pNo: '_Role',                       //流程的序号
     navBarTitle: app.roleData.uUnit.uName,              //申请项目名称
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     sPages: [{
       pageName: 'tabPanelIndex'
     }],

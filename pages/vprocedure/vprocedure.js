@@ -6,7 +6,7 @@ Page({
     uEV: app.roleData.user.emailVerified,
     enUpdate: false,
     pNo: 'articles',
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     sPages: ['viewRecord'],
     vData: {},
     vFormat: []

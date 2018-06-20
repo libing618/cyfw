@@ -32,7 +32,7 @@ Page({
   onReady:function(){
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{ this.setPage(isupdated) });
     this.setData({
-      pw: app.sysinfo.pw,
+      statusBar: app.sysinfo.statusBarHeight,
       grids: require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.customer, 'customer')
     })
   },

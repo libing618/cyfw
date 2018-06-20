@@ -4,7 +4,7 @@ var app = getApp()
 Page({
   data:{
     user: {},
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     sysheight: app.sysinfo.windowHeight-300,
     swcheck: true,
     uName: '',
@@ -25,21 +25,27 @@ Page({
 
   onLoad: function () {
     var that = this;
-    if (app.roleData.user.unit!='0') {
-      that.data.uName = app.roleData.uUnit.uName;
-      if (app.roleData.user.mobilePhoneVerified==false) { that.getLoginCode();}
-      if (app.roleData.uUnit.name == app.roleData.user.objectId) {
-        that.data.cUnitInfo = '您创建的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
-      } else {
-        that.data.cUnitInfo = '您申请的' + (app.roleData.user.emailVerified ? '' : '岗位正在审批中')
+    AV.User.become(AV.User.current().getSessionToken()).then((rLoginUser) => {    //再次登录同步用户信息
+      app.roleData.user = rLoginUser.toJSON();
+      if (app.roleData.user.unit!='0') {
+        that.data.uName = app.roleData.uUnit.uName;
+        if (app.roleData.user.mobilePhoneVerified==false) { that.getLoginCode();}
+        if (app.roleData.uUnit.name == app.roleData.user.objectId) {
+          that.data.cUnitInfo = '您创建的单位' + (app.roleData.user.emailVerified ? '' : '正在审批中')
+        } else {
+          that.data.cUnitInfo = '您申请的' + (app.roleData.user.emailVerified ? '' : '岗位正在审批中')
+        }
       }
-    }
-    that.setData({		    		// 获得当前用户
-      user: app.roleData.user,
-      iName: app.roleData.user.uName,
-      navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender == 1 ? '先生' : '女士'),
-      cUnitInfo: that.data.cUnitInfo,
-      uName: that.data.uName
+      that.setData({		    		// 获得当前用户
+        user: app.roleData.user,
+        iName: app.roleData.user.uName,
+        navBarTitle: '尊敬的' + app.roleData.user.nickName + (app.roleData.user.gender == 1 ? '先生' : '女士'),
+        cUnitInfo: that.data.cUnitInfo,
+        uName: that.data.uName
+      })
+    }).catch(error=>{
+      wx.showToast({title:'同步数据出错', duration: 2500 });
+      setTimeout(function () { wx.navigateBack({ delta: 1 }) }, 2000);
     })
   },
 

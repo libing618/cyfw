@@ -7,7 +7,7 @@ var app = getApp();
 Page({
   data:{
     navBarTitle: app.roleData.uUnit.uName+'的货架',
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     pageData: {}
   },
   onLoad:function(options){

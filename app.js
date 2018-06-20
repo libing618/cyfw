@@ -26,12 +26,12 @@ function onNet() {
 };
 
 App({
-  roleData: wx.getStorageSync('roleData') || require('globaldata.js').roleData,
+  roleData: require('globaldata.js').roleData,
   fData: require('./model/procedureclass'),
-  mData: wx.getStorageSync('mData') || require('globaldata.js').mData,                          //以objectId为key的数据记录
-  aData: wx.getStorageSync('aData') || require('globaldata.js').aData,              //读数据记录的缓存
-  aCount : wx.getStorageSync('aCount') || require('globaldata.js').aData,
-  procedures: wx.getStorageSync('procedures') || {},              //读流程的缓存
+  mData: require('globaldata.js').mData,                          //以objectId为key的数据记录
+  aData: require('globaldata.js').aData,              //读数据记录的缓存
+  aCount: require('globaldata.js').aData,
+  procedures: {},              //读流程的缓存
   logData: [],                         //操作记录
   fwClient: {},                        //实时通信客户端实例
   fwCs: [],                           //客户端的对话实例
@@ -166,6 +166,14 @@ App({
 
   onLaunch: function ({ path, query, scene, shareTicket, referrerInfo }) {
     var that = this;
+    ['roleData', 'mData', 'aData', 'aCount', 'procedures'].forEach(dataName=>{
+      wx.getStorage({
+        key: dataName,
+        success: function (res) {
+          if (res.data) {that[dataName] = res.data};
+        }
+      })
+    });
     wx.getSystemInfo({                     //读设备信息
       success: function (res) {
         that.sysinfo = res;

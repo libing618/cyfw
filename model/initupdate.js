@@ -10,7 +10,6 @@ function updateData(isDown, pNo, uId) {    //更新页面显示数据,isDown下�
     let inFamily = typeof app.fData[pNo].afamily != 'undefined';            //是否有分类数组
     var umdata = [], updAt;
     var readProcedure = new AV.Query(pNo);                                      //进行数据库初始化操作
-    console.log(app.mData.pAt)
     if (isAll) {
       updAt = app.mData.pAt[pNo];
       umdata = app.mData[pNo] || [];

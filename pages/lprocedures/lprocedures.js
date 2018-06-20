@@ -3,7 +3,7 @@ var app = getApp()
 Page ({
   data: {
     pNo: '',                       //流程
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     mPage: [],                 //页面管理数组
     artId: 0,             //已建数据的ID作为修改标志，则为新建
     pageData: []

@@ -7,7 +7,7 @@ var app = getApp()
 Page({
   data:{
     pNo: 'distributor',
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     ht:{
       navTabs: ['已签约店铺','已解约店铺'],
       fLength: 2,

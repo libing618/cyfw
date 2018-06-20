@@ -36,7 +36,7 @@ Page({
     integration("product", "cargo",app.roleData.uUnit.objectId).then(isupdated=>{this.setPage(isupdated)});
     this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.production, 'production');
     this.setData({
-      pw: app.sysinfo.pw,
+      statusBar: app.sysinfo.statusBarHeight,
       grids: this.grids
     })
   },

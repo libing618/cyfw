@@ -7,7 +7,7 @@ var app = getApp()
 Page({
   data: {
     pNo: 'share',                       //流程
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     ht:{
       navTabs: app.fData.share.afamily,
       modalBtn: ['可以开始','等待订单','停止服务'],

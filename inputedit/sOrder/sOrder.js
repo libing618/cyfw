@@ -6,7 +6,7 @@ var app = getApp()
 Page({
   data: {
     pNo: 'service',                       //流程
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     mPage: [],
     pageData: {},
     sPages: [{

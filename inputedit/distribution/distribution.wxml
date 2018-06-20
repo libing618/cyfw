@@ -1,7 +1,7 @@
 <import src="../import/impedit.wxml" />
 <import src="../../libs/wepage.wxml" />
 <view class="page">
-  <template is="p_navBar__back" data="{{...pw,navBarTitle}}"/>
+  <template is="p_navBar__back" data="{{statusBar,navBarTitle}}"/>
   <view class="page__hd">己上架商品(点击单品下架)</view>
   <view class="page__bd">
     <block wx:for="{{mPage}}" wx:key="{{index}}" wx:for-item="sp" wx:for-index="i">

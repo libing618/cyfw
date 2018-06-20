@@ -9,7 +9,7 @@ var app = getApp();
 Page({
   data:{
     pNo: 'orderlist',                       //流程
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     iFormat: [{ gname:"seDate", p:'起止日期', t:"sedate",endif:false}],
     vData: {},
     iClicked: ''

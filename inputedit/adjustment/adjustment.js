@@ -8,7 +8,7 @@ var app = getApp();
 Page({
   data: {
     pNo: 'prodesign',                       //流程
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     ht:{
       navTabs: app.fData.prodesign.afamily,
       fLength: app.fData.prodesign.afamily.length,

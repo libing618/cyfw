@@ -2,7 +2,7 @@
 <import src="../../libs/wedetail.wxml"/>
 <import src="../../libs/wepage.wxml" />
 <view class="page">
-  <template is="p_navBar__headTab" data="{{...pw,...ht}}"/>
+  <template is="p_navBar__headTab" data="{{statusBar,...ht}}"/>
 
   <view class="page__bd weui-tab__panel">
     <block wx:for="{{indexPage[pageCk].total}}" wx:key="{{index}}" wx:for-item="ac" wx:for-index="j">

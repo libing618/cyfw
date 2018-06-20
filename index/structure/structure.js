@@ -6,7 +6,7 @@ Page({
     userRolName: '',
 		uUnitUsers: {},
 		navBarTitle: app.roleData.uUnit.nick+'的组织架构',      //将页面标题设置成单位名称
-		pw: app.sysinfo.pw,
+		statusBar: app.sysinfo.statusBarHeight,
 		mRols: [
 			['办公','产品','营销','客服'],
 			['负责人','部门管理','员工']

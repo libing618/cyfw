@@ -26,7 +26,7 @@ Page({
   data:{
     pClassName: {},
     wWidth: app.sysinfo.windowWidth,
-    pw: app.sysinfo.pw,
+    statusBar: app.sysinfo.statusBarHeight,
     ht: {
       navTabs: ['待我审', '处理中', '已结束'],
       fLength: 3,

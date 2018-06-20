@@ -30,7 +30,7 @@ Page({
     integration('goods','specs',app.roleData.uUnit.objectId).then((isupdated)=>{ this.setPage(isupdated) });              //更新缓存以后有变化的数据
     this.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.plan, 'plan');
     this.setData({
-      pw: app.sysinfo.pw,
+      statusBar: app.sysinfo.statusBarHeight,
       wWidth: app.sysinfo.windowWidth,
       grids: this.grids
     })
