@@ -115,11 +115,11 @@ loginAndMenu: function (lcUser,roleData) {
 },
 
 checkRols: function(ouRole,user){
-  if (user.userRolName=='admin' && user.emailVerified){
+  let uRoleName = user.userRolName.split('.')
+  if (uRoleName[1]=='admin' && user.emailVerified){
     return true;
   } else {
-    let roleLine = parseInt(substring(user.userRolName,1,1));
-    if (roleLine==ouRole && user.emailVerified) {
+    if (parseInt(uRoleName[1])==ouRole && user.emailVerified) {
       return true;
     } else {
       exitPage();

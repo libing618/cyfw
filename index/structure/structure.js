@@ -62,58 +62,16 @@ Page({
 			userRolName: app.roleData.user.userRolName
 		})
   },
-	giveRole: function(rHandle,operation,sRole) {
-	  let rols={
-			"au01": "592e7f8f7a1ff90032531b62",
-			"au02": "592e7fb77a1ff90032531b65",
-			"au10": "592e8107315c1e0050c9b214",
-			"au11": "592e8148315c1e0050c9b222",
-			"au12": "592e82627a1ff90032531bb1",
-			"au20": "592e8343315c1e0050c9b30c",
-			"au21": "592e8350315c1e0050c9b30d",
-			"au22": "592e83577a1ff90032531bb4",
-			"au30": "592e8366315c1e0050c9b314",
-			"au31": "592e83737a1ff90032531bb5",
-			"au32": "592e837a315c1e0050c9b31a",
-			"bu00": "592e8414315c1e0050c9b348",
-			"bu10": "592e841c7a1ff90032531bb9",
-			"bu11": "592e84227a1ff90032531bba",
-			"bu01": "592e842d7a1ff90032531bbc",
-			"bu02": "592e8438315c1e0050c9b352",
-			"bu12": "592e8440315c1e0050c9b353",
-			"bu20": "592e8450315c1e0050c9b354",
-			"bu21": "592e8458315c1e0050c9b35a",
-			"bu22": "592e845e315c1e0050c9b35b",
-			"bu30": "592e84687a1ff90032531bbd",
-			"bu31": "592e846e7a1ff90032531bbe",
-			"bu32": "592e84767a1ff90032531bbf",
-			"cu00": "59ce950d9545040067999f95",
-			"cu01": "59ce951217d0090063a0f6d3",
-			"cu02": "59ce9520a22b9d0061333f33",
-			"cu10": "59ce9576570c35088c8a56b2",
-			"cu11": "59ce9584128fe1529c2c35f1",
-			"cu12": "59ce9593ee920a0044c16116",
-			"cu20": "59ce959817d0090063a0f7ae",
-			"cu21": "59ce95a2570c35088c8a56ee",
-			"cu22": "59ce95ac67f356003a603989",
-			"cu30": "59ce95b8fe88c2003c3ef616",
-			"cu31": "59ce95c317d0090063a0f7f2",
-			"cu32": "59ce95cb67f356003a6039bb"};
+	giveRole: function(operation,sRole) {
 		let sUser = AV.Object.createWithoutData('_User',operation);
 		if (sRole=='sessionuser'){
-		  var rQuery = AV.Object.createWithoutData('userInit', "59af7119ac502e006abee06a");
 		  sUser.set('emailVerified', false );
 		  sUser.set('unit', '0' );
 		} else {
-		  var rQuery = AV.Object.createWithoutData('userInit', rols[rHander+sRole]);  //设定菜单为
 		  sUser.set('emailVerified', true );
 		}
 		sUser.set('userRolName',sRole);
-		sUser.set('userRol',rQuery);
-		return sUser.save().then(()=>{
-		  return '授权成功';
-		}).catch(console.error);
-
+		return sUser.save();
 	},
 
 	fSpicker: function(e) {                         //选择岗位和条线
@@ -134,13 +92,13 @@ Page({
       } else {                                     //调岗
 				that.data.crole[uId] = true;
 	    	that.setData({ crole: that.data.crole });
-				app.roleData.uUnit.unitUsers[rN].userRolName = that.data.cmRole[0].toString()+ that.data.cmRole[1].toString() ;
+				app.roleData.uUnit.unitUsers[rN].userRolName = (app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu.' : 'au.')+that.data.cmRole[0]+'.'+ that.data.cmRole[1] ;
 				muRole = app.roleData.uUnit.unitUsers[rN].userRolName;
 			};
 			unitRole.set('unitUsers',app.roleData.uUnit.unitUsers);
 			unitRole.save().then((muser) => { resolve(muRole); })
 		}).then((uSetRole)=>{
-			that.giveRole(app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , uId , uSetRole).then( ()=>{
+			that.giveRole(uId , uSetRole).then( ()=>{
 				that.setData({ uUnitUsers: app.roleData.uUnit.unitUsers });
 			})
     }).catch(console.error())
@@ -153,8 +111,8 @@ Page({
 		return new Promise((resolve, reject) => {
 			var uId = that.data.applyUser[rN].userId;
       if (e.currentTarget.id=='mr_2') {                          //同意
-					let auRole = that.data.applyUser[rN].rRolArray[0].toString()+that.data.applyUser[rn].rRolArray[1].toString()
-					app.roleData.uUnit.unitUsers.push({"objectId":uId, "userRolName":rR, 'uName':that.data.applyUser[rn].uName, 'avatarUrl':that.data.applyUser[rn].avatarUrl,'nickName':that.data.applyUser[rn].nickName})
+					let auRole = (app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu.' : 'au.') + that.data.applyUser[rN].rRolArray[0]+'.'+that.data.applyUser[rn].rRolArray[1]
+					app.roleData.uUnit.unitUsers.push({"objectId":uId, "userRolName":auRole, 'uName':that.data.applyUser[rn].uName, 'avatarUrl':that.data.applyUser[rn].avatarUrl,'nickName':that.data.applyUser[rn].nickName})
 					that.setData({ uUnitUsers: app.roleData.uUnit.unitUsers });
 					unitRole.getUsers().add(uId);
 					unitRole.set('unitUsers',app.roleData.uUnit.unitUsers);
@@ -163,7 +121,7 @@ Page({
 				resolve('sessionuser');
 			};
 		}).then((uSetRole)=>{
-			that.giveRole(app.roleData.uUnit.indType.indexOf(620406)>=0 ? 'bu' : 'au' , uId , uSetRole).then( ()=>{
+			that.giveRole(uId , uSetRole).then( ()=>{
 				AV.Object.createWithoutData('reqUnit',that.data.applyUser[rN].objectId).destroy().then(()=>{
 					that.data.applyUser[rn].splice(rN,1);
 					that.setData({applyUser:that.data.applyUser});

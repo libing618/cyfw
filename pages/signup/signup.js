@@ -117,7 +117,7 @@ Page({
           let unitRole = new AV.Role(app.roleData.user.objectId,crUnit);   //用创建人的ID作ROLE的名称
           unitRole.getUsers().add(AV.User.current());
           unitRole.set('uName',reqUnitName)
-          unitRole.set('unitUsers',[{"objectId":app.roleData.user.objectId, "userRolName":'admin', 'uName':app.roleData.user.uName, 'avatarUrl':app.roleData.user.avatarUrl,'nickName':app.roleData.user.nickName}] );
+          unitRole.set('unitUsers',[{"objectId":app.roleData.user.objectId, "userRolName":'csradmin', 'uName':app.roleData.user.uName, 'avatarUrl':app.roleData.user.avatarUrl,'nickName':app.roleData.user.nickName}] );
           unitRole.save().then((res)=>{
             app.roleData.uUnit = res.toJSON();
             AV.User.current()

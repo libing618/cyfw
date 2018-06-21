@@ -310,9 +310,7 @@ module.exports = {
         let acpa = [];
         monInterval.yearMon.forEach(yearMon=>{
           if (typeof app.aCount[classObj][yearMon]=='undefined') {
-            let countClass = new AV.Query(classObj);
-            let userType = app.roleData.user.userRolName == 'promoter' ? 'promoter' : 'channel';
-            if (app.roleData.user.userRolName !== 'admin') { countClass.equalTo(userType, app.roleData.user.objectId) };                //除权限和文章类数据外只能查指定单位的数据
+            let countClass = new AV.Query(classObj);             //除权限和文章类数据外只能查指定单位的数据
             if (cObjName) { countClass.equalTo(cObjName, cObjValue) };                //除权限和文章类数据外只能查指定单位的数据
             countClass.greaterThan('updatedAt',monInterval.dayRange[yearMon][0]);
             countClass.lessThan('updatedAt',monInterval.dayRange[yearMon][1]);

@@ -65,7 +65,7 @@ Page({
         if (that.data.aValue.dProcedure == '_Role') {                    //是否单位审批流程
           let setUser = AV.Object.createWithoutData('_User',that.data.aValue.unitId);
           setUser.set('emailVerified',true);
-          setUser.set('userRolName','admin');
+          setUser.set('userRolName','u'+that.data.aValue.afamily+'.admin');
           setUser.save().then(()=>{ resolve(true) })
         } else { resolve(false) }
       }).catch(console.error);

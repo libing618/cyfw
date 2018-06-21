@@ -13,7 +13,7 @@ function setRole(puRoles,suRoles){      //流程审批权限列表
     for (let i = 0; i < puRoles.length; i++) {
       pRoleUser = [];
       app.roleData.uUnit.unitUsers.forEach((pUser) => {
-        if (pUser.userRolName == puRoles[i]) {
+        if (pUser.userRolName.substring(3) == puRoles[i]) {
           pRoleUser.push(pUser.objectId);
           cUserName[pUser.objectId] = pUser.uName;
         }
@@ -23,9 +23,9 @@ function setRole(puRoles,suRoles){      //流程审批权限列表
         cManagers.push(pRoleUser);
       }
     };
-    if (pRolesNum == 0 && app.roleData.user.userRolName != 'admin') {
+    if (pRolesNum == 0 && app.roleData.user.userRolName.substring(3) != 'admin') {
       app.roleData.uUnit.unitUsers.forEach((pUser) => {
-        if (pUser.userRolName == 'admin') {
+        if (pUser.userRolName.substring(3) == 'admin') {
           cManagers.push([pUser.objectId]);
           cUserName[pUser.objectId] = pUser.uName;
         }
@@ -38,7 +38,7 @@ function setRole(puRoles,suRoles){      //流程审批权限列表
       for (let i = 0; i < suRoles.length; i++) {
         sRoleUser = [];
         app.roleData.sUnit.unitUsers.forEach((sUser) => {
-          if (sUser.userRolName == suRoles[i]) {
+          if (sUser.userRolName.substring(3) == suRoles[i]) {
             sRoleUser.push(sUser.objectId);
             cUserName[sUser.objectId] = sUser.uName;
           }
@@ -51,7 +51,7 @@ function setRole(puRoles,suRoles){      //流程审批权限列表
     }
     if (sRolesNum == 0) {
       app.roleData.sUnit.unitUsers.forEach((sUser) => {
-        if (sUser.userRolName == 'admin') {
+        if (sUser.userRolName.substring(3) == 'admin') {
           cManagers.push([sUser.objectId]);;
           cUserName[sUser.objectId] = sUser.uName;
         }
