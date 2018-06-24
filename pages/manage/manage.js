@@ -16,7 +16,8 @@ Page({
 
   onLoad: function () {
     var that = this;
-    loginAndMenu(AV.User.current(), app.roleData).then(() => {
+    loginAndMenu(AV.User.current(), app.roleData).then( rData => {
+      app.roleData = rData;
       that.data.grids = require('../../libs/allmenu.js').iMenu(app.roleData.wmenu.manage, 'manage');
       that.data.grids[0].mIcon = app.roleData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
       that.setData({
@@ -48,7 +49,8 @@ Page({
 
   userInfoHandler: function (e) {
     var that = this;
-    openWxLogin(app).then( (mstate)=> {
+    openWxLogin(app.roleData).then( mstate=> {
+      app.roleData = mstate;
       app.logData.push([Date.now(), '用户授权' + app.sysinfo.toString()]);                      //用户授权时间记入日志
       that.grids = require('../libs/allmenu.js').iMenu(app.roleData.wmenu.manage,'manage');
       that.grids[0].mIcon=app.roleData.user.avatarUrl;   //把微信头像地址存入第一个菜单icon
